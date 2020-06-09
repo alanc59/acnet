@@ -1,0 +1,13 @@
+.sidebar-nav {
+    margin-top: 20px;
+    padding: 0;
+    list-style: none;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+th, td {padding: 15px; text-align: left}
+
+#centred_table th, td
+{
+    text-align: center;
+}

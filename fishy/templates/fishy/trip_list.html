@@ -1,0 +1,24 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Trip List</h1>
+  {% if trip_list %}
+  <table>
+     <tr>
+         <th>Trip Id</th>
+         <th>Date</th>
+         <th>Venue</th>
+         <th>Fish Caught</th>
+     </tr>
+    {% for trip in trip_list %}
+    <tr>
+        <td><a href="{{ trip.get_absolute_url }}">{{ trip.id }}</a></td>
+        <td>{{ trip.date }}</td>
+        <td>{{ trip.venue }}</td>
+        <td>{{ trip.catch_set.count }}</td>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p>There are no trips in the library.</p>
+  {% endif %}       
+{% endblock %}

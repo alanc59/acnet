@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Trip: {{ trip.venue }}</h1>
+
+  <p><strong>Date:</strong> {{ trip.date }}</p>
+  <p><strong>Venue:</strong> {{ trip.venue }}</p>
+
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Fish Caught = {{ trip.catch_set.count }}</h4> 
+
+    <table>
+       <tr>
+           <th><strong>Fish Type</strong></th>
+           <th><strong>Weight (oz)</strong</th>
+           <th>Bait</th>
+       </tr>
+       {% for catch_instance in trip.catch_set.all %}
+       <tr>
+           <td> {{ catch_instance.fish }} </td>
+           <td> {{ catch_instance.weight }} </td>
+           <td> {{ catch_instance.bait }} </td>
+       </tr>
+       {% endfor %}
+    </table>
+  </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Catch List</h1>
+  {% if catch_list %}
+  <table>
+     <tr>
+         <th>Catch Id</th>
+         <th>Date</th>
+         <th>Venue</th>
+         <th>Fish</th>
+         <th>Weight (oz)</th>
+     </tr>
+    {% for catch in catch_list %}
+     <tr>
+         <td><a href="{{ catch.get_absolute_url }}">{{ catch.id }}</a></td>
+         <td>{{catch.trip.date}}</td>
+         <td>{{catch.trip.venue}}</td>
+         <td>{{catch.fish.name}}</td>
+         <td>{{catch.weight}}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p>There are no catches in the library.</p>
+  {% endif %}       
+{% endblock %}
