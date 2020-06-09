@@ -25,15 +25,15 @@ from django.views import generic
 
 class TripListView(generic.ListView):
     model = Trip
-    paginate_by = 10
+    paginate_by = 8
 
 class VenueListView(generic.ListView):
     model = Venue
-    paginate_by = 10
+    paginate_by = 8
 
 class CatchListView(generic.ListView):
     model = Catch
-    paginate_by = 10
+    paginate_by = 8
 
 class CatchDetailView(generic.DetailView):
     model = Catch

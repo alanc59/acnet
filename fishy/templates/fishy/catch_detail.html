@@ -3,7 +3,7 @@
 {% block content %}
   <h1>Title: {{ catch.trip }} - {{ catch.fish  }}</h1>
 
-  <p><strong>Trip:</strong> <a href="">{{ catch.trip }}</a></p>
+  <p><strong>Trip:</strong> <a href="/trip/{{catch.trip.id}}">{{ catch.trip }}</a></p>
   <p><strong>Fish:</strong> {{ catch.fish }}</p>
   <p><strong>Weight:</strong> {{ catch.weight }}</p> 
   <p><strong>Weighed:</strong> {{ catch.weighed }}</p>  
