@@ -72,7 +72,8 @@ class Catch(models.Model):
     method = models.CharField(max_length=1, choices=METHOD, default='F', help_text='Method used for catch')
     
     class Meta:
-        ordering = ['trip', 'fish', '-weight']
+#        ordering = ['trip', 'fish', '-weight']
+        ordering = ['trip', '-weight', 'fish']
     
     def __str__(self):
         """String for representing the Model object."""
