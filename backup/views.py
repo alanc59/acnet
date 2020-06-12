@@ -21,8 +21,9 @@ from django.views import generic
 
 class BackupListView(generic.ListView):
     model = Backup
-   
+ 
     dates = Backup.objects.values('date').distinct().order_by('-date') 
+
     pi190_records = Backup.objects.filter(pi='PI190').order_by('-date')
     pi191_records = Backup.objects.filter(pi='PI191').order_by('-date')
     pi192_records = Backup.objects.filter(pi='PI192').order_by('-date')

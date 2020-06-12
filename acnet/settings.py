@@ -80,9 +80,9 @@ WSGI_APPLICATION = 'acnet.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'fishy_test',
-        'USER': 'fishy_user',
-        'PASSWORD': 'fishy_user',
+        'NAME': 'acnet',
+        'USER': 'acnet_user',
+        'PASSWORD': 'w1nt3r',
         'HOST': '192.168.1.190',
         'PORT': '3306',
     }

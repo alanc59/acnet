@@ -1,6 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+    backup_list(request)
     <h1>Backup List</h1>
     {% if pi190_records %}
         <table border="1" id="centred_table">

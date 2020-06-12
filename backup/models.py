@@ -14,4 +14,3 @@ class Backup(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.pi} - {self.date} : {self.result}'
-
