@@ -10,8 +10,13 @@ def index(request):
     # Generate counts of some of the main objects
     num_backups = Backup.objects.all().count()
 
+    # Number of visits to this view, as counted in the session variable.
+    num_visits_bu = request.session.get('num_visits_bu', 0)
+    request.session['num_visits_bu'] = num_visits_bu + 1
+
     context = {
         'num_backups': num_backups,
+        'num_visits_bu': num_visits_bu,
     }
 
     # Render the HTML template index.html with the data in the context variable

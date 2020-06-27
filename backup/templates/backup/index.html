@@ -8,5 +8,7 @@
   <ul>
     <li><strong>Backups:</strong> {{ num_backups }}</li>
   </ul>
+
+  <p>You have visited this page {{ num_visits_bu }}{% if num_visits_bu == 1 %} time{% else %} times{% endif %}.</p>
 {% endblock %}
 ~                 

@@ -70,7 +70,7 @@ class Catch(models.Model):
     bait = models.ForeignKey('Bait', on_delete=models.SET_NULL, null=True)
     METHOD = (('F', 'Float'), ('L', 'Ledger'))
     method = models.CharField(max_length=1, choices=METHOD, default='F', help_text='Method used for catch')
-    
+ 
     class Meta:
 #        ordering = ['trip', 'fish', '-weight']
         ordering = ['trip', '-weight', 'fish']

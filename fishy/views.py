@@ -11,11 +11,16 @@ def index(request):
     num_venues = Venue.objects.all().count()
     num_trips = Trip.objects.all().count()
     num_catches = Catch.objects.all().count() 
+
+    # Number of visits to this view, as counted in the session variable.
+    num_visits = request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits + 1
     
     context = {
         'num_venues': num_venues,
         'num_trips': num_trips,
         'num_catches': num_catches,
+        'num_visits': num_visits,
     }
 
     # Render the HTML template index.html with the data in the context variable
@@ -38,6 +43,7 @@ class CatchListView(generic.ListView):
 class CatchDetailView(generic.DetailView):
     model = Catch
 
+from django.db.models import Sum
 class TripDetailView(generic.DetailView):
     model = Trip
 

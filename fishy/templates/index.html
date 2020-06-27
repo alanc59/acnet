@@ -10,4 +10,6 @@
     <li><strong>Trips:</strong> {{ num_trips }}</li>
     <li><strong>Catches:</strong> {{ num_catches }}</li>
   </ul>
+
+  <p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time{% else %} times{% endif %}.</p>
 {% endblock %}
