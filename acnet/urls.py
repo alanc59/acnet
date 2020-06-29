@@ -26,6 +26,7 @@ from django.urls import include
 urlpatterns += [
     path('fishy/', include('fishy.urls')),
     path('backup/', include('backup.urls')),
+    path('prem_league/', include('prem_league.urls')),
     path('', include('fishy.urls')),
 ]
 #Add URL maps to redirect the base URL to our application 
@@ -40,7 +41,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
 
 #Add Django site authentication urls (for login, logout, password management)
 

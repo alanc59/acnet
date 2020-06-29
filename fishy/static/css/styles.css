@@ -4,5 +4,31 @@
     list-style: none;
 }
 
+.league-table tr:nth-child(even) {background-color: #f2f2f2;}
+.league-table tr:nth-child(odd) {background-color: #grey;}
+.league-table td { 
+    text-align : center ; 
+    padding : 4px 
+}
+
+.results-table {
+    margin-left : auto ;
+    margin-right : auto
+}
+
+.results-table td { 
+    text-align : center;
+    padding : 4px 
+}
+
+.results-table th {
+    background-color: #f2f200;
+    padding : 4px 
+}
+
 tr:nth-child(even) {background-color: #f2f2f2;}
 th, td {padding: 15px; text-align: left}
+
+.centre_text {
+    text-align : center;
+}
