@@ -4,6 +4,9 @@
     list-style: none;
 }
 
+.league-bg {
+}
+
 .league-table tr:nth-child(even) {background-color: #f2f2f2;}
 .league-table tr:nth-child(odd) {background-color: #grey;}
 .league-table td { 
