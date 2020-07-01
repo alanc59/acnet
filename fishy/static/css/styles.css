@@ -44,3 +44,16 @@ th, td {padding: 15px; text-align: left}
 .centre_text {
     text-align : center;
 }
+
+.centre_text h2 {
+    color : blue;
+}
+
+.centre_text a {
+    color : blue;
+}
+
+.centre_text p {
+    color : blue;
+}
+
