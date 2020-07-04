@@ -1,6 +1,7 @@
 {% extends "backup/base_generic.html" %}
 
 {% block content %}
+<div class="index">
   <h1>Backup Database Home</h1>
   <p>Welcome to ACNet Backup Database, a website developed in <em>Python and Django</em>!</p>
   <h2>Dynamic content</h2>
@@ -10,5 +11,6 @@
   </ul>
 
   <p>You have visited this page {{ num_visits_bu }}{% if num_visits_bu == 1 %} time{% else %} times{% endif %}.</p>
+</div>
 {% endblock %}
 ~                 

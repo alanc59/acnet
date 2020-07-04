@@ -4,56 +4,103 @@
     list-style: none;
 }
 
-.league-bg {
+.league-page tr:nth-child(even) {background-color: #f2f2f2;}
+.league-page tr:nth-child(odd) {background-color: #grey;}
+.league-page td { 
+    text-align: center ; 
+    padding: 4px 
 }
 
-.league-table tr:nth-child(even) {background-color: #f2f2f2;}
-.league-table tr:nth-child(odd) {background-color: #grey;}
-.league-table td { 
-    text-align : center ; 
-    padding : 4px 
+.league-page h1, h2, h3, p {
+    text-align: left ;
 }
 
-.league-table h1, h2, h3, p {
-    text-align : center ;
+.league-page {
+    margin-left: auto ;
+    margin-right: auto
 }
 
-.league-table {
-    margin-left : auto ;
-    margin-right : auto
+.results-page {
+    margin-left: auto ;
+    margin-right: auto
 }
 
-.results-table {
-    margin-left : auto ;
-    margin-right : auto
+.results-page td { 
+    text-align: center;
+    padding: 4px 
 }
 
-.results-table td { 
-    text-align : center;
-    padding : 4px 
-}
-
-.results-table th {
+.results-page th {
     background-color: #f2f200;
-    padding : 4px 
+    padding: 4px 
 }
 
-tr:nth-child(even) {background-color: #f2f2f2;}
-th, td {padding: 15px; text-align: left}
-
-.centre_text {
-    text-align : center;
+.results-page h1, h2, h3, p {
+    text-align: center ;
 }
 
-.centre_text h2 {
-    color : blue;
+.fishy-table tr:nth-child(even) {background-color: #f2f2f2;}
+.fishy-table th, td {
+    padding: 15px; 
+    text-align: left
 }
 
-.centre_text a {
-    color : blue;
+.index h1, h2, a, p {
+    text-align: left;
 }
 
-.centre_text p {
-    color : blue;
+ /* The sidebar menu */
+.sidenav_stats {
+  height: 100%;
+  width: 160px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: #111; /* Black */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 20px;
 }
+
+/* The navigation menu links */
+.sidenav_stats a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #818181;
+  display: block;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav_stats a:hover {
+  color: #f1f1f1;
+}
+
+/* Style page content */
+.main {
+  height: 100%;
+  margin-left: 160px; /* Same as the width of the sidebar */ 
+  background-color: lightblue;
+}
+
+.main td, th {
+  padding: 10px;
+  text-align: right;
+}
+
+.main h1 {
+  color: blue;
+}
+
+.body {
+  background-color: lightblue;
+}
+
+
+/* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav_stats {padding-top: 15px;}
+  .sidenav_stats a {font-size: 18px;}
+} 
+
 
