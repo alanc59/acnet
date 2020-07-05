@@ -1,7 +1,6 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<div class="index">
   <h1>Fishy Database Home</h1>
   <p>Welcome to ACNet Fishy Database, a website developed in <em>Python and Django</em>!</p>
   <h2>Dynamic content</h2>
@@ -13,5 +12,4 @@
   </ul>
 
   <p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time{% else %} times{% endif %}.</p>
-</div>
 {% endblock %}

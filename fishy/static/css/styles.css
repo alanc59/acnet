@@ -1,27 +1,13 @@
-.sidebar-nav {
-    margin-top: 20px;
-    padding: 0;
-    list-style: none;
-}
+html { height : 100%; }
+body { height : 100%; }
 
-.league-page tr:nth-child(even) {background-color: #f2f2f2;}
-.league-page tr:nth-child(odd) {background-color: #grey;}
-.league-page td { 
-    text-align: center ; 
-    padding: 4px 
-}
-
-.league-page h1, h2, h3, p {
-    text-align: left ;
-}
-
-.league-page {
-    margin-left: auto ;
-    margin-right: auto
+.league-table td, th {
+    text-align: center; 
+    padding: 6px;
 }
 
 .results-page {
-    margin-left: auto ;
+    margin-left: 200px;
     margin-right: auto
 }
 
@@ -36,23 +22,33 @@
 }
 
 .results-page h1, h2, h3, p {
-    text-align: center ;
+    text-align: left;
+    color: blue;
 }
 
-.fishy-table tr:nth-child(even) {background-color: #f2f2f2;}
+.fishy-table tr:nth-child(even) {background-color: lightblue }
+.fishy-table tr:nth-child(odd) {background-color: #70CCC7;}
 .fishy-table th, td {
     padding: 15px; 
-    text-align: left
+    text-align: left;
 }
+
+.fishy-stats-table tr:nth-child(even) {background-color: lightblue }
+.fishy-stats-table tr:nth-child(odd) {background-color: #70CCC7;}
+.fishy-stats-table th, td {
+    padding: 10px; 
+    text-align: right;
+}
+
 
 .index h1, h2, a, p {
     text-align: left;
 }
 
- /* The sidebar menu */
-.sidenav_stats {
+/* The sidebar menu */
+.sidebar-nav {
   height: 100%;
-  width: 160px; /* Set the width of the sidebar */
+  width: 200px; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
@@ -60,10 +56,11 @@
   background-color: #111; /* Black */
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 20px;
+  list-style: none;
 }
 
 /* The navigation menu links */
-.sidenav_stats a {
+.sidebar-nav a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 15px;
@@ -72,30 +69,25 @@
 }
 
 /* When you mouse over the navigation links, change their color */
-.sidenav_stats a:hover {
+.sidebar-nav a:hover {
   color: #f1f1f1;
+}
+
+.sidebar-nav h4 {
+  color: blue;
+  font-size: 20px;
 }
 
 /* Style page content */
 .main {
-  height: 100%;
-  margin-left: 160px; /* Same as the width of the sidebar */ 
+  height: 100%; 
+  margin-left: 200px; /* Same as the width of the sidebar */ 
   background-color: lightblue;
-}
-
-.main td, th {
-  padding: 10px;
-  text-align: right;
 }
 
 .main h1 {
   color: blue;
 }
-
-.body {
-  background-color: lightblue;
-}
-
 
 /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
