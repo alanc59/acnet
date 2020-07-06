@@ -1,9 +1,17 @@
 html { height : 100%; }
-body { height : 100%; }
+body { 
+    height : 100%; 
+    background-color: lightblue;
+}
+
+.league-table {
+    border: 2px solid blue;
+}
 
 .league-table td, th {
+    border: 2px solid blue;
     text-align: center; 
-    padding: 6px;
+    padding: 4px;
 }
 
 .results-page {
@@ -11,19 +19,26 @@ body { height : 100%; }
     margin-right: auto
 }
 
-.results-page td { 
+.results-page h1, h2, h3, p {
+    text-align: left;
+    color: blue;
+}
+
+.results-table {
+    border: 2px solid blue;
+    border-collapse: collapse;
+}
+
+.results-table td { 
+    border: 2px solid blue;
     text-align: center;
     padding: 4px 
 }
 
-.results-page th {
+.results-table th {
+    border: 2px solid blue;
     background-color: #f2f200;
     padding: 4px 
-}
-
-.results-page h1, h2, h3, p {
-    text-align: left;
-    color: blue;
 }
 
 .fishy-table tr:nth-child(even) {background-color: lightblue }
@@ -39,7 +54,6 @@ body { height : 100%; }
     padding: 10px; 
     text-align: right;
 }
-
 
 .index h1, h2, a, p {
     text-align: left;
@@ -80,7 +94,6 @@ body { height : 100%; }
 
 /* Style page content */
 .main {
-  height: 100%; 
   margin-left: 200px; /* Same as the width of the sidebar */ 
   background-color: lightblue;
 }
@@ -94,5 +107,3 @@ body { height : 100%; }
   .sidenav_stats {padding-top: 15px;}
   .sidenav_stats a {font-size: 18px;}
 } 
-
-
