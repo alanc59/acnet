@@ -1,13 +1,33 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Title: {{ catch.trip }} - {{ catch.fish  }}</h1>
-
-  <p><strong>Trip:</strong> <a href="/trip/{{catch.trip.id}}">{{ catch.trip }}</a></p>
-  <p><strong>Fish:</strong> {{ catch.fish }}</p>
-  <p><strong>Weight:</strong> {{ catch.weight }}</p> 
-  <p><strong>Weighed:</strong> {{ catch.weighed }}</p>  
-  <p><strong>Bait:</strong> {{ catch.bait }}</p>
-  <p><strong>Method:</strong> {{ catch.method }}</p>
+  <h1>Title: {{ catch.trip }}</h1>
+  <BR><BR>
+  <TABLE class ="fishy-table">
+      <TR>
+          <TH>Trip:</TH>
+          <TD><a href="/trip/{{catch.trip.id}}">{{ catch.trip }}</a></TD>
+      </TR>
+      <TR>
+          <TH>Fish:</TH>
+          <TD> {{ catch.fish }} </TD>
+      </TR>
+      <TR>
+          <TH>Weight (oz) :</TH>
+          <TD> {{ catch.weight }} </TD>
+      </TR>
+      <TR>
+          <TH>Weighed:</TH>
+          <TD> {{ catch.weighed }} </TD>
+      </TR>
+      <TR>
+          <TH>Bait:</TH>
+          <TD> {{catch.bait }}</a></TD>
+      </TR>
+      <TR>
+          <TH>Method:</TH>
+          <TD> {{ catch.method }} </TD>
+      </TR>
+  </TABLE>
 
 {% endblock %}

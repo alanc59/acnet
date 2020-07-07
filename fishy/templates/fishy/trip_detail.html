@@ -10,10 +10,10 @@
   <div style="margin-left:20px;margin-top:20px">
     <h4>Total Fish Caught = {{ trip.catch_set.count }}</h4> 
 
-    <table>
+    <table class="fishy-table">
        <tr>
-           <th><strong>Fish Type</strong></th>
-           <th><strong>Weight (oz)</strong</th>
+           <th>Fish Type</th>
+           <th>Weight (oz)</th>
            <th>Bait</th>
        </tr>
        {% for catch_instance in trip.catch_set.all %}

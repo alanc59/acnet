@@ -1,15 +1,15 @@
 html { height : 100%; }
 body { 
     height : 100%; 
-    background-color: #FFFDD0;
+    background-color: lightblue;
 }
 
 .league-table {
-    border: 2px solid grey;
+    border: 2px solid blue;
 }
 
 .league-table td, th {
-    border: 2px solid grey;
+    border: 2px solid blue;
     text-align: center; 
     padding: 4px;
 }
@@ -21,50 +21,38 @@ body {
 
 .results-page h1, h2, h3, p {
     text-align: left;
-    color: grey;
+    color: blue;
 }
 
 .results-table {
-    border: 2px solid grey;
+    border: 2px solid blue;
     border-collapse: collapse;
 }
 
 .results-table td { 
-    border: 2px solid grey;
+    border: 2px solid blue;
     text-align: center;
     padding: 4px 
 }
 
 .results-table th {
     border: 2px solid blue;
-    /* background-color: #f2f200; */
+    background-color: #f2f200;
     padding: 4px 
 }
 
-.fishy-table tr:nth-child(odd) {background-color: #FFFFAA; }
-.fishy-table td {
+.fishy-table tr:nth-child(even) {background-color: lightblue }
+.fishy-table tr:nth-child(odd) {background-color: #70CCC7;}
+.fishy-table th, td {
     padding: 15px; 
     text-align: left;
 }
 
-.fishy-table th {
-    padding: 15px; 
-    text-align: left;
-    font-weight: bold;
-    font-style: italic;
-}
-
-.fishy-stats-table tr:nth-child(odd) {background-color: #FFFFAA; }
-.fishy-stats-table td {
+.fishy-stats-table tr:nth-child(even) {background-color: lightblue }
+.fishy-stats-table tr:nth-child(odd) {background-color: #70CCC7;}
+.fishy-stats-table th, td {
     padding: 10px; 
     text-align: right;
-}
-
-.fishy-stats-table th {
-    padding: 10px; 
-    text-align: right;
-    font-weight: bold;
-    font-style: italic;
 }
 
 .index h1, h2, a, p {
@@ -107,7 +95,7 @@ body {
 /* Style page content */
 .main {
   margin-left: 200px; /* Same as the width of the sidebar */ 
-  /* background-color: lightblue; */
+  background-color: lightblue;
 }
 
 .main h1 {
