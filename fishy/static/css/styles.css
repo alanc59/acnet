@@ -4,6 +4,22 @@ body {
     background-color: #FFFDD0;
 }
 
+td.recent {
+    background-color: lightblue;
+}
+
+td.c, th.c {
+  text-align : center;
+}
+
+td.r, th.r {
+  text-align : right;
+}
+
+td.l, th.l {
+  text-align : left;
+}
+
 .league-table {
     border: 2px solid grey;
 }
@@ -21,7 +37,7 @@ body {
 
 .results-page h1, h2, h3, p {
     text-align: left;
-    color: grey;
+    color: blue;
 }
 
 .results-table {
@@ -36,8 +52,7 @@ body {
 }
 
 .results-table th {
-    border: 2px solid blue;
-    /* background-color: #f2f200; */
+    border: 2px solid lightblue;
     padding: 4px 
 }
 
@@ -58,6 +73,17 @@ body {
 .fishy-stats-table td {
     padding: 10px; 
     text-align: right;
+}
+
+.fishy-stats-table th {
+    padding: 10px; 
+    font-weight: bold;
+    font-style: italic;
+}
+
+.fishy-record-table tr:nth-child(odd) {background-color: #FFFFAA; }
+.fishy-record-table td {
+    padding: 10px; 
 }
 
 .fishy-stats-table th {
@@ -100,7 +126,7 @@ body {
 }
 
 .sidebar-nav h4 {
-  color: blue;
+  color: lightblue;
   font-size: 20px;
 }
 
