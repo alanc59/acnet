@@ -5,141 +5,65 @@
     {% if pi190_records %}
         <table border="1" id="centred_table">
             <tr>
-                <th>PI Name</th>
-                {% for day in dates %}
+                <th class="l">PI Name</th>
+                {% for day in dates_list %}
                     {% if forloop.counter0 < 4 %}
-                        <th>{{day.date}}</th>
+                        <th class="c">{{day}}</th>
                     {% endif %}
                 {% endfor %}
             </tr>
             <tr>
+                <td class="l">PI190</a></td>
                 {% for pi in pi190_records %}
-                    {% if forloop.counter0 == 0 %}
-                        <td>{{pi.pi}}</a></td>
+                    {% if pi.date not in dates_list %}
+                        <td  class="c" style="background-color:#ff0000;">Fail</td>
+                    {% else %}
                         {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
+                            <td class="c" style="background-color:#00ff00;">Success</td>
                         {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
-                        {% endif %}
-                    {% endif %}
-                    {% if forloop.counter0 == 1 %}
-                        {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
-                        {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
-                        {% endif %}
-                    {% endif %}
-                    {% if forloop.counter0 == 2 %}
-                        {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
-                        {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
-                        {% endif %}
-                    {% endif %}
-                    {% if forloop.counter0 == 3 %}
-                        {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
-                        {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
+                            <td class="c" style="background-color:#ff0000;">Fail</td>
                         {% endif %}
                     {% endif %}
                 {% endfor %}
             </tr>
             <tr>
-                {% for pi in pi191_records %}
-                    {% if forloop.counter0 == 0 %}
-                        <td>{{pi.pi}}</a></td>
+                <td class="l">PI191</a></td>
+                {% for pi in pi191_records %} 
+                    {% if pi.date not in dates_list %}
+                        <td class="c" style="background-color:#ff0000;">Fail</td>
+                    {% else %}
                         {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
+                            <td class="c" style="background-color:#00ff00;">Success</td>
                         {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
-                        {% endif %}
-                    {% endif %}
-                    {% if forloop.counter0 == 1 %}
-                        {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
-                        {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
-                        {% endif %}
-                    {% endif %}
-                    {% if forloop.counter0 == 2 %}
-                        {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
-                        {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
-                        {% endif %}
-                    {% endif %}
-                    {% if forloop.counter0 == 3 %}
-                        {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
-                        {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
+                            <td class="c" style="background-color:#ff0000;">Fail</td>
                         {% endif %}
                     {% endif %}
                 {% endfor %}
             </tr>
             <tr>
-                {% for pi in pi192_records %}
-                    {% if forloop.counter0 == 0 %}
-                        <td>{{pi.pi}}</a></td>
+                <td class="l">PI192</a></td>
+                {% for pi in pi192_records %} 
+                    {% if pi.date not in dates_list %}
+                        <td class="c" style="background-color:#ff0000;">Fail</td>
+                    {% else %}
                         {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
+                            <td class="c" style="background-color:#00ff00;">Success</td>
                         {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
-                        {% endif %}
-                    {% endif %}
-                    {% if forloop.counter0 == 1 %}
-                        {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
-                        {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
-                        {% endif %}
-                    {% endif %}
-                    {% if forloop.counter0 == 2 %}
-                        {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
-                        {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
-                        {% endif %}
-                    {% endif %}
-                    {% if forloop.counter0 == 3 %}
-                        {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
-                        {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
+                            <td class="c" style="background-color:#ff0000;">Fail</td>
                         {% endif %}
                     {% endif %}
                 {% endfor %}
             </tr>
             <tr>
-                {% for pi in pi193_records %}
-                    {% if forloop.counter0 == 0 %}
-                        <td>{{pi.pi}}</a></td>
+                <td class="l">PI193</a></td>
+                {% for pi in pi193_records %} 
+                    {% if pi.date not in dates_list %}
+                        <td class="c" style="background-color:#ff0000;">Fail</td>
+                    {% else %}
                         {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
+                            <td class="c" style="background-color:#00ff00;">Success</td>
                         {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
-                        {% endif %}
-                    {% endif %}
-                    {% if forloop.counter0 == 1 %}
-                        {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
-                        {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
-                        {% endif %}
-                    {% endif %}
-                    {% if forloop.counter0 == 2 %}
-                        {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
-                        {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
-                        {% endif %}
-                    {% endif %}
-                    {% if forloop.counter0 == 3 %}
-                        {% if pi.result == 'S' %}
-                             <td style="background-color:#00ff00;">Success</td>
-                        {% else %}
-                             <td style="background-color:#ff0000;">Fail</td>
+                            <td class="c" style="background-color:#ff0000;">Fail</td>
                         {% endif %}
                     {% endif %}
                 {% endfor %}
