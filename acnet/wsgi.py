@@ -12,6 +12,7 @@ import sys
 
 from django.core.wsgi import get_wsgi_application
 sys.path.append("/home/pi/virtualenvs/acnetv/acnet")
+sys.path.append("/home/pi/python")
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'acnet.settings')
 
