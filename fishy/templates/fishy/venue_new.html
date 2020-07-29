@@ -1,0 +1,37 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+    <h1>New Venue</h1>
+    <form action "" method="post">{% csrf_token %}
+        <table class="fishy-table">
+            <tr>
+                <td><label for="id_name">Name:</label></td>
+                <td><input type="text" name="name" maxlength="25" required id="id_name"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><label for="id_wac">Wac:</label></td>
+                <td><select name="wac" required id="id_wac">
+                        <option value="N" selected>No</option>
+                        <option value="Y">Yes</option>
+                    </select> 
+                </td>
+                <td><span class="helptext">Withnell Water or not</span></td>
+            </tr>
+            <tr>
+                <td><label for="id_postcode">Postcode:</label></td>
+                <td><input type="text" name="postcode" maxlength="10" required id="id_postcode"></td>
+                <td></td>
+            </tr>
+            {% if user.is_authenticated %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="r"><button type="submit" value="Save">Save</button></td>
+                </tr>
+            {% endif %}
+         </table> 
+    </form>
+
+{% endblock content %}

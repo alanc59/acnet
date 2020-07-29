@@ -14,7 +14,7 @@
     {% for catch in catch_list %}
      <tr>
          <td><a href="{{ catch.get_absolute_url }}">{{ catch.id }}</a></td>
-         <td>{{catch.trip.date}}</td>
+         <td>{{catch.trip.date|date:'Y-m-d'}}</td>
          <td>{{catch.trip.venue}}</td>
          <td>{{catch.fish.name}}</td>
          <td>{{catch.weight}}</td>

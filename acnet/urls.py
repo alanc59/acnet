@@ -27,6 +27,7 @@ urlpatterns += [
     path('fishy/', include('fishy.urls')),
     path('backup/', include('backup.urls')),
     path('prem_league/', include('prem_league.urls')),
+    path('championship/', include('championship.urls')),
     path('', include('fishy.urls')),
 ]
 #Add URL maps to redirect the base URL to our application 

@@ -59,14 +59,16 @@ td.l, th.l {
 .fishy-table tr:nth-child(odd) {background-color: #FFFFAA; }
 .fishy-table td {
     padding: 15px; 
-    text-align: left;
 }
 
 .fishy-table th {
     padding: 15px; 
-    text-align: left;
     font-weight: bold;
     font-style: italic;
+}
+
+.fishy-table button {
+    background-color: lightblue;
 }
 
 .fishy-stats-table tr:nth-child(odd) {background-color: #FFFFAA; }
@@ -128,6 +130,10 @@ td.l, th.l {
 .sidebar-nav h4 {
   color: lightblue;
   font-size: 20px;
+}
+
+.sidebar-nav div.user {
+    color: yellow;
 }
 
 /* Style page content */

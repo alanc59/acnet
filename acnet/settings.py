@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'fishy',
     'backup',
     'prem_league',
+    'championship',
 ]
 
 MIDDLEWARE = [
@@ -118,6 +119,7 @@ TIME_ZONE = 'GMT'
 USE_I18N = True
 
 USE_L10N = True
+DATE_INPUT_FORMATS = ['%Y-%m-%d']
 
 USE_TZ = True
 

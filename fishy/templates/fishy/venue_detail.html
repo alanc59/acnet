@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Title: {{ venue.name }}</h1>
+  <h1>Venue: {{ venue.name }}</h1>
   <BR><BR>
   <TABLE class="fishy-table">
      <TR>
@@ -16,5 +16,11 @@
         <TH>Postcode:</TH>
         <TD> {{ venue.postcode }} </TD>
      </TR>
+     {% if user.is_authenticated %}
+         <TR>
+             <TD><a href="{% url 'venue_edit' venue.pk %}">Edit Venue</a></TD>
+             <TD><a href="{% url 'venue_delete' venue.pk %}">Delete Venue</a></TD>
+         </TR>
+     {% endif %}
   </TABLE>
 {% endblock %}

@@ -3,26 +3,34 @@
 {% block content %}
   <h1>Trip: {{ trip.venue }}</h1>
 
-  <p><strong>Date:</strong> {{ trip.date }}</p>
+  <p><strong>Date:</strong> {{ trip.date|date:'Y-m-d' }}</p>
   <p><strong>Venue:</strong> {{ trip.venue }}</p>
 
 
   <div style="margin-left:20px;margin-top:20px">
     <h4>Total Fish Caught = {{ trip.catch_set.count }}</h4> 
+    <h4>Total Fish Weight = {{ weight }}</h4> 
 
     <table class="fishy-table">
        <tr>
            <th>Fish Type</th>
-           <th>Weight (oz)</th>
+           <th class="r">Weight (oz)</th>
            <th>Bait</th>
        </tr>
        {% for catch_instance in trip.catch_set.all %}
        <tr>
            <td> {{ catch_instance.fish }} </td>
-           <td> {{ catch_instance.weight }} </td>
+           <td class="r"> {{ catch_instance.weight }} </td>
            <td> {{ catch_instance.bait }} </td>
        </tr>
        {% endfor %}
+       {% if user.is_authenticated %}
+           <tr>
+               <td><a href="{% url 'trip_edit' trip.pk %}">Edit Trip</a></td>
+               <td></td>
+               <td><a href="{% url 'trip_delete' trip.pk %}">Delete Trip</a></td>
+           </tr>
+       {% endif %}
     </table>
   </div>
 {% endblock %}

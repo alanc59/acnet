@@ -13,7 +13,7 @@
     {% for trip in trip_list %}
     <tr>
         <td><a href="{{ trip.get_absolute_url }}">{{ trip.id }}</a></td>
-        <td>{{ trip.date }}</td>
+        <td>{{ trip.date|date:'Y-m-d' }}</td>
         <td>{{ trip.venue }}</td>
         <td>{{ trip.catch_set.count }}</td>
     {% endfor %}

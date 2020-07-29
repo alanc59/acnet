@@ -28,6 +28,11 @@
           <TH>Method:</TH>
           <TD> {{ catch.method }} </TD>
       </TR>
+      {% if user.is_authenticated %}
+          <TR>
+              <TD><a href="{% url 'catch_edit' catch.pk %}">Edit Catch</a></TD>
+              <TD><a href="{% url 'catch_delete' catch.pk %}">Delete Catch</a></TD>
+          </TR>
+      {% endif %}
   </TABLE>
-
 {% endblock %}

@@ -7,11 +7,13 @@
      <tr>
          <th>Venue</th>
          <th>Postcode</th>
+         <th>WAC Water</th>
      </tr>
     {% for venue in venue_list %}
      <tr>
          <td><a href="{{ venue.get_absolute_url }}">{{ venue.name }}</a></td>
          <td>{{venue.postcode}}</td>
+         <td class="c">{{venue.wac}}</td>
      </tr>
     {% endfor %}
   </table>

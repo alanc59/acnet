@@ -49,7 +49,7 @@ class Bait(models.Model):
 class Trip(models.Model):
     date = models.DateField()
     venue = models.ForeignKey('Venue', on_delete=models.SET_NULL, null=True)
-   
+
     class Meta:
         ordering = ['-date', 'venue']
 
@@ -72,7 +72,6 @@ class Catch(models.Model):
     method = models.CharField(max_length=1, choices=METHOD, default='F', help_text='Method used for catch')
  
     class Meta:
-#        ordering = ['trip', 'fish', '-weight']
         ordering = ['trip', '-weight', 'fish']
     
     def __str__(self):
