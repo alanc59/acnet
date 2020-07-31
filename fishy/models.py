@@ -15,6 +15,10 @@ class Fish(models.Model):
 
     def __unicode__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this fish."""
+        return reverse('fish-detail', args=[str(self.id)])
 
 class Venue(models.Model):
     name = models.CharField(max_length=25)

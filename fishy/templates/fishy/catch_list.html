@@ -10,6 +10,7 @@
          <th>Venue</th>
          <th>Fish</th>
          <th>Weight (oz)</th>
+         <th>Weighed</th>
      </tr>
     {% for catch in catch_list %}
      <tr>
@@ -17,7 +18,8 @@
          <td>{{catch.trip.date|date:'Y-m-d'}}</td>
          <td>{{catch.trip.venue}}</td>
          <td>{{catch.fish.name}}</td>
-         <td>{{catch.weight}}</td>
+         <td class="c">{{catch.weight}}</td>
+         <td class="c">{{catch.weighed}}</td>
       </tr>
     {% endfor %}
   </table>

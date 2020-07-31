@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Fish List</h1>
+  {% if fish_list %}
+  <table class="fishy-table">
+     <tr>
+         <th>Name</th>
+     </tr>
+    {% for fish in fish_list %}
+     <tr>
+         <td><a href="{{ fish.get_absolute_url }}">{{ fish.name }}</a></td>
+     </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p>There are no fish in the library.</p>
+  {% endif %}       
+{% endblock %}
