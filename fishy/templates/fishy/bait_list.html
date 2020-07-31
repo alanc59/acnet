@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Bait List</h1>
+  {% if bait_list %}
+  <table class="fishy-table">
+     <tr>
+         <th>Name</th>
+     </tr>
+    {% for bait in bait_list %}
+     <tr>
+         <td><a href="{{ bait.get_absolute_url }}">{{ bait.name }}</a></td>
+     </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p>There are no baits in the library.</p>
+  {% endif %}       
+{% endblock %}

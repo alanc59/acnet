@@ -1,16 +1,16 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Fish: {{ fish.name }}</h1>
+  <h1>Bait: {{ bait.name }}</h1>
   <BR><BR>
   <TABLE class="fishy-table">
      <TR>
         <TH>Name:</TH>
-        <TD> {{ fish.name }} </TD>
+        <TD> {{ bait.name }} </TD>
      </TR>
      {% if user.is_authenticated %}
          <TR>
-             <TD><a href="{% url 'fish_delete' fish.pk %}">Delete Fish</a></TD>
+             <TD><a href="{% url 'bait_delete' bait.pk %}">Delete Bait</a></TD>
              <TD></TD>
          </TR>
      {% endif %}

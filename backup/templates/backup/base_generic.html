@@ -17,12 +17,16 @@
           <a href="{% url 'venues' %}">All Venues</a>
           <a href="{% url 'trips' %}">All Trips</a>
           <a href="{% url 'catches' %}">All Catches</a>
+          <a href="{% url 'fishes' %}">All Fish</a>
+          <a href="{% url 'baits' %}">All Baits</a>
           <a href="/static/fishy_stats/index.html">Statistics</a>
           {% if user.is_authenticated %}
               <h4>Fishy Update</h4>
               <a href="{% url 'venue_new' %}">New Venue</a>
               <a href="{% url 'trip_new' %}">New Trip</a>
               <a href="{% url 'catch_new' %}">New Catch</a>
+              <a href="{% url 'fish_new' %}">New Fish</a>
+              <a href="{% url 'bait_new' %}">New Bait</a>
               <h4>Backup</h4>
               <a href="/backup">Home</a>
               <a href="/backup/backups">All Backups</a>

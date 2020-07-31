@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Delete Bait</h1>
+<form action="" method="post">{% csrf_token %}
+<table class="fishy-table">
+    <tr><td>ID</td><td>{{bait.id}}</td></tr>
+    <tr><td>Name</td><td>{{bait.name}}</td></tr>
+    {% if user.is_authenticated %}
+        <tr><td></td><td class="r"><button type="submit" value="Confirm">Confirm</button></td></tr>
+    {% endif %}     
+</table>
+</form>
+{% endblock content %}

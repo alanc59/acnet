@@ -179,12 +179,30 @@ class FishCreateView(CreateView):
     template_name = 'fishy/fish_new.html'
     fields = ['name']
 
-class FishUpdateView(UpdateView):
-    model = Fish
-    template_name = 'fishy/fish_edit.html'
-    fields = ['name']
-
 class FishDeleteView(DeleteView):
     model = Fish
     template_name = 'fishy/fish_delete.html'
     success_url = reverse_lazy('fishes')
+
+#######
+#
+# Bait
+#
+#######
+
+class BaitListView(generic.ListView):
+    model = Bait
+    paginate_by = 8
+
+class BaitDetailView(generic.DetailView):
+    model = Bait
+
+class BaitCreateView(CreateView):
+    model = Bait
+    template_name = 'fishy/bait_new.html'
+    fields = ['name']
+
+class BaitDeleteView(DeleteView):
+    model = Bait
+    template_name = 'fishy/bait_delete.html'
+    success_url = reverse_lazy('baits')

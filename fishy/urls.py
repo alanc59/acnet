@@ -3,12 +3,15 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('bait/<int:pk>', views.BaitDetailView.as_view(), name='bait-detail'),
+    path('bait/new/', views.BaitCreateView.as_view(), name='bait_new'),
+    path('bait/<int:pk>/delete/', views.BaitDeleteView.as_view(), name='bait_delete'),
+    path('baits/', views.BaitListView.as_view(), name='baits'),
     path('catch/<int:pk>', views.CatchDetailView.as_view(), name='catch-detail'),
     path('catch/new/', views.CatchCreateView.as_view(), name='catch_new'),
     path('catch/<int:pk>/edit/', views.CatchUpdateView.as_view(), name='catch_edit'),
     path('catch/<int:pk>/delete/', views.CatchDeleteView.as_view(), name='catch_delete'),
     path('catches/', views.CatchListView.as_view(), name='catches'),
-    path('fish/<int:pk>/edit/', views.FishUpdateView.as_view(), name='fish_edit'),
     path('fish/<int:pk>', views.FishDetailView.as_view(), name='fish-detail'),
     path('fish/new/', views.FishCreateView.as_view(), name='fish_new'),
     path('fish/<int:pk>/delete/', views.FishDeleteView.as_view(), name='fish_delete'),
