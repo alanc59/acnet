@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'fishy',
     'backup',
-    'prem_league',
-    'championship',
+    'league',
 ]
 
 MIDDLEWARE = [

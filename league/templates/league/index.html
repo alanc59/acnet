@@ -1,0 +1,18 @@
+{% extends "league/base_generic.html" %}
+
+{% block content %}
+  <h1>Prediction League Home</h1>
+  <p>Welcome to ACNet Prediction League, a website developed in <em>Python and Django</em>!</p>
+  <p>The Prediction League App has the following Leagues:</p>
+  <ul>
+    <li><strong>Premier League</strong></li>
+    <li><strong>Championship</strong></li>
+  </ul>
+
+  <p>
+The predictor computes a final table for each league based on games played in the current season <BR>
+replacing the games that haven't yet been played this season with last season's results. This gives <BR>
+an indication of the improvement/deteriation of each teams current form compared to last season. The<BR>
+ league then displays how this improvement/deteriation will play out for each team over the season.<BR>
+  </p>
+{% endblock %}

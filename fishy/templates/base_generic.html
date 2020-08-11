@@ -12,8 +12,7 @@
 <body>
    <div class="sidebar-nav">
       {% block sidebar %}
-          <h4>Fishy</h4>
-          <a href="{% url 'index' %}">Home</a>
+          <a href="/fishy"><h4>Fishy</h4></a>
           <a href="{% url 'venues' %}">All Venues</a>
           <a href="{% url 'trips' %}">All Trips</a>
           <a href="{% url 'catches' %}">All Catches</a>
@@ -27,14 +26,9 @@
               <a href="{% url 'catch_new' %}">New Catch</a>
               <a href="{% url 'fish_new' %}">New Fish</a>
               <a href="{% url 'bait_new' %}">New Bait</a>
-              <h4>Backup</h4>
-              <a href="/backup">Home</a>
-              <a href="/backup/backups">All Backups</a>
+              <a href="/backup"><h4>Backup</h4></a>
           {% endif %} 
-           
-          <h4>Football Predictor</h4>
-          <a href="/prem_league">Premier League</a>
-          <a href="/championship">Championship</a>
+          <a href="/league"><h4>Football Predictor</h4></a>
           {% if user.is_authenticated %}
               <div class="user">User: {{ user.get_username }} </div>
               <a href="{% url 'logout'%}?next={{request.path}}">Logout</a>
