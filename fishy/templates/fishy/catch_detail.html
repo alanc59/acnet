@@ -28,6 +28,10 @@
           <TH>Method:</TH>
           <TD> {{ catch.method }} </TD>
       </TR>
+      <TR>
+          <TH>Catch Time:</TH>
+          <TD> {{ catch.catch_time|date:'Y-m-d H:i' }} </TD>
+      </TR>
       {% if user.is_authenticated %}
           <TR>
               <TD><a href="{% url 'catch_edit' catch.pk %}">Edit Catch</a></TD>

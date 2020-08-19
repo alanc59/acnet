@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from fishy.models import Bait, Catch, Fish, Trip, Venue
 from util.utilities import *
 from django.db.models import Sum
+from datetime import datetime, timedelta, timezone
 
 #######
 #
@@ -50,7 +51,14 @@ class TripDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(TripDetailView, self).get_context_data(**kwargs)
         catches = Catch.objects.filter(trip_id=self.kwargs.get('pk'))
-     
+        for catch in catches:
+            new_time = datetime.now(timezone.utc) - timedelta(minutes=5)
+            if new_time > catch.catch_time:
+                new_fish = False
+            else:
+                new_fish = True
+            #catch.append(new_fish)
+        print(catches) 
         wgt = catches.aggregate(Sum('weight'))
         if wgt['weight__sum'] == None:
             wgt['weight__sum'] = 0   

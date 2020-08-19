@@ -1,8 +1,6 @@
 from django.db import models
 from django.urls import reverse
 
-# Create your models here.
-
 class Fish(models.Model):
     name = models.CharField(max_length=20)
     
@@ -78,13 +76,14 @@ class Catch(models.Model):
     bait = models.ForeignKey('Bait', on_delete=models.SET_NULL, null=True)
     METHOD = (('F', 'Float'), ('L', 'Ledger'))
     method = models.CharField(max_length=1, choices=METHOD, default='F', help_text='Method used for catch')
- 
+    catch_time = models.DateTimeField(auto_now_add=True)
+    
     class Meta:
         ordering = ['trip', '-weight', 'fish']
     
     def __str__(self):
         """String for representing the Model object."""
-        return f'{self.trip}, {self.fish}, Weight (oz)={self.weight}, Weighed={self.weighed}, {self.bait}'
+        return f'{self.trip}, {self.fish}, Weight (oz)={self.weight}, Weighed={self.weighed}, {self.bait}, {self.catch_time}, {self.is_new}'
 
     def get_absolute_url(self):
         """Returns the url to access a detail record for this catch."""
