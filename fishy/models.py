@@ -83,7 +83,7 @@ class Catch(models.Model):
     
     def __str__(self):
         """String for representing the Model object."""
-        return f'{self.trip}, {self.fish}, Weight (oz)={self.weight}, Weighed={self.weighed}, {self.bait}, {self.catch_time}, {self.is_new}'
+        return f'{self.trip}, {self.fish}, Weight (oz)={self.weight}, Weighed={self.weighed}, {self.bait}, {self.catch_time}'
 
     def get_absolute_url(self):
         """Returns the url to access a detail record for this catch."""
