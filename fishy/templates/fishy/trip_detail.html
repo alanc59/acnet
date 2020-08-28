@@ -2,26 +2,58 @@
 
 {% block content %}
   <h1>Trip: {{ trip.venue }}</h1>
-
-  <p><strong>Date:</strong> {{ trip.date|date:'Y-m-d' }}</p>
-  <p><strong>Venue:</strong> {{ trip.venue }}</p>
-
+  <h1>Date: {{ trip.date|date:'Y-m-d' }}
+  {% if live_trip %}
+ - Live Trip</h1>
+      <h4><strong>Page last refreshed:</strong> <span id="datetime"> </h4>
+      <script>
+         var dt = new Date();
+         document.getElementById("datetime").innerHTML = (("0"+dt.getHours()).slice(-2)) +":"+ (("0"+dt.getMinutes()).slice(-2));
+      </script>
+  {% else %}
+- Completed Trip</h1>
+  {% endif %}
 
   <div style="margin-left:20px;margin-top:20px">
     <h4>Total Fish Caught = {{ trip.catch_set.count }}</h4> 
     <h4>Total Fish Weight = {{ weight }}</h4> 
+
+  {% if new_fish %}
+      <BR>
+      <table class="fishy-table">
+          <tr>
+               <td class="recent">NEW CATCH</td>
+               <td class="recent">NEW CATCH</td>
+               <td class="recent">NEW CATCH</td>
+               <td class="recent">NEW CATCH</td>
+          </tr>
+      </table> 
+      <BR>
+  {% endif %}
 
     <table class="fishy-table">
        <tr>
            <th>Fish Type</th>
            <th class="r">Weight (oz)</th>
            <th>Bait</th>
+           <th>Method</th>
+           <th>Catch Time</th>
        </tr>
        {% for catch_instance in trip.catch_set.all %}
        <tr>
-           <td> {{ catch_instance.fish }} </td>
-           <td class="r"> {{ catch_instance.weight }} </td>
-           <td> {{ catch_instance.bait }} </td>
+          {% if new_fish and forloop.first %} 
+              <td class="recent"> {{ catch_instance.fish }} </td>
+              <td class="recent r"> {{ catch_instance.weight }} </td>
+              <td class="recent"> {{ catch_instance.bait }} </td>
+              <td class="recent c"> {{ catch_instance.method }} </td>
+              <td class="recent c"> {{ catch_instance.catch_time|date:'H:i' }} </td>
+          {% else %}
+              <td> {{ catch_instance.fish }} </td>
+              <td class="r"> {{ catch_instance.weight }} </td>
+              <td> {{ catch_instance.bait }} </td>
+              <td class="c"> {{ catch_instance.method }} </td>
+              <td class="c"> {{ catch_instance.catch_time|date:'H:i' }} </td>
+          {% endif %}
        </tr>
        {% endfor %}
        {% if user.is_authenticated %}

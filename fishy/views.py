@@ -47,23 +47,31 @@ class TripListView(generic.ListView):
 class TripDetailView(generic.DetailView):
     model = Trip
     paginate_by = 8
-    
+
     def get_context_data(self, **kwargs):
         context = super(TripDetailView, self).get_context_data(**kwargs)
+        trips = Trip.objects.filter(id=self.kwargs.get('pk'))
+        for trip in trips:
+            catch_date = trip.date.strftime('%Y-%m-%d')
         catches = Catch.objects.filter(trip_id=self.kwargs.get('pk'))
+        new_fish = False
+        time_now = datetime.now(timezone.utc)
+
         for catch in catches:
-            new_time = datetime.now(timezone.utc) - timedelta(minutes=5)
-            if new_time > catch.catch_time:
-                new_fish = False
-            else:
+            catch_date = catch.trip.date.strftime('%Y-%m-%d')
+            new_time = time_now - timedelta(minutes=10)
+            if new_time <= catch.catch_time:
                 new_fish = True
-            #catch.append(new_fish)
-        print(catches) 
+            break
+        today_date = time_now.strftime('%Y-%m-%d')
+        live_trip = (catch_date == today_date)
         wgt = catches.aggregate(Sum('weight'))
         if wgt['weight__sum'] == None:
             wgt['weight__sum'] = 0   
         weight = toPoundsAndOunces(wgt['weight__sum'])
         context['weight'] = weight
+        context['live_trip'] = live_trip
+        context['new_fish'] = new_fish
         return context
 
 class TripCreateView(CreateView):

@@ -74,12 +74,12 @@ class Catch(models.Model):
     weighed = models.CharField(max_length=1, choices=YES_OR_NO, default='Y', help_text='Weighed (if N = estimated)')
     trip = models.ForeignKey('Trip', on_delete=models.SET_NULL, null=True)
     bait = models.ForeignKey('Bait', on_delete=models.SET_NULL, null=True)
-    METHOD = (('F', 'Float'), ('L', 'Ledger'))
+    METHOD = (('F', 'Float'), ('L', 'Ledger'), ('M', 'Method Feeder'))
     method = models.CharField(max_length=1, choices=METHOD, default='F', help_text='Method used for catch')
     catch_time = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        ordering = ['trip', '-weight', 'fish']
+        ordering = ['trip', '-catch_time', '-weight', 'fish']
     
     def __str__(self):
         """String for representing the Model object."""

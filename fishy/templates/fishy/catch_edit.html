@@ -76,9 +76,17 @@
                     {% if catch.method == 'F' %}
                         <option value="F" selected>Float</option>
                         <option value="L">Ledger</option>
-                    {% else %}
+                        <option value="M">Method Feeder</option>
+                    {% endif %}
+                    {% if catch.method == 'L' %}
                         <option value="F">Float</option>
                         <option value="L" selected>Ledger</option>
+                        <option value="M">Method Feeder</option>
+                    {% endif %}
+                    {% if catch.method == 'M' %}
+                        <option value="F">Float</option>
+                        <option value="L">Ledger</option>
+                        <option value="M" selected>Method Feeder</option>
                     {% endif %}
                     </select>
                 </td>
