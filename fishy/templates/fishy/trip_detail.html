@@ -45,13 +45,29 @@
               <td class="recent"> {{ catch_instance.fish }} </td>
               <td class="recent r"> {{ catch_instance.weight }} </td>
               <td class="recent"> {{ catch_instance.bait }} </td>
-              <td class="recent c"> {{ catch_instance.method }} </td>
+              <td class="recent c"> 
+                  {% if catch_instance.method == 'F' %}
+                      Float
+                  {% elif catch_instance.method == 'L' %}
+                      Ledger
+                  {% else %}
+                      Method Feeder
+                  {% endif %}
+              </td>
               <td class="recent c"> {{ catch_instance.catch_time|date:'H:i' }} </td>
           {% else %}
               <td> {{ catch_instance.fish }} </td>
               <td class="r"> {{ catch_instance.weight }} </td>
               <td> {{ catch_instance.bait }} </td>
-              <td class="c"> {{ catch_instance.method }} </td>
+              <td class="c"> 
+                  {% if catch_instance.method == 'F' %}
+                      Float
+                  {% elif catch_instance.method == 'L' %}
+                      Ledger
+                  {% else %}
+                      Method Feeder
+                  {% endif %}
+              </td>
               <td class="c"> {{ catch_instance.catch_time|date:'H:i' }} </td>
           {% endif %}
        </tr>

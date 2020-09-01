@@ -5,21 +5,30 @@
   {% if catch_list %}
   <table class="fishy-table">
      <tr>
-         <th>Catch Id</th>
          <th>Date</th>
          <th>Venue</th>
          <th>Fish</th>
          <th>Weight (oz)</th>
          <th>Weighed</th>
+         <th>Method</th>
      </tr>
     {% for catch in catch_list %}
      <tr>
-         <td><a href="{{ catch.get_absolute_url }}">{{ catch.id }}</a></td>
-         <td>{{catch.trip.date|date:'Y-m-d'}}</td>
+         <td><a href="{{ catch.get_absolute_url }}">{{catch.trip.date|date:'Y-m-d'}}</a></td>
          <td>{{catch.trip.venue}}</td>
          <td>{{catch.fish.name}}</td>
          <td class="c">{{catch.weight}}</td>
          <td class="c">{{catch.weighed}}</td>
+         <td>
+             {% if catch.method == 'F' %}
+                 Float
+             {% elif catch.method == 'L' %}
+                 Ledger
+             {% else %}
+                 Method Feeder
+             {% endif %}
+         </td>
+
       </tr>
     {% endfor %}
   </table>

@@ -26,7 +26,15 @@
       </TR>
       <TR>
           <TH>Method:</TH>
-          <TD> {{ catch.method }} </TD>
+          <TD> 
+              {% if catch.method == 'F' %}
+                  Float
+              {% elif catch.method == 'L' %}
+                  Ledger
+              {% else %}
+                  Method Feeder
+              {% endif %}
+          </TD>
       </TR>
       <TR>
           <TH>Catch Time:</TH>
