@@ -4,6 +4,10 @@ body {
     background-color: #FFFDD0;
 }
 
+td.new {
+    background-color: lightgreen;
+}
+
 td.recent {
     background-color: lightblue;
 }
