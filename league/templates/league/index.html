@@ -10,9 +10,33 @@
   </ul>
 
   <p>
-The predictor computes a final table for each league based on games played in the current season <BR>
+The predictor computes a final table for each league based on the games played in the current season<BR>
 replacing the games that haven't yet been played this season with last season's results. This gives <BR>
 an indication of the improvement/deteriation of each teams current form compared to last season. The<BR>
- league then displays how this improvement/deteriation will play out for each team over the season.<BR>
+ league then displays how this improvement/deteriation will play out for each team over the season. <BR>
   </p>
+  <p>
+Due to promotion and relegation, teams new to a particular league have to take over last season's   <BR>
+record of a team that is no longer in the league. The following table shows these substitutions for <BR>
+the 2020/2021 season:
+  </p>
+
+<table class="league-table">
+  <tr>
+     <th colspan="2">Premier League</th>
+     <th colspan="2">Championship</th>
+  </tr>
+  <tr>
+     <th>2021 Team</th>
+     <th>2020 Team</th>
+     <th>2021 Team</th>
+     <th>2020 Team</th>
+  </tr> 
+  <tr><td>Leeds</td><td>Bournmouth</td><td>Bournmouth</td><td>Leeds</td></tr>
+  <tr><td>West Brom</td><td>Watford</td><td>Watford</td><td>West Brom</td></tr>
+  <tr><td>Fulham</td><td>Norwich</td><td>Norwich</td><td>Fulham</td></tr>
+  <tr><td></td><td></td><td>Rotherham</td><td>Wigan</td></tr>
+  <tr><td></td><td></td><td>Wycombe</td><td>Charlton</td></tr>
+  <tr><td></td><td></td><td>Coventry</td><td>Hull</td></tr>
+</table>
 {% endblock %}
