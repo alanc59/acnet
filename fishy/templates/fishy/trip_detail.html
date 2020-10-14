@@ -56,7 +56,7 @@
               </td>
               <td class="recent c"> {{ catch_instance.catch_time|date:'H:i' }} </td>
           {% else %}
-              <td> {{ catch_instance.fish }} </td>
+              <td><a href="/fishy/catch/{{catch_instance.id}}"> {{ catch_instance.fish }} </a></td>
               <td class="r"> {{ catch_instance.weight }} </td>
               <td> {{ catch_instance.bait }} </td>
               <td class="c"> 

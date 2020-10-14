@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'fishy',
     'backup',
     'league',
+    'home',
 ]
 
 MIDDLEWARE = [

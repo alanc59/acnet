@@ -27,7 +27,8 @@ urlpatterns += [
     path('fishy/', include('fishy.urls')),
     path('backup/', include('backup.urls')),
     path('league/', include('league.urls')),
-    path('', include('fishy.urls')),
+    path('home/', include('home.urls')),
+    path('', include('home.urls')),
 ]
 #Add URL maps to redirect the base URL to our application 
 from django.views.generic import RedirectView
