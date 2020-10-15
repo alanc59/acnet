@@ -77,13 +77,14 @@ class Catch(models.Model):
     METHOD = (('F', 'Float'), ('L', 'Ledger'), ('M', 'Method Feeder'))
     method = models.CharField(max_length=1, choices=METHOD, default='F', help_text='Method used for catch')
     catch_time = models.DateTimeField(auto_now_add=True)
-    
+    photo =  models.CharField(max_length=1, choices=YES_OR_NO, default='N')    
+
     class Meta:
         ordering = ['trip', '-catch_time', '-weight', 'fish']
     
     def __str__(self):
         """String for representing the Model object."""
-        return f'{self.trip}, {self.fish}, Weight (oz)={self.weight}, Weighed={self.weighed}, {self.bait}, {self.catch_time}'
+        return f'{self.trip}, {self.fish}, Weight (oz)={self.weight}, Weighed={self.weighed}, {self.bait}, {self.catch_time}, {self.photo}'
 
     def get_absolute_url(self):
         """Returns the url to access a detail record for this catch."""

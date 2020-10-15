@@ -11,6 +11,7 @@
          <th>Weight (oz)</th>
          <th>Weighed</th>
          <th>Method</th>
+         <th>Photo</th>
      </tr>
     {% for catch in catch_list %}
      <tr>
@@ -28,7 +29,11 @@
                  Method Feeder
              {% endif %}
          </td>
-
+         {% if catch.photo == 'N' %}
+             <td class="c">None</td>
+         {% elif catch.photo == 'Y' %}
+             <td class="c"><a href="{{ catch.get_absolute_url }}">View</a></td>
+         {% endif %}
       </tr>
     {% endfor %}
   </table>

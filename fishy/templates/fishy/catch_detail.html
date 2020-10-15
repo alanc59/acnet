@@ -40,6 +40,11 @@
           <TH>Catch Time:</TH>
           <TD> {{ catch.catch_time|date:'Y-m-d H:i' }} </TD>
       </TR>
+      {% if catch.photo == 'Y' %}
+          <TR>
+              <TD colspan="2"><img src="/static/images/fish/{{catch.id}}.jpg" width="600" height="400"></TD>
+          </TR>
+      {% endif %}
       {% if user.is_authenticated %}
           <TR>
               <TD><a href="{% url 'catch_edit' catch.pk %}">Edit Catch</a></TD>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  {% block title %}<title>ACNet Fishy Website</title>{% endblock %}
+  {% block title %}<title>ACNet Fishing App</title>{% endblock %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -23,7 +23,7 @@
           <a href="{% url 'baits' %}">All Baits</a>
           <a href="/static/fishy_stats/index.html">Statistics</a>
           {% if user.is_authenticated %}
-              <h4>Fishy Update</h4>
+              <h4>Fishing Update</h4>
               <a href="{% url 'venue_new' %}">New Venue</a>
               <a href="{% url 'trip_new' %}">New Trip</a>
               <a href="{% url 'catch_new' %}">New Catch</a>
