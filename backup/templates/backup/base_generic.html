@@ -14,7 +14,6 @@
       {% block sidebar %}
           <a href="/home"><h4>Home</h4></a>
           <a href="/fishy"><h4>Fishing</h4></a>
-          <a href="{% url 'index' %}"><h4>Fishing</h4></a>
           {% if user.is_authenticated %}
               <a href="/backup"><h4>Backup</h4></a>
               <a href="/backup/backups">All Backups</a>
