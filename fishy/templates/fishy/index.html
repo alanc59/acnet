@@ -1,14 +1,23 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Fishing Database Home</h1>
-  <p>Welcome to ACNet Fishy Database</p>
+  <h1>ACNet Fishing App Home</h1>
+  <p>Welcome to the ACNet Fishing App</p>
   <p>The Fishing Database has the following record counts:</p>
-  <ul>
-    <li><strong>Venues:</strong> {{ num_venues }}</li>
-    <li><strong>Trips:</strong> {{ num_trips }}</li>
-    <li><strong>Catches:</strong> {{ num_catches }}</li>
-  </ul>
-
-  <p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time{% else %} times{% endif %}.</p>
+  <table>
+     <tr>
+         <th><strong>Venues</strong></td>
+         <th><strong>Trips</strong></td>
+         <th><strong>Catches</strong></td>
+     </tr>
+     <tr>
+         <td class="c">{{ num_venues }}</td>
+         <td class="c">{{ num_trips }}</td>
+         <td class="c">{{ num_catches }}</td>
+     </tr>
+     <tr>
+         <td><img src="/static/images/fish/1307.jpg" width="200" height="112">
+         <td><img src="/static/images/fish/1307.jpg" width="200" height="112">
+         <td><img src="/static/images/fish/1307.jpg" width="200" height="112">
+  </table>
 {% endblock %}
