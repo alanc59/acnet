@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import generic
-from league.models import League, Pl, Ch
+from league.models import League, Pl, Ch, Td
 
 def index(request):
     """View function for home page of site."""
@@ -15,3 +15,6 @@ class PLListView(generic.ListView):
 
 class CHListView(generic.ListView):
     model = Ch
+
+class TDListView(generic.ListView):
+    model = Td

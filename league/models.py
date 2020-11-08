@@ -8,3 +8,6 @@ class Pl(models.Model):
 
 class Ch(models.Model):
     temp = ""
+
+class Td(models.Model):
+    temp = ""
