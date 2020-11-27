@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fishy',
-    'backup',
     'league',
     'home',
+    'backup',
 ]
 
 MIDDLEWARE = [
@@ -85,7 +85,7 @@ DATABASES = {
         'NAME': 'acnet',
         'USER': 'acnet_user',
         'PASSWORD': 'w1nt3r',
-        'HOST': '192.168.1.190',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }

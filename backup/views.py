@@ -39,14 +39,13 @@ class BackupListView(generic.ListView):
     pi193_records = []
     idx = 0
     for date_o in dates_list:
-        row_qs = Backup.objects.filter(pi='PI190', date=date_o)
+        row_qs = Backup.objects.filter(pi='PI190', date=date_o) 
         rows_returned = len(row_qs)
         for row in row_qs:
             pi190_records.append({'pi' : row.pi ,'date' : row.date.strftime('%d-%m-%Y'), 'result' : row.result})
         if rows_returned == 0:
             pi190_records.append({'pi' : 'PI190', 'date' : date_o.strftime('%d-%m-%Y'), 'result' : 'F'})
             
-        row_qs = Backup.objects.filter(pi='PI191', date=date_o)
         rows_returned = len(row_qs)
         for row in row_qs:
             pi191_records.append({'pi' : row.pi ,'date' : row.date.strftime('%d-%m-%Y'), 'result' : row.result})
