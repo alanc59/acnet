@@ -26,7 +26,6 @@ from django.urls import include
 urlpatterns += [
     path('fishy/', include('fishy.urls')),
     path('backup/', include('backup.urls')),
-    path('league/', include('league.urls')),
     path('home/', include('home.urls')),
     path('', include('home.urls')),
 ]

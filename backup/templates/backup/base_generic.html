@@ -17,10 +17,6 @@
           {% if user.is_authenticated %}
               <a href="/backup"><h4>Backup</h4></a>
               <a href="/backup/backups">All Backups</a>
-          {% endif %} 
-           
-          <a href="/league"><h4>Football Predictor</h4></a>
-          {% if user.is_authenticated %}
               <div class="user">User: {{ user.get_username }} </div>
               <a href="{% url 'logout'%}?next={{request.path}}">Logout</a>
           {% else %}

@@ -34,9 +34,6 @@
               <a href="{% url 'fish_new' %}">New Fish</a>
               <a href="{% url 'bait_new' %}">New Bait</a>
               <a href="/backup"><h4>Backup</h4></a>
-          {% endif %} 
-          <a href="/league"><h4>Football Predictor</h4></a>
-          {% if user.is_authenticated %}
               <div class="user">User: {{ user.get_username }} </div>
               <a href="{% url 'logout'%}?next={{request.path}}">Logout</a>
           {% else %}
