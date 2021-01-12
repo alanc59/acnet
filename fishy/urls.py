@@ -14,6 +14,7 @@ urlpatterns = [
     path('catches/', views.CatchListView.as_view(), name='catches'),
     path('fish/<int:pk>', views.FishDetailView.as_view(), name='fish-detail'),
     path('fish/new/', views.FishCreateView.as_view(), name='fish_new'),
+    path('fish/<int:pk>/edit/', views.FishUpdateView.as_view(), name='fish_edit'),
     path('fish/<int:pk>/delete/', views.FishDeleteView.as_view(), name='fish_delete'),
     path('fishes/', views.FishListView.as_view(), name='fishes'),
     path('trip/<int:pk>/edit/', views.TripUpdateView.as_view(), name='trip_edit'),

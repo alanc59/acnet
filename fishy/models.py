@@ -3,6 +3,8 @@ from django.urls import reverse
 
 class Fish(models.Model):
     name = models.CharField(max_length=20)
+    latin_name = models.CharField(max_length=35, null=True)
+    uk_record = models.IntegerField(help_text='Weight in ounces')
     
     class Meta:
         ordering = ['name']

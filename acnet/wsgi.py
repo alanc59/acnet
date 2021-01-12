@@ -13,8 +13,8 @@ import sys
 
 #site.addsitedir('/usr/lib/python3/dist-packages')
 
-sys.path.append("/home/pi/src/python/acnet")
-sys.path.append("/home/pi/src/python")
+sys.path.append("/home/alanc/src/python/acnet")
+sys.path.append("/home/alanc/src/python")
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'acnet.settings')
 
