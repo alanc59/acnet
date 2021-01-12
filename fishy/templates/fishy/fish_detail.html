@@ -8,10 +8,22 @@
         <TH>Name:</TH>
         <TD> {{ fish.name }} </TD>
      </TR>
+     <TR>
+        <TH>Latin Name:</TH>
+        <TD> {{ fish.latin_name }} </TD>
+     </TR>
+     <TR>
+        <TH>UK Record:</TH>
+        <TD> {{ uk_record }} </TD>
+     </TR>
+     <TR>
+        <TD colspan="2"><img src="/static/images/fish/{{ fish.name }}.jpeg" alt="picture of {{ fish.name }}"></TD>
+     </TR>
+    
      {% if user.is_authenticated %}
          <TR>
+             <TD><a href="{% url 'fish_edit' fish.pk %}">Edit Fish</a></TD>
              <TD><a href="{% url 'fish_delete' fish.pk %}">Delete Fish</a></TD>
-             <TD></TD>
          </TR>
      {% endif %}
   </TABLE>

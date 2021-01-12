@@ -185,20 +185,41 @@ class CatchDeleteView(DeleteView):
 
 class FishListView(generic.ListView):
     model = Fish
-    paginate_by = 8
+    fishes = Fish.objects.all().order_by('name')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(FishListView, self).get_context_data(*args, **kwargs)
+        # add extra field
+        for fish in self.fishes:
+            fish.uk_record = toPoundsAndOunces(fish.uk_record)
+        context["fishes"] = self.fishes
+        return context
+
 
 class FishDetailView(generic.DetailView):
     model = Fish
 
+    def get_context_data(self, *args, **kwargs): 
+        context = super(FishDetailView, self).get_context_data(*args, **kwargs) 
+        my_object = self.get_object()
+        # add extra field  
+        context["uk_record"] = toPoundsAndOunces(my_object.uk_record)
+        return context 
+
 class FishCreateView(CreateView):
     model = Fish
     template_name = 'fishy/fish_new.html'
-    fields = ['name']
+    fields = ['name', 'latin_name', 'uk_record']
 
 class FishDeleteView(DeleteView):
     model = Fish
     template_name = 'fishy/fish_delete.html'
     success_url = reverse_lazy('fishes')
+
+class FishUpdateView(UpdateView):
+    model = Fish
+    template_name = 'fishy/fish_edit.html'
+    fields =['name', 'latin_name', 'uk_record']
 
 #######
 #
