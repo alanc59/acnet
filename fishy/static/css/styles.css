@@ -122,13 +122,13 @@ td.l, th.l {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 15px;
-  color: #818181;
+  color: #f1f1f1;
   display: block;
 }
 
 /* When you mouse over the navigation links, change their color */
 .sidebar-nav a:hover {
-  color: #f1f1f1;
+  color: #818181;
 }
 
 .sidebar-nav h4 {
