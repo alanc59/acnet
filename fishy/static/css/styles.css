@@ -155,3 +155,34 @@ td.l, th.l {
   .sidenav_stats {padding-top: 15px;}
   .sidenav_stats a {font-size: 18px;}
 } 
+
+
+.filter {
+    border: 100px;
+    padding: 50px;
+    border-collapse: collapse;
+    background-color: lightgrey
+}
+
+.filter button {
+    color: lightblue;
+    background-color: darkgrey; 
+}
+
+.catch-table {
+    width: 800px;
+}
+
+.catch-table tr:nth-child(odd) {
+    background-color: #FFFFAA; 
+}
+
+.catch-table td {
+    padding: 15px; 
+}
+
+.catch-table th {
+    padding: 15px; 
+    font-weight: bold;
+    font-style: italic;
+}

@@ -137,7 +137,70 @@ class VenueDeleteView(DeleteView):
 
 class CatchListView(generic.ListView):
     model = Catch
-    paginate_by = 8
+    photo = ''
+    method = ''
+    fish = ''
+    fish_key = 0
+    paginate_by = 10
+    fishes = Fish.objects.all().order_by('name')
+    venues = Venue.objects.all().order_by('name')
+  
+    def get_queryset(self, **kwargs):
+        self.photo = self.request.GET.get('photo', None)
+        self.method = self.request.GET.get('method', None)
+        self.fish = self.request.GET.get('fish', None)
+        
+        if self.photo == None and self.method == None and self.fish == None:
+            self.photo = 'A'
+            self.method = 'A'
+            self.fish = 'A'
+
+        if self.fish == 'A': 
+            self.fish_int = 99
+
+        if self.photo == 'A' and self.method == 'A' and self.fish == 'A':
+            return Catch.objects.all()
+
+        filter_fish = False
+        filter_method = False
+        filter_photo = False
+
+        if self.fish != 'A':
+            filter_fish = True
+            self.fish_key = int(self.fish) 
+        if self.method != 'A':
+            filter_method = True
+        if self.photo != 'A':
+            filter_photo = True
+ 
+        if filter_fish:
+            if filter_method:
+                if filter_photo:
+                    return Catch.objects.filter(fish_id=self.fish, method=self.method,  photo=self.photo)
+                else:
+                    return Catch.objects.filter(fish_id=self.fish, method=self.method)
+            else:
+                if filter_photo:
+                    return Catch.objects.filter(fish_id=self.fish, photo=self.photo)
+                else:
+                    return Catch.objects.filter(fish_id=self.fish)
+        else:
+            if filter_method:
+                if filter_photo:
+                    return Catch.objects.filter(method=self.method,  photo=self.photo) 
+                else:
+                    return Catch.objects.filter(method=self.method)
+            else:
+                return Catch.objects.filter(photo=self.photo)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['photo'] = self.photo
+        context['method'] = self.method
+        context['fishes'] = self.fishes
+        context['fish_key'] = self.fish_key
+        context['venues'] = self.venues
+        return context
 
 class CatchDetailView(generic.DetailView):
     model = Catch
