@@ -1,14 +1,32 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<h1>Delete Bait</h1>
-<form action="" method="post">{% csrf_token %}
-<table class="fishy-table">
-    <tr><td>ID</td><td>{{bait.id}}</td></tr>
-    <tr><td>Name</td><td>{{bait.name}}</td></tr>
+<div class="container bg-info p-3">
+   <h1>Delete Bait</h1>
+   <div class="row">
+      <div class="col"> </div>
+      <div class="col">
+         <form action="" method="post">{% csrf_token %}
+            <table class="table">
+               <tr>
+                  <td>ID</td>
+                  <td>{{bait.id}}</td></tr>
+               <tr>
+                  <td>Name</td>
+                  <td>{{bait.name}}</td>
+               </tr>
     {% if user.is_authenticated %}
-        <tr><td></td><td class="r"><button type="submit" value="Confirm">Confirm</button></td></tr>
+               <tr>
+                  <td></td>
+                  <td class="r">
+                     <button type="submit" class="btn btn-danger" value="Confirm">Confirm</button>
+                  </td>
+               </tr>
     {% endif %}     
-</table>
-</form>
+            </table>
+         </form>
+      </div>
+      <div class="col"> </div>
+   </div>
+</div>
 {% endblock content %}

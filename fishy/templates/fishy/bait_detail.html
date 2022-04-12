@@ -1,18 +1,26 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Bait: {{ bait.name }}</h1>
-  <BR><BR>
-  <TABLE class="fishy-table">
-     <TR>
-        <TH>Name:</TH>
-        <TD> {{ bait.name }} </TD>
-     </TR>
-     {% if user.is_authenticated %}
-         <TR>
-             <TD><a href="{% url 'bait_delete' bait.pk %}">Delete Bait</a></TD>
-             <TD></TD>
-         </TR>
-     {% endif %}
-  </TABLE>
+<div class="container bg-info p-3">
+   <div class="row">
+      <div class="col"> </div>
+      <div class="col">
+         <h1>Bait: {{ bait.name }}</h1>
+         <TABLE class="table">
+            <TR>
+               <TH>Name:</TH>
+               <TD> {{ bait.name }} </TD>
+            </TR>
+         </TABLE>
+      </div>
+      <div class="col"> </div>
+   </div>
+   {% if user.is_authenticated %}
+      <div class="row">
+         <div class="text-center">
+            <a class="btn btn-sm btn-danger" href="{% url 'bait_delete' bait.pk %}" role="button">Delete Bait</a>
+         </div>
+      </div>
+   {% endif %}
+</div>
 {% endblock %}

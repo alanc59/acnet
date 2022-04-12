@@ -42,11 +42,9 @@ def index(request):
 
 class TripListView(generic.ListView):
     model = Trip
-    paginate_by = 8
 
 class TripDetailView(generic.DetailView):
     model = Trip
-    paginate_by = 8
 
     def get_context_data(self, **kwargs):
         context = super(TripDetailView, self).get_context_data(**kwargs)
@@ -109,7 +107,6 @@ class TripDeleteView(DeleteView):
 
 class VenueListView(generic.ListView):
     model = Venue
-    paginate_by = 8
 
 class VenueDetailView(generic.DetailView):
     model = Venue
@@ -141,10 +138,9 @@ class CatchListView(generic.ListView):
     method = ''
     fish = ''
     fish_key = 0
-    paginate_by = 10
     fishes = Fish.objects.all().order_by('name')
     venues = Venue.objects.all().order_by('name')
-  
+
     def get_queryset(self, **kwargs):
         self.photo = self.request.GET.get('photo', None)
         self.method = self.request.GET.get('method', None)
@@ -292,7 +288,6 @@ class FishUpdateView(UpdateView):
 
 class BaitListView(generic.ListView):
     model = Bait
-    paginate_by = 8
 
 class BaitDetailView(generic.DetailView):
     model = Bait

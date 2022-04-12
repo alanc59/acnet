@@ -1,127 +1,131 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Catch List</h1>
-
-
-<table>
-    <tr>
-        <td>
-            <table class="catch-table">
-                <tr>
-                    <th>Date</th>
-                    <th>Venue</th>
-                    <th>Fish</th>
-                    <th>Weight (oz)</th>
-                    <th>Weighed</th>
-                    <th>Method</th>
-                    <th>Photo</th>
-                </tr>
-                {% for catch in catch_list %}
-                <tr>
-                    <td><a href="{{ catch.get_absolute_url }}">{{catch.trip.date|date:'Y-m-d'}}</a></td>
-                    <td>{{catch.trip.venue}}</td>
-                    <td>{{catch.fish.name}}</td>
-                    <td class="c">{{catch.weight}}</td>
-                    <td class="c">{{catch.weighed}}</td>
-                    <td>
-                        {% if catch.method == 'F' %}
-                            Float
-                        {% elif catch.method == 'L' %}
-                            Ledger
-                        {% else %}
-                            Method Feeder
-                        {% endif %}
-                    </td>
-                    {% if catch.photo == 'N' %}
-                        <td class="c">None</td>
-                    {% elif catch.photo == 'Y' %}
-                        <td class="c"><a href="{{ catch.get_absolute_url }}">View</a></td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </table>
-        </td>
-        <td>
-            <form method="GET" action="/fishy/catches">
-            <table class="filter">
-                <tr>
-                    <td class="c" colspan="2">Filter</td>
-                </tr>
-                <tr>
-                    <td><label>Fish:</label></td>
-                    <td> 
-                         <select id="fish" name="fish">
-                            {% if fish_key == 99 %}
-                                <option value="A" SELECTED>All</option>
-                            {% else %}
-                                <option value="A">All</option>
-                            {% endif %}
-                            {% for fish_inst in fishes %}
-                                {% if fish_inst.id == fish_key %}
-                                    <option value="{{ fish_inst.id }}" SELECTED>{{ fish_inst.name }}</option> 
-                                {% else %}
-                                    <option value="{{ fish_inst.id }}">{{ fish_inst.name }}</option> 
+<div class="container bg-info p-4">
+    <H1>Catch List</H1>
+    <div class="container">
+        <div class="row p-4 text-center">
+            <div class="col-9 p-4">
+                <TABLE class="table">
+                    <t-head>
+                        <tr>
+                            <th>Date</th>
+                            <th>Venue</th>
+                            <th>Fish</th>
+                            <th>Weight (oz)</th>
+                            <th>Weighed</th>
+                            <th>Method</th>
+                            <th>Photo</th>
+                        </tr>
+                    </t-head>
+                    <t-body>
+                        {% for catch in catch_list %}
+                            <tr>
+                                <td><a href="{{ catch.get_absolute_url }}">{{catch.trip.date|date:'Y-m-d'}}</a></td>
+                                <td>{{catch.trip.venue}}</td>
+                                <td>{{catch.fish.name}}</td>
+                                <td class="c">{{catch.weight}}</td>
+                                <td class="c">{{catch.weighed}}</td>
+                                <td>
+                                    {% if catch.method == 'F' %}
+                                        Float
+                                    {% elif catch.method == 'L' %}
+                                        Ledger
+                                    {% else %}
+                                        Method Feeder
+                                    {% endif %}
+                                </td>
+                                {% if catch.photo == 'N' %}
+                                    <td class="c">None</td>
+                                {% elif catch.photo == 'Y' %}
+                                    <td class="c"><a href="{{ catch.get_absolute_url }}">View</a></td>
                                 {% endif %}
-                            {% endfor %} 
-                         </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label>Method:</label></td>
-                    <td>
-                        <select id="method" name="method">
-                            {% if method == 'A' %}
-                                <option value="A" SELECTED>All</option>
-                            {% else %}
-                                <option value="A">All</option>
-                            {% endif %}
-                            {% if method == 'F' %}
-                                <option value="F" SELECTED>Float</option>
-                            {% else %}
-                                <option value="F">Float</option>
-                            {% endif %}
-                            {% if method == 'L' %}
-                                <option value="L" SELECTED>Ledger</option>
-                            {% else %}
-                                <option value="L">Ledger</option>
-                            {% endif %}
-                            {% if method == 'M' %}
-                                <option value="M" SELECTED>Method Feeder</option>
-                            {% else %}
-                                <option value="M">Method Feeder</option>
-                            {% endif %}
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label>Photo:</label></td>
-                    <td>
-                        <select id="photo" name="photo">
-                            {% if photo == 'A' %}
-                                <option value="A" SELECTED>All</option>
-                            {% else %}
-                                <option value="A">All</option>
-                            {% endif %}
-                            {% if photo == 'Y' %}
-                                <option value="Y" SELECTED>View</option>
-                            {% else %}
-                                <option value="Y">View</option>
-                            {% endif %}
-                            {% if photo == 'N' %}
-                                <option value="N" SELECTED>None</option>
-                            {% else %}
-                                <option value="N">None</option>
-                            {% endif %}
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td></td><td><button>Search</button></td>
-                </tr>
-             </table>
-             </form>
-        </td>
-    </tr>
-</table>
+                            </tr>
+                            {% endfor %}
+                    </t-body>
+                </TABLE>
+            </div>
+            <div class="col-2 p-4 align-items-start">
+                <form method="GET" action="/fishy/catches">
+                    <table class="table">
+                        <tr>
+                            <td class="c" colspan="2">Filter</td>
+                        </tr>
+                        <tr style="text-align:left">
+                            <td><label>Fish:</label></td>
+                            <td> 
+                                 <select id="fish" name="fish" style="background-color: yellow">
+                                        {% if fish_key == 99 %}
+                                            <option value="A" SELECTED>All</option>
+                                        {% else %}
+                                            <option value="A">All</option>
+                                        {% endif %}
+                                        {% for fish_inst in fishes %}
+                                            {% if fish_inst.id == fish_key %}
+                                                <option value="{{ fish_inst.id }}" SELECTED>{{ fish_inst.name }}</option> 
+                                            {% else %}
+                                                <option value="{{ fish_inst.id }}">{{ fish_inst.name }}</option> 
+                                            {% endif %}
+                                        {% endfor %} 
+                                 </select>
+                            </td>
+                        </tr>
+                        <tr style="text-align:left">
+                            <td><label>Method:</label></td>
+                            <td>
+                                <select id="method" name="method" style="background-color: yellow">
+                                        {% if method == 'A' %}
+                                            <option value="A" SELECTED>All</option>
+                                        {% else %}
+                                            <option value="A">All</option>
+                                        {% endif %}
+                                        {% if method == 'F' %}
+                                            <option value="F" SELECTED>Float</option>
+                                        {% else %}
+                                            <option value="F">Float</option>
+                                        {% endif %}
+                                        {% if method == 'L' %}
+                                            <option value="L" SELECTED>Ledger</option>
+                                        {% else %}
+                                            <option value="L">Ledger</option>
+                                        {% endif %}
+                                        {% if method == 'M' %}
+                                            <option value="M" SELECTED>Method Feeder</option>
+                                        {% else %}
+                                            <option value="M">Method Feeder</option>
+                                        {% endif %}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr style="text-align:left">
+                            <td><label>Photo:</label></td>
+                            <td>
+                                <select id="photo" name="photo" style="background-color: yellow">
+                                        {% if photo == 'A' %}
+                                            <option value="A" SELECTED>All</option>
+                                        {% else %}
+                                            <option value="A">All</option>
+                                        {% endif %}
+                                        {% if photo == 'Y' %}
+                                            <option value="Y" SELECTED>View</option>
+                                        {% else %}
+                                            <option value="Y">View</option>
+                                        {% endif %}
+                                        {% if photo == 'N' %}
+                                            <option value="N" SELECTED>None</option>
+                                        {% else %}
+                                            <option value="N">None</option>
+                                        {% endif %}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="c" colspan="2"><Button style="background-color: green; color: white">Search</Button></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

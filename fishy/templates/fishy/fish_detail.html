@@ -1,30 +1,41 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Fish: {{ fish.name }}</h1>
-  <BR><BR>
-  <TABLE class="fishy-table">
-     <TR>
-        <TH>Name:</TH>
-        <TD> {{ fish.name }} </TD>
-     </TR>
-     <TR>
-        <TH>Latin Name:</TH>
-        <TD> {{ fish.latin_name }} </TD>
-     </TR>
-     <TR>
-        <TH>UK Record:</TH>
-        <TD> {{ uk_record }} </TD>
-     </TR>
-     <TR>
-        <TD colspan="2"><img src="/static/images/fish/{{ fish.name }}.jpeg" alt="picture of {{ fish.name }}"></TD>
-     </TR>
-    
-     {% if user.is_authenticated %}
-         <TR>
-             <TD><a href="{% url 'fish_edit' fish.pk %}">Edit Fish</a></TD>
-             <TD><a href="{% url 'fish_delete' fish.pk %}">Delete Fish</a></TD>
-         </TR>
-     {% endif %}
-  </TABLE>
+
+<div class="container bg-info p-3">
+   <h1>Fish: {{ fish.name }}</h1>
+   <div class="row">
+      <div class="col"> </div>
+      <div class="col">
+         <table class="table">
+            <tr>
+               <th>Name:</th>
+               <td> {{ fish.name }} </td>
+            </tr>
+            <tr>
+               <th>Latin Name:</th>
+               <td> {{ fish.latin_name }} </td>
+            </tr>
+            <tr>
+               <th>UK Record:</th>
+               <td> {{ uk_record }} </td>
+            </tr>
+         </table>
+      </div>
+      <div class="col"> </div>
+   </div>
+   <div class="row p-3">
+      <div class="text-center">
+         <img src="/static/images/fish/{{ fish.name }}.jpeg" alt="picture of {{ fish.name }}">
+      </div>   
+   </div>
+   {% if user.is_authenticated %}
+      <div class="row">
+         <div class="text-center">
+            <a class="btn btn-sm btn-warning" href="{% url 'fish_edit' fish.pk %}" role="button">Edit Fish</a>
+            <a class="btn btn-sm btn-danger" href="{% url 'fish_delete' fish.pk %}" role="button">Delete Fish</a>
+         </div>
+      </div>
+   {% endif %}
+</div>
 {% endblock %}

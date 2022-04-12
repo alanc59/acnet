@@ -1,55 +1,67 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Title: {{ catch.trip }}</h1>
-  <BR><BR>
-  <TABLE class ="fishy-table">
-      <TR>
-          <TH>Trip:</TH>
-          <TD><a href="/fishy/trip/{{catch.trip.id}}">{{ catch.trip }}</a></TD>
-      </TR>
-      <TR>
-          <TH>Fish:</TH>
-          <TD> {{ catch.fish }} </TD>
-      </TR>
-      <TR>
-          <TH>Weight (oz) :</TH>
-          <TD> {{ catch.weight }} </TD>
-      </TR>
-      <TR>
-          <TH>Weighed:</TH>
-          <TD> {{ catch.weighed }} </TD>
-      </TR>
-      <TR>
-          <TH>Bait:</TH>
-          <TD> {{catch.bait }}</TD>
-      </TR>
-      <TR>
-          <TH>Method:</TH>
-          <TD> 
-              {% if catch.method == 'F' %}
-                  Float
-              {% elif catch.method == 'L' %}
-                  Ledger
-              {% else %}
-                  Method Feeder
-              {% endif %}
-          </TD>
-      </TR>
-      <TR>
-          <TH>Catch Time:</TH>
-          <TD> {{ catch.catch_time|date:'Y-m-d H:i' }} </TD>
-      </TR>
-      {% if catch.photo == 'Y' %}
-          <TR>
-              <TD colspan="2"><img src="/static/images/fish/{{catch.id}}.jpg" width="800" height="450"></TD>
-          </TR>
-      {% endif %}
-      {% if user.is_authenticated %}
-          <TR>
-              <TD><a href="{% url 'catch_edit' catch.pk %}">Edit Catch</a></TD>
-              <TD><a href="{% url 'catch_delete' catch.pk %}">Delete Catch</a></TD>
-          </TR>
-      {% endif %}
-  </TABLE>
+<div class="container bg-info p-4">
+   <div class="row">
+      <div class="col"> </div>
+      <div class="col">
+         <H1>Catch Information</H1>
+         <table class="table">
+            <TR>
+               <TH>Trip:</TH>
+               <TD><a href="/fishy/trip/{{catch.trip.id}}">{{ catch.trip }}</a></TD>
+            </TR>
+            <TR>
+               <TH>Fish:</TH>
+               <TD> {{ catch.fish }} </TD>
+            </TR>
+            <TR>
+               <TH>Weight (oz) :</TH>
+               <TD> {{ catch.weight }} </TD>
+            </TR>
+            <TR>
+               <TH>Weighed:</TH>
+               <TD> {{ catch.weighed }} </TD>
+            </TR>
+            <TR>
+               <TH>Bait:</TH>
+               <TD> {{catch.bait }}</TD>
+            </TR>
+            <TR>
+               <TH>Method:</TH>
+               <TD> 
+                  {% if catch.method == 'F' %}
+                     Float
+                  {% elif catch.method == 'L' %}
+                     Ledger
+                  {% else %}
+                     Method Feeder
+                  {% endif %}
+               </TD>
+            </TR>
+            <TR>
+               <TH>Catch Time:</TH>
+               <TD> {{ catch.catch_time|date:'Y-m-d H:i' }} </TD>
+            </TR>
+            {% if catch.photo == 'Y' %}
+               <TR>
+                  <TD colspan="2"><img src="/static/images/fish/{{catch.id}}.jpg" width="800" height="450"></TD>
+               </TR>
+            {% endif %}
+         </table>
+      </div>
+      <div class="col"> </div>
+   </div>
+   {% if user.is_authenticated %}
+      <div class="row">
+         <div class="col">
+            <div class="text-center">
+               <a class="btn btn-sm btn-warning" href="{% url 'catch_edit' catch.pk %}" role="button">Edit Catch</a>
+               <a class="btn btn-sm btn-danger" href="{% url 'catch_delete' catch.pk %}" role="button">Delete Catch</a>
+            </div> 
+         </div>
+      </div>
+   {% endif %}
+</div>
+
 {% endblock %}

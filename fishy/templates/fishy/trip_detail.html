@@ -1,95 +1,96 @@
 {% extends "base_generic_refresh.html" %}
 
 {% block content %}
-  <h1>Trip: {{ trip.venue }}</h1>
-  <h1>Date: {{ trip.date|date:'Y-m-d' }}
-  {% if live_trip %}
- - Live Trip</h1>
-      <h4><strong>Page last refreshed:</strong> <span id="datetime"> </h4>
-      <script>
-         var dt = new Date();
-         document.getElementById("datetime").innerHTML = (("0"+dt.getHours()).slice(-2)) +":"+ (("0"+dt.getMinutes()).slice(-2));
-      </script>
-  {% else %}
-- Completed Trip</h1>
-  {% endif %}
+        <div class="container bg-info p-4">
+            <h1>Trip: {{ trip.venue }}</h1>
+            <h1>Date: {{ trip.date|date:'Y-m-d' }}
+            {% if live_trip %}
+                - Live Trip</h1>
+                <h4><strong>Page last refreshed:</strong> <span id="datetime"> </h4>
+                <script>
+                    var dt = new Date();
+                    document.getElementById("datetime").innerHTML = (("0"+dt.getHours()).slice(-2)) +":"+ (("0"+dt.getMinutes()).slice(-2));
+                </script>
+            {% else %}
+                - Completed Trip</h1>
+            {% endif %}
 
-  <div style="margin-left:20px;margin-top:20px">
-    <h4>Total Fish Caught = {{ trip.catch_set.count }}</h4> 
-    <h4>Total Fish Weight = {{ weight }}</h4> 
+            <div style="margin-left:20px;margin-top:20px">
+                <h4>Total Fish Caught = {{ trip.catch_set.count }}</h4> 
+                <h4>Total Fish Weight = {{ weight }}</h4> 
 
-  {% if new_fish %}
-      <BR>
-      <table class="fishy-table">
-          <tr>
-               <td class="recent">NEW CATCH</td>
-               <td class="recent">NEW CATCH</td>
-               <td class="recent">NEW CATCH</td>
-               <td class="recent">NEW CATCH</td>
-          </tr>
-      </table> 
-      <BR>
-  {% endif %}
+                {% if new_fish %}
+                    <BR>
+                    <table class="table">
+                        <tr>
+                            <td class="bg-warning">NEW CATCH</td>
+                            <td class="bg-warning">NEW CATCH</td>
+                            <td class="bg-warning">NEW CATCH</td>
+                            <td class="bg-warning">NEW CATCH</td>
+                       </tr>
+                   </table> 
+                   <BR>
+                {% endif %}
 
-    <table class="fishy-table">
-       <tr>
-           <th>Fish Type</th>
-           <th class="r">Weight (oz)</th>
-           <th>Bait</th>
-           <th>Method</th>
-           <th>Catch Time</th>
-           <th>Photo</th>
-       </tr>
-       {% for catch_instance in trip.catch_set.all %}
-       <tr>
-          {% if new_fish and forloop.first %} 
-              <td class="recent"> {{ catch_instance.fish }} </td>
-              <td class="recent r"> {{ catch_instance.weight }} </td>
-              <td class="recent"> {{ catch_instance.bait }} </td>
-              <td class="recent c"> 
-                  {% if catch_instance.method == 'F' %}
-                      Float
-                  {% elif catch_instance.method == 'L' %}
-                      Ledger
-                  {% else %}
-                      Method Feeder
-                  {% endif %}
-              </td>
-              <td class="recent c"> {{ catch_instance.catch_time|date:'H:i' }} </td>
-              {% if catch_instance.photo == 'N' %}
-                  <td class="c">None</td>
-              {% elif catch_instance.photo == 'Y' %}
-                  <td class="c"><a href="{{ catch_instance.get_absolute_url }}">View</a></td>
-              {% endif %}
-          {% else %}
-              <td><a href="/fishy/catch/{{catch_instance.id}}"> {{ catch_instance.fish }} </a></td>
-              <td class="r"> {{ catch_instance.weight }} </td>
-              <td> {{ catch_instance.bait }} </td>
-              <td class="c"> 
-                  {% if catch_instance.method == 'F' %}
-                      Float
-                  {% elif catch_instance.method == 'L' %}
-                      Ledger
-                  {% else %}
-                      Method Feeder
-                  {% endif %}
-              </td>
-              <td class="c"> {{ catch_instance.catch_time|date:'H:i' }} </td>
-              {% if catch_instance.photo == 'N' %}
-                  <td class="c">None</td>
-              {% elif catch_instance.photo == 'Y' %}
-                  <td class="c"><a href="{{ catch_instance.get_absolute_url }}">View</a></td>
-              {% endif %}
-          {% endif %}
-       </tr>
-       {% endfor %}
-       {% if user.is_authenticated %}
-           <tr>
-               <td><a href="{% url 'trip_edit' trip.pk %}">Edit Trip</a></td>
-               <td></td>
-               <td><a href="{% url 'trip_delete' trip.pk %}">Delete Trip</a></td>
-           </tr>
-       {% endif %}
-    </table>
-  </div>
+                <table class="table">
+                    <tr>
+                        <th>Fish Type</th>
+                        <th class="r">Weight (oz)</th>
+                        <th>Bait</th>
+                        <th>Method</th>
+                        <th>Catch Time</th>
+                        <th>Photo</th>
+                    </tr>
+                    {% for catch_instance in trip.catch_set.all %}
+                    <tr>
+                       {% if new_fish and forloop.first %} 
+                           <td class="bg-warning"> {{ catch_instance.fish }} </td>
+                           <td class="bg-warning r"> {{ catch_instance.weight }} </td>
+                           <td class="bg-warning"> {{ catch_instance.bait }} </td>
+                           <td class="bg-warning c"> 
+                               {% if catch_instance.method == 'F' %}
+                                   Float
+                               {% elif catch_instance.method == 'L' %}
+                                   Ledger
+                               {% else %}
+                                   Method Feeder
+                               {% endif %}
+                           </td>
+                           <td class="bg-warning c"> {{ catch_instance.catch_time|date:'H:i' }} </td>
+                           {% if catch_instance.photo == 'N' %}
+                               <td class="bg-warning c">None</td>
+                           {% elif catch_instance.photo == 'Y' %}
+                               <td class="bg-warning c"><a href="{{ catch_instance.get_absolute_url }}">View</a></td>
+                           {% endif %}
+                       {% else %}
+                           <td><a href="/fishy/catch/{{catch_instance.id}}"> {{ catch_instance.fish }} </a></td>
+                           <td class="r"> {{ catch_instance.weight }} </td>
+                           <td> {{ catch_instance.bait }} </td>
+                           <td class="c"> 
+                               {% if catch_instance.method == 'F' %}
+                                   Float
+                               {% elif catch_instance.method == 'L' %}
+                                   Ledger
+                               {% else %}
+                                   Method Feeder
+                               {% endif %}
+                           </td>
+                           <td class="c"> {{ catch_instance.catch_time|date:'H:i' }} </td>
+                           {% if catch_instance.photo == 'N' %}
+                               <td class="c">None</td>
+                           {% elif catch_instance.photo == 'Y' %}
+                               <td class="c"><a href="{{ catch_instance.get_absolute_url }}">View</a></td>
+                           {% endif %}
+                       {% endif %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            {% if user.is_authenticated %}
+                <div class="col-xs-4 text-center">
+                    <a class="btn btn-sm btn-warning" href="{% url 'trip_edit' trip.pk %}" role="button">Edit Trip</a>
+                    <a class="btn btn-sm btn-danger" href="{% url 'trip_delete' trip.pk %}" role="button">Delete Trip</a>
+                </div>
+            {% endif %}
+        </div>
 {% endblock %}

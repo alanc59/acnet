@@ -1,23 +1,31 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Venue List</h1>
-  {% if venue_list %}
-  <table class="fishy-table">
-     <tr>
-         <th>Venue</th>
-         <th>Postcode</th>
-         <th>WAC Water</th>
-     </tr>
-    {% for venue in venue_list %}
-     <tr>
-         <td><a href="{{ venue.get_absolute_url }}">{{ venue.name }}</a></td>
-         <td>{{venue.postcode}}</td>
-         <td class="c">{{venue.wac}}</td>
-     </tr>
-    {% endfor %}
-  </table>
-  {% else %}
-    <p>There are no venues in the library.</p>
-  {% endif %}       
+
+        <div class="container bg-info p-4"> 
+            <h1>Venue List</h1>
+            {% if venue_list %}
+
+                <table class="table">
+                    <t-head>
+                        <tr>
+                            <th>Venue</th>
+                            <th>Postcode</th>
+                            <th>WAC Water</th>
+                        </tr>
+                    </t-head>
+                    <t-body>
+                        {% for venue in venue_list %}
+                            <tr>
+                                <td><a href="{{ venue.get_absolute_url }}">{{ venue.name }}</a></td>
+                                <td>{{venue.postcode}}</td>
+                                <td class="c">{{venue.wac}}</td>
+                            </tr>
+                        {% endfor %}
+                    </t-body>
+                </table>
+            {% else %}
+                <p>There are no venues in the library.</p>
+            {% endif %}       
+        </div>
 {% endblock %}

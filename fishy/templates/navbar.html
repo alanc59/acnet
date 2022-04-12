@@ -1,0 +1,62 @@
+    {% load static %}
+    <nav class="navbar navbar-fixed-top navbar-expand-sm navbar-light bg-primary">
+        <div class="container">
+            <a class="navbar-brand hf_txt_color" ref="#">
+                <img src="{% static 'images/acnet_logo.png' %}" alt="..." height="80" />
+                ACNet            </a> 
+            <button aria-controls="nav-2" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#nav-2" data-bs-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="nav-2">
+                <ul class="navbar-nav ms-auto">
+                    <li>
+                        <a class="nav-link hf_txt_color" href="/fishy">Home</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle hf_txt_color" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">New</a>
+                            <ul class="dropdown-menu bg-primary" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item hf_txt_color" href="{% url 'catch_new' %}">Catch</a></li>
+                                <li><a class="dropdown-item hf_txt_color" href="{% url 'trip_new' %}">Trip</a></li>
+                                <li><a class="dropdown-item hf_txt_color" href="{% url 'venue_new' %}">Venue</a></li>
+                                <li><a class="dropdown-item hf_txt_color" href="{% url 'fish_new' %}">Fish</a></li>
+                                <li><a class="dropdown-item hf_txt_color" href="{% url 'bait_new' %}">Bait</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a class="nav-link hf_txt_color" href="{% url 'catches' %}">Catches</a>
+                    </li>
+                    <li>
+                        <a class="nav-link hf_txt_color" href="{% url 'trips' %}">Trips</a>
+                    </li>
+                    <li>
+                        <a class="nav-link hf_txt_color" href="{% url 'venues' %}">Venues</a>
+                    </li>
+                    <li>
+                        <a class="nav-link hf_txt_color" href="{% url 'fishes' %}">Fish</a>
+                    </li>
+                    <li>
+                        <a class="nav-link hf_txt_color" href="{% url 'baits' %}">Bait</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle hf_txt_color" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Statistics</a>
+                        <ul class="dropdown-menu bg-primary" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item hf_txt_color" href="{% static 'fishy_stats/fish_by_species_by_year.html' %}">Fish by species by year</a></li>
+                            <li><a class="dropdown-item hf_txt_color" href="{% static 'fishy_stats/fish_by_venue_by_year.html' %}">Fish by venue by year</a></li>
+                            <li><a class="dropdown-item hf_txt_color" href="{% static 'fishy_stats/fish_by_bait_by_year.html' %}">Fish by bait by year</a></li>
+                            <li><a class="dropdown-item hf_txt_color" href="{% static 'fishy_stats/fish_records.html' %}">Fish records</a></li>
+                            <li><a class="dropdown-item hf_txt_color" href="{% static 'fishy_stats/top_twenty_trips.html' %}">Top twenty trips</a></li>
+                            <li><a class="dropdown-item hf_txt_color" href="{% static 'fishy_stats/top_twenty_trips_this_year.html' %}">Top twenty trips this year</a></li>
+                            <li><a class="dropdown-item hf_txt_color" href="{% static 'fishy_stats/trip_by_venue_by_year.html' %}">Trips by venue by year</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        {% if user.is_authenticated %}
+                            <a class="nav-link hf_txt_color" href="/accounts/login/?next=/accounts/logout/">{{ user.get_username }} : Logout</a>
+                        {% else %}
+                            <a class="nav-link hf_txt_color" href="/accounts/login/?next=/accounts/login/">Login</a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>

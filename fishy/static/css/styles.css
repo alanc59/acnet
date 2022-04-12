@@ -1,188 +1,72 @@
-html { height : 100%; }
-body { 
-    height : 100%; 
-    background-color: #FFFDD0;
+html, body {
+    margin: 0px;
+    padding: 0px;
 }
 
-td.new {
-    background-color: lightgreen;
+.stats_table td {
+    text-align: right;
+    border: 1px solid grey;
+    border-right: 1px solid grey;
 }
 
-td.recent {
-    background-color: lightblue;
+a {
+    color: yellow!important;
 }
 
-td.c, th.c {
-  text-align : center;
+h1, h4, h6 {
+    color: yellow;
+    text-align: center;
 }
 
-td.r, th.r {
-  text-align : right;
+.ct_red   { background-color: red; }
+.ct_green { background-color: lightgreen; }
+
+#features {
+    background-color: white;
+    min-width: 100%;
 }
 
-td.l, th.l {
-  text-align : left;
-}
-
-.league-table {
-    border: 2px solid grey;
-}
-
-.league-table td, th {
-    border: 2px solid grey;
-    text-align: center; 
-    padding: 4px;
-}
-
-.results-page {
-    margin-left: 200px;
-    margin-right: auto
-}
-
-.results-page h1, h2, h3, p {
-    text-align: left;
+#features h1, h6 {
     color: blue;
 }
 
-.results-table {
-    border: 2px solid grey;
-    border-collapse: collapse;
+.hf_txt_color {
+    color: yellow!important;
 }
 
-.results-table td { 
-    border: 2px solid grey;
+.txt_color {
+    color: blue!important;
+}
+
+#no_games {
+    background-color: yellow;
+    border: 4px solid blue;
+    color: blue;
+    font-size: 30px;
+    min-width: 100%;
     text-align: center;
-    padding: 4px 
 }
 
-.results-table th {
-    border: 2px solid lightblue;
-    padding: 4px 
+.tac {
+    text-align: center;
 }
 
-.fishy-table tr:nth-child(odd) {background-color: #FFFFAA; }
-.fishy-table td {
-    padding: 15px; 
+#last_season {
+    background-color: #add8e6;
 }
 
-.fishy-table th {
-    padding: 15px; 
-    font-weight: bold;
-    font-style: italic;
+#this_season {
+    background-color: lightgreen;
 }
 
-.fishy-table button {
-    background-color: lightblue;
+#minus_points {
+    background-color: #FFB6C1;
 }
 
-.fishy-stats-table tr:nth-child(odd) {background-color: #FFFFAA; }
-.fishy-stats-table td {
-    padding: 10px; 
-    text-align: right;
+#plus_points {
+    background-color: #FFB6C1;
 }
 
-.fishy-stats-table th {
-    padding: 10px; 
-    font-weight: bold;
-    font-style: italic;
-}
-
-.fishy-record-table tr:nth-child(odd) {background-color: #FFFFAA; }
-.fishy-record-table td {
-    padding: 10px; 
-}
-
-.fishy-stats-table th {
-    padding: 10px; 
-    text-align: right;
-    font-weight: bold;
-    font-style: italic;
-}
-
-.index h1, h2, a, p {
-    text-align: left;
-}
-
-/* The sidebar menu */
-.sidebar-nav {
-  height: 100%;
-  width: 200px; /* Set the width of the sidebar */
-  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-  z-index: 1; /* Stay on top */
-  top: 0; /* Stay at the top */
-  left: 0;
-  background-color: #111; /* Black */
-  overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 20px;
-  list-style: none;
-}
-
-/* The navigation menu links */
-.sidebar-nav a {
-  padding: 6px 8px 6px 16px;
-  text-decoration: none;
-  font-size: 15px;
-  color: #f1f1f1;
-  display: block;
-}
-
-/* When you mouse over the navigation links, change their color */
-.sidebar-nav a:hover {
-  color: #818181;
-}
-
-.sidebar-nav h4 {
-  color: lightblue;
-  font-size: 20px;
-}
-
-.sidebar-nav div.user {
-    color: yellow;
-}
-
-/* Style page content */
-.main {
-  margin-left: 200px; /* Same as the width of the sidebar */ 
-  /* background-color: lightblue; */
-}
-
-.main h1 {
-  color: blue;
-}
-
-/* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
-  .sidenav_stats {padding-top: 15px;}
-  .sidenav_stats a {font-size: 18px;}
-} 
-
-
-.filter {
-    border: 100px;
-    padding: 50px;
-    border-collapse: collapse;
-    background-color: lightgrey
-}
-
-.filter button {
-    color: lightblue;
-    background-color: darkgrey; 
-}
-
-.catch-table {
-    width: 800px;
-}
-
-.catch-table tr:nth-child(odd) {
-    background-color: #FFFFAA; 
-}
-
-.catch-table td {
-    padding: 15px; 
-}
-
-.catch-table th {
-    padding: 15px; 
-    font-weight: bold;
-    font-style: italic;
+#equal_points {
+    background-color: #ADD8E6;
 }

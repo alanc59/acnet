@@ -1,34 +1,101 @@
-<HTML><HEAD>
-<title>ACNet Fishy Statistics</title><meta http-equiv="refresh" content="60"><link rel="stylesheet" href="/static/css/styles.css">
-<link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
-<link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
-</HEAD><BODY><div class="sidebar-nav">
-  <h4>Statistics</h4>
-  <a href="index.html">Stats Home</a>
-  <a href="fish_by_species_by_year.html">Fish by species by year</a>
-  <a href="fish_by_venue_by_year.html">Fish by venue by year</a>
-  <a href="fish_by_bait_by_year.html">Fish by bait by year</a>
-  <a href="fish_records.html">Fish records</a>
-  <a href="top_twenty_trips.html">Top twenty trips</a>
-  <a href="trip_by_venue_by_year.html">Trips by venue by year</a>
-  <a href="/fishy">Back to Main Menu</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <!-- Add additional CSS in static file -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.1/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+
+
+
+    <nav class="navbar navbar-fixed-top navbar-expand-sm navbar-light bg-primary">
+        <div class="container">
+            <a class="navbar-brand hf_txt_color" ref="#">
+                <img src="/static/images/acnet_logo.png" alt="..." height="80" />
+                ACNet            </a> 
+            <button aria-controls="nav-2" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#nav-2" data-bs-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="nav-2">
+                <ul class="navbar-nav ms-auto">
+                    <li>
+                        <a class="nav-link hf_txt_color" href="/fishy">Home</a>
+                    </li>
+                    <li>
+                        <a class="nav-link hf_txt_color" href="/fishy/catches">Catches</a>
+                    </li>
+                    <li>
+                        <a class="nav-link hf_txt_color" href="/fishy/trips">Trips</a>
+                    </li>
+                    <li>
+                        <a class="nav-link hf_txt_color" href="/fishy/venues">Venues</a>
+                    </li>
+                    <li>
+                        <a class="nav-link hf_txt_color" href="/fishy/fishes">Fish</a>
+                    </li>
+                    <li>
+                        <a class="nav-link hf_txt_color" href="/fishy/baits">Bait</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle hf_txt_color" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Statistics</a>
+                        <ul class="dropdown-menu bg-primary" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item hf_txt_color" href="fish_by_species_by_year.html">Fish by species by year</a></li>
+                            <li><a class="dropdown-item hf_txt_color" href="fish_by_venue_by_year.html">Fish by venue by year</a></li>
+                            <li><a class="dropdown-item hf_txt_color" href="fish_by_bait_by_year.html">Fish by bait by year</a></li>
+                            <li><a class="dropdown-item hf_txt_color" href="fish_records.html">Fish records</a></li>
+                            <li><a class="dropdown-item hf_txt_color" href="top_twenty_trips.html">Top twenty trips</a></li>
+                            <li><a class="dropdown-item hf_txt_color" href="top_twenty_trips_this_year.html">Top twenty trips this year</a></li>
+                            <li><a class="dropdown-item hf_txt_color" href="trip_by_venue_by_year.html">Trips by venue by year</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<div class="container bg-info p-4">
+  <h1>Fish By Species By Year</h1>
+   <div class="container">      <div class="row p-4 text-center">         <table class="table">
+            <t-head>
+               <tr>
+<TR><TH>Fish</TH><TH>2019</TH><TH>2020</TH><TH>2022</TH><TH>Total</TH></TR>
+               </tr>
+            </t-head>
+            <t-body>
+<TR><TD>Barbel</TD><TD>0</TD><TD>2</TD><TD>0</TD><TD>2</TD></TR>
+<TR><TD>Bream</TD><TD>49</TD><TD>24</TD><TD>0</TD><TD>73</TD></TR>
+<TR><TD>Carp-Common</TD><TD>89</TD><TD>241</TD><TD>1</TD><TD>331</TD></TR>
+<TR><TD>Carp-Crucian</TD><TD>15</TD><TD>12</TD><TD>0</TD><TD>27</TD></TR>
+<TR><TD>Carp-F1</TD><TD>0</TD><TD>75</TD><TD>0</TD><TD>75</TD></TR>
+<TR><TD>Carp-Mirror</TD><TD>17</TD><TD>67</TD><TD>1</TD><TD>85</TD></TR>
+<TR><TD>Dace</TD><TD>0</TD><TD>3</TD><TD>0</TD><TD>3</TD></TR>
+<TR><TD>Eel</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>3</TD></TR>
+<TR><TD>Gudgeon</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>2</TD></TR>
+<TR><TD>Perch</TD><TD>53</TD><TD>6</TD><TD>2</TD><TD>61</TD></TR>
+<TR><TD>Roach</TD><TD>177</TD><TD>44</TD><TD>7</TD><TD>228</TD></TR>
+<TR><TD>Rudd</TD><TD>103</TD><TD>1</TD><TD>0</TD><TD>104</TD></TR>
+<TR><TD>Tench</TD><TD>5</TD><TD>10</TD><TD>0</TD><TD>15</TD></TR>
+<TR><TH>Totals</TH><TH>510</TH><TH>486</TH><TH>13</TH><TH>1009</TH></TR>
+            </t-body>
+         </table>
+      </div>   </div></div>
+
+    <!-- Footer -->
+    <footer>
+        <!-- Copyright -->
+        <div class="bg-primary text-center p-4 hf_txt_color">
+            © 2022 Copyright: ACNet        </div>
+        <!-- Copyright -->
+    </footer>
 </div>
-<DIV class="main"><H1>Fish By Species By Year</H1>
-<TABLE class="fishy-stats-table">
-<TR><TH style="text-align:left">Fish</TH><TH>2019</TH><TH>2020</TH><TH>Total</TH></TR>
-<TR><TD style="text-align:left">Barbel</TD><TD>0</TD><TD>2</TD><TD>2</TD></TR>
-<TR><TD style="text-align:left">Bream</TD><TD>49</TD><TD>24</TD><TD>73</TD></TR>
-<TR><TD style="text-align:left">Carp-Common</TD><TD>89</TD><TD>241</TD><TD>330</TD></TR>
-<TR><TD style="text-align:left">Carp-Crucian</TD><TD>15</TD><TD>12</TD><TD>27</TD></TR>
-<TR><TD style="text-align:left">Carp-F1</TD><TD>0</TD><TD>75</TD><TD>75</TD></TR>
-<TR><TD style="text-align:left">Carp-Mirror</TD><TD>17</TD><TD>67</TD><TD>84</TD></TR>
-<TR><TD style="text-align:left">Dace</TD><TD>0</TD><TD>3</TD><TD>3</TD></TR>
-<TR><TD style="text-align:left">Eel</TD><TD>2</TD><TD>0</TD><TD>2</TD></TR>
-<TR><TD style="text-align:left">Gudgeon</TD><TD>0</TD><TD>1</TD><TD>1</TD></TR>
-<TR><TD style="text-align:left">Perch</TD><TD>53</TD><TD>6</TD><TD>59</TD></TR>
-<TR><TD style="text-align:left">Roach</TD><TD>177</TD><TD>44</TD><TD>221</TD></TR>
-<TR><TD style="text-align:left">Rudd</TD><TD>103</TD><TD>1</TD><TD>104</TD></TR>
-<TR><TD style="text-align:left">Tench</TD><TD>5</TD><TD>10</TD><TD>15</TD></TR>
-<TR><TH>Totals</TH><TH>510</TH><TH>486</TH><TH>996</TH></TR>
-</TABLE>
-</DIV></BODY></HTML>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"> 
+</script> 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js">
+</script>

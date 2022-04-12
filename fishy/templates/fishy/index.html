@@ -1,23 +1,74 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>ACNet Fishing App Home</h1>
-  <p>Welcome to the ACNet Fishing App</p>
-  <p>The Fishing Database has the following record counts:</p>
-  <table>
-     <tr>
-         <th><strong>Venues</strong></td>
-         <th><strong>Trips</strong></td>
-         <th><strong>Catches</strong></td>
-     </tr>
-     <tr>
-         <td class="c">{{ num_venues }}</td>
-         <td class="c">{{ num_trips }}</td>
-         <td class="c">{{ num_catches }}</td>
-     </tr>
-     <tr>
-         <td><img src="/static/images/top_lock.jpg" width="200" height="112">
-         <td><img src="/static/images/angler.jpg" width="200" height="112">
-         <td><img src="/static/images/fish/1307.jpg" width="200" height="112">
-  </table>
+ {% load static %}
+        <div class="container bg-info p-4">
+            <h1>ACNet Fishing App Home</h1>
+            <h4>Welcome to the ACNet Fishing App</h4>
+            <h4>The Fishing Database has the following record counts:</h4>
+            <div class="container">
+                <div class="row p-4 text-center">
+                    <div class="col">
+                        <img src="/static/images/top_lock.jpg" width="200" height="112">
+                        <strong>Venues: </strong> {{ num_venues }}
+                    </div>
+                    <div class="col">
+                        <img src="/static/images/angler.jpg" width="200" height="112">
+                        <strong>Trips: </strong> {{ num_trips }}
+                    </div> 
+                    <div class="col">
+                        <img src="/static/images/fish/1307.jpg" width="200" height="112">
+                        <strong>Catches: </strong> {{ num_catches }}
+                    </div>
+                </div>  
+                <div class="row">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                        </div>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="{% static 'images/fish/1342.jpg' %}" class="d-block w-100" alt="...">
+                                <div class="carousel-caption d-none d-md-block text-white">
+                                    <h5>Common Carp</h5>
+                                    <p>Top Lock : 26/07/2021 : 6 lb 8 oz</p>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{% static 'images/fish/1090.jpg' %}" class="d-block w-100" alt="...">
+                                <div class="carousel-caption d-none d-md-block text-white">
+                                    <h5>Tench</h5>
+                                    <p>Limbrick Fishery : 19/08/2020 : 1 lb 15 oz</p>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{% static 'images/fish/1403.jpg' %}" class="d-block w-100" alt="...">
+                                <div class="carousel-caption d-none d-md-block text-white">
+                                    <h5>Rainbow Trout</h5>
+                                    <p>Cricket Field : 23/03/2021 : 2 lb 5 oz</p>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{% static 'images/fish/1087.jpg' %}" class="d-block w-100" alt="...">
+                                <div class="carousel-caption d-none d-md-block text-white">
+                                    <h5>Bream</h5>
+                                    <p>Lancaster House : 22/07/2020 : 1 lb 4 oz</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 {% endblock %}

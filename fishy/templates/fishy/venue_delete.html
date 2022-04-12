@@ -1,16 +1,28 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<h1>Delete Venue</h1>
-<form action="" method="post">{% csrf_token %}
-<table class="fishy-table">
-    <tr><td>ID</td><td>{{venue.id}}</td></tr>
-    <tr><td>Name</td><td>{{venue.name}}</td></tr>
-    <tr><td>WAC Water</td><td>{{venue.wac}}</td></tr>
-    <tr><td>Postcode</td><td>{{venue.postcode}}</td></tr>
-    {% if user.is_authenticated %}
-        <tr><td></td><td class="r"><button type="submit" value="Confirm">Confirm</button></td></tr>
-    {% endif %}     
-</table>
-</form>
+<div class="container bg-info p-4">
+    <h1>Delete Venue</h1>
+    <form action="" method="post">{% csrf_token %}
+        <div class="row">
+            <div class="col"> </div>
+            <div class="col-6">
+                <table class="table">
+                    <tr><td>ID</td><td>{{venue.id}}</td></tr>
+                    <tr><td>Name</td><td>{{venue.name}}</td></tr>
+                    <tr><td>WAC Water</td><td>{{venue.wac}}</td></tr>
+                    <tr><td>Postcode</td><td>{{venue.postcode}}</td></tr>
+                </table>
+            </div>
+            <div class="col"> </div>
+        </div>
+        {% if user.is_authenticated %}
+            <div class="row">
+                <div class="col text-center">
+                    <button class="btn btn-sm btn-danger" type="submit" value="Confirm">Confirm</button>
+                </div>
+            </div>
+        {% endif %}     
+    </form>
+</div>
 {% endblock content %}

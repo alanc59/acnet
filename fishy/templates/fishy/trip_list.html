@@ -1,22 +1,30 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Trip List</h1>
-  {% if trip_list %}
-  <table class="fishy-table">
-     <tr>
-         <th>Date</th>
-         <th>Venue</th>
-         <th>Fish Caught</th>
-     </tr>
-    {% for trip in trip_list %}
-    <tr>
-        <td><a href="{{ trip.get_absolute_url }}">{{ trip.date|date:'Y-m-d' }}</a></td>
-        <td>{{ trip.venue }}</td>
-        <td class="c">{{ trip.catch_set.count }}</td>
-    {% endfor %}
-  </table>
-  {% else %}
-    <p>There are no trips in the library.</p>
-  {% endif %}       
+    
+    <div class="container bg-info p-4">  
+        <h1>Trip List</h1>
+        {% if trip_list %}
+            <table class="table">
+                <t-head>
+                    <tr>
+                        <th>Date</th>
+                        <th>Venue</th>
+                        <th>Fish Caught</th>
+                    </tr>
+                </t-head>
+                <t-body>
+                    {% for trip in trip_list %}
+                    <tr>
+                        <td><a href="{{ trip.get_absolute_url }}">{{ trip.date|date:'Y-m-d' }}</a></td>
+                        <td>{{ trip.venue }}</td>
+                        <td class="c">{{ trip.catch_set.count }}</td>
+                    </tr>
+                    {% endfor %}
+               </t-body>
+            </table>
+        {% else %}
+            <p>There are no trips in the library.</p>
+        {% endif %}       
+    </div>
 {% endblock %}
