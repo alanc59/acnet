@@ -7,6 +7,8 @@ from util.utilities import *
 from django.db.models import Sum
 from datetime import datetime, timedelta, timezone
 
+import sys
+
 #######
 #
 # index
@@ -200,6 +202,11 @@ class CatchListView(generic.ListView):
 
 class CatchDetailView(generic.DetailView):
     model = Catch
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['weight_pounds'] = toPoundsAndOunces(self.get_object().weight)
+        return context
 
 class CatchCreateView(CreateView):
     model = Catch
