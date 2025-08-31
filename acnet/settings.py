@@ -131,6 +131,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+# Where collectstatic will copy files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
