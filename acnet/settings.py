@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+from django.conf import settings
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -17,9 +18,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+AP_REFRESH_DOMAIN = os.getenv("AP_REFRESH_DOMAIN")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -30,7 +29,11 @@ SECRET_KEY = os.getenv('AP_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('AP_DEBUG')
 
-ALLOWED_HOSTS = ['*']
+if (os.getenv('DB_ENVIRONMENT') == 'PROD'):
+    ALLOWED_HOSTS = [ "fish.acleator.com", "www.fish.acleator.com", ]
+    CSRF_TRUSTED_ORIGINS = [ "https://fish.acleator.com", "https://www.fish.acleator.com", ]
+else:
+    ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -61,9 +64,7 @@ ROOT_URLCONF = 'acnet.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
-        ],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'fishy.context_processors.ap_settings',
             ],
         },
     },
@@ -132,7 +134,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 # Where collectstatic will copy files
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'fishy/static')
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
