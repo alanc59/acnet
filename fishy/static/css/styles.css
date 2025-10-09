@@ -81,7 +81,7 @@ h1, h4, h6 {
 .table td:first-child {
   position: sticky;
   left: 0;
-  background: inherit; /* ensures text isn’t overlapped by scrolling part */
+  background: white; /* ensures text isn’t overlapped by scrolling part */
   z-index: 3;
 }
 
@@ -89,7 +89,7 @@ h1, h4, h6 {
 .table th:nth-child(2),
 .table td:nth-child(2) {
   position: sticky;
-  left: 100px; /* adjust based on actual width of first column */
-  background: inherit;
+  left: 80px; /* adjust based on actual width of first column */
+  background: white;
   z-index: 2;
 }
