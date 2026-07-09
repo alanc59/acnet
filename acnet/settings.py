@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('AP_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('AP_DEBUG')
 
-if (os.getenv('DB_ENVIRONMENT') == 'PROD'):
+if (os.getenv('AP_ENVIRONMENT') == 'PROD'):
     ALLOWED_HOSTS = [ "fish.acleator.com", "www.fish.acleator.com", ]
     CSRF_TRUSTED_ORIGINS = [ "https://fish.acleator.com", "https://www.fish.acleator.com", ]
 else:

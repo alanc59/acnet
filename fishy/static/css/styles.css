@@ -76,20 +76,3 @@ h1, h4, h6 {
   position: relative;
 }
 
-/* Sticky first column */
-.table th:first-child,
-.table td:first-child {
-  position: sticky;
-  left: 0;
-  background: white; /* ensures text isn’t overlapped by scrolling part */
-  z-index: 3;
-}
-
-/* Sticky second column */
-.table th:nth-child(2),
-.table td:nth-child(2) {
-  position: sticky;
-  left: 80px; /* adjust based on actual width of first column */
-  background: white;
-  z-index: 2;
-}
