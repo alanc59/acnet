@@ -212,15 +212,12 @@ class CatchCreateView(CreateView):
     model = Catch
     template_name = 'fishy/catch_new.html'
     fields = ['trip', 'fish', 'weight', 'weighed', 'bait', 'method']
-    trips = Trip.objects.all().order_by('-date')
-    fishes = Fish.objects.all().order_by('name')
-    baits = Bait.objects.all().order_by('name')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['trips'] = self.trips
-        context['fishes'] = self.fishes
-        context['baits'] = self.baits
+        context['trips'] = Trip.objects.order_by('-date')
+        context['fishes'] = Fish.objects.order_by('name')
+        context['baits'] = Bait.objects.order_by('name')
         return context
 
 class CatchUpdateView(UpdateView):
