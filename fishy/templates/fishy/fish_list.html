@@ -1,23 +1,69 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-         <div class="container bg-info p-4">
-             <h1>Fish List</h1>
-             <table class="table">
-                 <t-head>
-                     <tr>
-                         <th>Name</th><th>Latin Name</th><th>UK Record</th>
-                     </tr>
-                 </t-head>
-                 <t-body>
-                 {% for fish in fishes %}
-                     <tr>
-                         <td><a href="{{ fish.get_absolute_url }}">{{ fish.name }}</a></td>
-                         <td>{{ fish.latin_name }}</td>
-                         <td class="r">{{ fish.uk_record }}</td>
-                     </tr>
-                 {% endfor %}
-                 </t-body>
-             </table>
-         </div> 
+
+<div class="page-card fish-list-card">
+
+    <h1 class="page-title">
+        <span class="line"></span>
+        Fish
+        <span class="line"></span>
+    </h1>
+
+    <p class="page-subtitle">
+        Fish species recorded
+    </p>
+
+    <div class="list-wrapper">
+
+        <table class="list-table">
+
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Latin Name</th>
+                    <th class="text-center">UK Record</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for fish in fishes %}
+
+                    <tr>
+
+                        <td>
+                            <a href="{{ fish.get_absolute_url }}">
+                                {{ fish.name }}
+                            </a>
+                        </td>
+
+                        <td>
+                            <em>{{ fish.latin_name }}</em>
+                        </td>
+
+                        <td class="text-center">
+                            {{ fish.uk_record }}
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="3" class="text-center py-4">
+                            No fish species recorded.
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
 {% endblock %}

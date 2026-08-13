@@ -2,30 +2,83 @@
 
 {% block content %}
 
-        <div class="container bg-info p-4"> 
-            <h1>Venue List</h1>
-            {% if venue_list %}
+<div class="list-card">
 
-                <table class="table">
-                    <t-head>
-                        <tr>
-                            <th>Venue</th>
-                            <th>Postcode</th>
-                            <th>WAC Water</th>
-                        </tr>
-                    </t-head>
-                    <t-body>
-                        {% for venue in venue_list %}
-                            <tr>
-                                <td><a href="{{ venue.get_absolute_url }}">{{ venue.name }}</a></td>
-                                <td>{{venue.postcode}}</td>
-                                <td class="c">{{venue.wac}}</td>
-                            </tr>
-                        {% endfor %}
-                    </t-body>
-                </table>
-            {% else %}
-                <p>There are no venues in the library.</p>
-            {% endif %}       
-        </div>
+    <h1 class="page-title">
+        <span class="line"></span>
+        Venues
+        <span class="line"></span>
+    </h1>
+
+    <p class="page-subtitle">
+        Fishing venues in the library
+    </p>
+
+    {% if venue_list %}
+
+    <div class="list-wrapper">
+
+        <table class="list-table">
+
+            <thead>
+                <tr>
+                    <th>Venue</th>
+                    <th>Postcode</th>
+                    <th class="text-center">WAC Water</th>
+                    <th class="text-center">Visits</th>
+                    <th class="text-center">Fish Caught</th>
+                    <th class="text-center">Total Weight</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for venue in venue_list %}
+
+                <tr>
+
+                    <td>
+                        <a href="{{ venue.get_absolute_url }}">
+                            {{ venue.name }}
+                        </a>
+                    </td>
+
+                    <td>
+                        {{ venue.postcode }}
+                    </td>
+
+                    <td class="text-center">
+                        {{ venue.wac }}
+                    </td>
+
+                    <td class="text-center">
+                        {{ venue.total_visits }}
+                    </td>
+
+                    <td class="text-center">
+                        {{ venue.total_fish }}
+                    </td>
+
+                    <td class="text-center">
+                        {{ venue.total_weight_display }}
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+        <p>No venues have been recorded.</p>
+
+    {% endif %}
+
+</div>
+
 {% endblock %}

@@ -1,98 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1" name="viewport">
-  <!-- Add additional CSS in static file -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.1/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/styles.css">
-  <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
-  <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
-</head>
-<body style="padding-top: 100px;">
-    <div class="container">
-
-
-
-    <nav class="navbar fixed-top navbar-expand-sm navbar-light bg-primary">
-        <div class="container">
-            <a class="navbar-brand hf_txt_color" href="#">
-                <img src="/static/images/acnet_logo.png" alt="..." height="80" />
-                ACNet            </a> 
-            <button aria-controls="nav-2" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#nav-2" data-bs-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="nav-2">
-                <ul class="navbar-nav ms-auto">
-                    <li>
-                        <a class="nav-link hf_txt_color" href="/fishy">Home</a>
-                    </li>
-                    <li>
-                        <a class="nav-link hf_txt_color" href="/fishy/catches">Catches</a>
-                    </li>
-                    <li>
-                        <a class="nav-link hf_txt_color" href="/fishy/trips">Trips</a>
-                    </li>
-                    <li>
-                        <a class="nav-link hf_txt_color" href="/fishy/venues">Venues</a>
-                    </li>
-                    <li>
-                        <a class="nav-link hf_txt_color" href="/fishy/fishes">Fish</a>
-                    </li>
-                    <li>
-                        <a class="nav-link hf_txt_color" href="/fishy/baits">Bait</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle hf_txt_color" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Statistics</a>
-                        <ul class="dropdown-menu bg-primary" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item hf_txt_color" href="fish_by_species_by_year.html">Fish by species by year</a></li>
-                            <li><a class="dropdown-item hf_txt_color" href="fish_by_venue_by_year.html">Fish by venue by year</a></li>
-                            <li><a class="dropdown-item hf_txt_color" href="fish_by_bait_by_year.html">Fish by bait by year</a></li>
-                            <li><a class="dropdown-item hf_txt_color" href="fish_records.html">Fish records</a></li>
-                            <li><a class="dropdown-item hf_txt_color" href="top_twenty_trips.html">Top twenty trips</a></li>
-                            <li><a class="dropdown-item hf_txt_color" href="top_twenty_trips_this_year.html">Top twenty trips this year</a></li>
-                            <li><a class="dropdown-item hf_txt_color" href="trip_by_venue_by_year.html">Trips by venue by year</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-<div class="container bg-info p-4">
-  <h1>Fish By Bait By Year</h1>
-   <div class="table-responsive">      <table class="table">
-         <thead>
-            <tr>
-<TR><TH>Bait</TH><TH>2019</TH><TH>2020</TH><TH>2021</TH><TH>2022</TH><TH>2023</TH><TH>2024</TH><TH>2025</TH><TH>Total</TH></TR>
-            </tr>
-         </thead>
-         <tbody>
-<TR><TD>bread</TD><TD>0</TD><TD>71</TD><TD>46</TD><TD>88</TD><TD>9</TD><TD>74</TD><TD>12</TD><TD>300</TD></TR>
-<TR><TD>caster</TD><TD>2</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>2</TD></TR>
-<TR><TD>hemp</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD></TR>
-<TR><TD>maggot</TD><TD>128</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>6</TD><TD>0</TD><TD>9</TD><TD>143</TD></TR>
-<TR><TD>mussel</TD><TD>350</TD><TD>342</TD><TD>89</TD><TD>14</TD><TD>50</TD><TD>16</TD><TD>7</TD><TD>868</TD></TR>
-<TR><TD>pellet</TD><TD>3</TD><TD>37</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>2</TD><TD>0</TD><TD>45</TD></TR>
-<TR><TD>prawn</TD><TD>24</TD><TD>19</TD><TD>27</TD><TD>1</TD><TD>0</TD><TD>8</TD><TD>5</TD><TD>84</TD></TR>
-<TR><TD>squid</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>6</TD><TD>0</TD><TD>1</TD><TD>0</TD><TD>7</TD></TR>
-<TR><TD>sweetcorn</TD><TD>1</TD><TD>17</TD><TD>5</TD><TD>3</TD><TD>1</TD><TD>7</TD><TD>3</TD><TD>37</TD></TR>
-<TR><TD>worm</TD><TD>2</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>3</TD><TD>5</TD></TR>
-<TR><TH>Totals</TH><TH>510</TD><TH>486</TD><TH>169</TD><TH>112</TD><TH>67</TD><TH>108</TD><TH>39</TD><TH>1491</TD></TR>
-         </tbody>
-      </table>
-   </div></div>
-
-    <!-- Footer -->
-    <footer>
-        <!-- Copyright -->
-        <div class="bg-primary text-center p-4 hf_txt_color">
-            © 2025 Copyright: ACNet        </div>
-        <!-- Copyright -->
-    </footer>
+<div class="report-card">
+    <h1 class="report-title"><span class="line"></span>Fish By Bait By Year<span class="line"></span></h1>
+    <div class="table-wrapper">
+        <table class="shared-report bait-report">
+            <thead>
+<TR><TH class="bait-col">Bait</TH><TH class="total-col text-end">Total</TH><TH class="text-end">2026</TH><TH class="text-end">2025</TH><TH class="text-end">2024</TH><TH class="text-end">2023</TH><TH class="text-end">2022</TH><TH class="text-end">2021</TH><TH class="text-end">2020</TH><TH class="text-end">2019</TH></TR>
+            </thead>
+            <tbody>
+<TR><TH class="bait-col">bread</TH><TH class="total-col text-end">305</TH><TD class="text-end">5</TD><TD class="text-end">12</TD><TD class="text-end">74</TD><TD class="text-end">9</TD><TD class="text-end">88</TD><TD class="text-end">46</TD><TD class="text-end">71</TD><TD class="text-end">0</TD></TR>
+<TR><TH class="bait-col">caster</TH><TH class="total-col text-end">2</TH><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">2</TD></TR>
+<TR><TH class="bait-col">hemp</TH><TH class="total-col text-end">0</TH><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD></TR>
+<TR><TH class="bait-col">maggot</TH><TH class="total-col text-end">143</TH><TD class="text-end">0</TD><TD class="text-end">9</TD><TD class="text-end">0</TD><TD class="text-end">6</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">128</TD></TR>
+<TR><TH class="bait-col">mussel</TH><TH class="total-col text-end">935</TH><TD class="text-end">67</TD><TD class="text-end">7</TD><TD class="text-end">16</TD><TD class="text-end">50</TD><TD class="text-end">14</TD><TD class="text-end">89</TD><TD class="text-end">342</TD><TD class="text-end">350</TD></TR>
+<TR><TH class="bait-col">pellet</TH><TH class="total-col text-end">45</TH><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">2</TD><TD class="text-end">1</TD><TD class="text-end">0</TD><TD class="text-end">2</TD><TD class="text-end">37</TD><TD class="text-end">3</TD></TR>
+<TR><TH class="bait-col">prawn</TH><TH class="total-col text-end">88</TH><TD class="text-end">4</TD><TD class="text-end">5</TD><TD class="text-end">8</TD><TD class="text-end">0</TD><TD class="text-end">1</TD><TD class="text-end">27</TD><TD class="text-end">19</TD><TD class="text-end">24</TD></TR>
+<TR><TH class="bait-col">squid</TH><TH class="total-col text-end">7</TH><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">1</TD><TD class="text-end">0</TD><TD class="text-end">6</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD></TR>
+<TR><TH class="bait-col">sweetcorn</TH><TH class="total-col text-end">40</TH><TD class="text-end">3</TD><TD class="text-end">3</TD><TD class="text-end">7</TD><TD class="text-end">1</TD><TD class="text-end">3</TD><TD class="text-end">5</TD><TD class="text-end">17</TD><TD class="text-end">1</TD></TR>
+<TR><TH class="bait-col">worm</TH><TH class="total-col text-end">5</TH><TD class="text-end">0</TD><TD class="text-end">3</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">0</TD><TD class="text-end">2</TD></TR>
+<TR><TH class="bait-col">Totals</TH><TH class="total-col text-end">1570</TH><TD class="text-end">79</TD><TD class="text-end">39</TD><TD class="text-end">108</TD><TD class="text-end">67</TD><TD class="text-end">112</TD><TD class="text-end">169</TD><TD class="text-end">486</TD><TD class="text-end">510</TD></TR>
+            </tbody>
+        </table>
+    </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"> 
-</script> 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js">
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js">
-</script>

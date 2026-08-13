@@ -1,72 +1,111 @@
 {% extends "base_generic.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container bg-info p-4">
-   <div class="row">
-      <div class="col"> </div>
-      <div class="col">
-         <H1>Catch Information</H1>
-         <table class="table">
-            <TR>
-               <TH>Trip:</TH>
-               <TD><a href="/fishy/trip/{{catch.trip.id}}">{{ catch.trip }}</a></TD>
-            </TR>
-            <TR>
-               <TH>Fish:</TH>
-               <TD> {{ catch.fish }} </TD>
-            </TR>
-            <TR>
-               <TH>Weight:</TH>
-               <TD> {{ weight_pounds }} </TD>
-            </TR>
 
-            <TR>
-               <TH>Weight (oz) :</TH>
-               <TD> {{ catch.weight }} </TD>
-            </TR>
-            <TR>
-               <TH>Weighed:</TH>
-               <TD> {{ catch.weighed }} </TD>
-            </TR>
-            <TR>
-               <TH>Bait:</TH>
-               <TD> {{catch.bait }}</TD>
-            </TR>
-            <TR>
-               <TH>Method:</TH>
-               <TD> 
-                  {% if catch.method == 'F' %}
-                     Float
-                  {% elif catch.method == 'L' %}
-                     Ledger
-                  {% else %}
-                     Method Feeder
-                  {% endif %}
-               </TD>
-            </TR>
-            <TR>
-               <TH>Catch Time:</TH>
-               <TD> {{ catch.catch_time|date:'Y-m-d H:i' }} </TD>
-            </TR>
-            {% if catch.photo == 'Y' %}
-               <TR>
-                  <TD colspan="2"><img src="/static/images/fish/{{catch.id}}.jpg" width="800" height="450"></TD>
-               </TR>
-            {% endif %}
-         </table>
-      </div>
-      <div class="col"> </div>
-   </div>
-   {% if user.is_authenticated %}
-      <div class="row">
-         <div class="col">
-            <div class="text-center">
-               <a class="btn btn-sm btn-warning" href="{% url 'catch_edit' catch.pk %}" role="button">Edit Catch</a>
-               <a class="btn btn-sm btn-danger" href="{% url 'catch_delete' catch.pk %}" role="button">Delete Catch</a>
-            </div> 
-         </div>
-      </div>
-   {% endif %}
+<div class="page-card catch-detail-card">
+
+    <h1 class="page-title">
+        <span class="line"></span>
+        {{ catch.fish }}
+        <span class="line"></span>
+    </h1>
+
+    <p class="page-subtitle">
+        {{ catch.trip.venue }} - {{ catch.trip.date|date:"l j F Y" }}
+    </p>
+
+    <div class="catch-detail-content">
+
+        <div class="catch-information">
+
+            <div class="catch-info-item">
+                <div class="catch-info-label">
+                    Weight
+                </div>
+                <div class="catch-info-value">
+                    {{ weight_display }}
+                </div>
+            </div>
+
+            <div class="catch-info-item">
+                <div class="catch-info-label">
+                    Bait
+                </div>
+                <div class="catch-info-value">
+                    {{ catch.bait }}
+                </div>
+            </div>
+
+            <div class="catch-info-item">
+                <div class="catch-info-label">
+                    Method
+                </div>
+                <div class="catch-info-value">
+                    {% if catch.method == 'F' %}
+                        Float
+                    {% elif catch.method == 'L' %}
+                        Ledger
+                    {% else %}
+                        Method Feeder
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="catch-info-item">
+                <div class="catch-info-label">
+                    Catch Time
+                </div>
+                <div class="catch-info-value">
+                    {{ catch.catch_time|date:"H:i" }}
+                </div>
+            </div>
+
+        </div>
+
+        {% if catch.photo == 'Y' %}
+
+            <div class="catch-photo">
+                <img
+                    src="/static/images/fish/{{ catch.id }}.jpg"
+                    alt="{{ catch.fish }}"
+                >
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <div class="catch-navigation">
+
+        <a href="{{ catch.trip.get_absolute_url }}"
+           class="btn btn-primary">
+            Back to Trip
+        </a>
+
+    </div>
+
+
+    {% if user.is_authenticated %}
+
+        <div class="catch-admin">
+
+            <a class="btn btn-sm btn-warning"
+               href="{% url 'catch_edit' catch.pk %}"
+               role="button">
+                Edit Catch
+            </a>
+
+            <a class="btn btn-sm btn-danger"
+               href="{% url 'catch_delete' catch.pk %}"
+               role="button">
+                Delete Catch
+            </a>
+
+        </div>
+
+    {% endif %}
+
 </div>
 
 {% endblock %}

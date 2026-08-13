@@ -11,14 +11,14 @@
   <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
   <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 </head>
-<body style="padding-top: 100px;">
-    <div class="container">
-
-    {% include "navbar.html" %}
-
-    {% block content %}
-    {% endblock %}
-
-    {% include 'footer.html' %}
+<body>
+    <div class="site-shell"> <!-- from base_generic.html -->
+        {% include "navbar.html" %}
+        <main class="page-content">
+                {% block content %}
+                {% endblock %}
+        </main>
+        {% include 'footer.html' %}
+    </div> <!-- from base_generic.html -->
 </body>
 </html>

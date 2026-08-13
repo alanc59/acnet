@@ -27,4 +27,75 @@ urlpatterns = [
     path('venue/<int:pk>/edit/', views.VenueUpdateView.as_view(), name='venue_edit'),
     path('venues/', views.VenueListView.as_view(), name='venues'),
     path('venue/<int:pk>/delete/', views.VenueDeleteView.as_view(), name='venue_delete'),
+path(
+    'statistics/fish-by-species-by-year/',
+    views.statistics_report,
+    {
+        'report_name': 'fish_by_species_by_year.html'
+    },
+    name='fish_by_species_by_year'
+),
+
+path(
+    'statistics/fish-by-venue-by-year/',
+    views.statistics_report,
+    {
+        'report_name': 'fish_by_venue_by_year.html'
+    },
+    name='fish_by_venue_by_year'
+),
+
+path(
+    'statistics/fish-by-bait-by-year/',
+    views.statistics_report,
+    {
+        'report_name': 'fish_by_bait_by_year.html'
+    },
+    name='fish_by_bait_by_year'
+),
+
+path(
+    'statistics/fish-records/',
+    views.statistics_report,
+    {
+        'report_name': 'fish_records.html'
+    },
+    name='fish_records'
+),
+
+path(
+    'statistics/top-twenty-trips/',
+    views.statistics_report,
+    {
+        'report_name': 'top_twenty_trips.html'
+    },
+    name='top_twenty_trips'
+),
+
+path(
+    'statistics/top-twenty-trips-this-year/',
+    views.statistics_report,
+    {
+        'report_name': 'top_twenty_trips_this_year.html'
+    },
+    name='top_twenty_trips_this_year'
+),
+
+path(
+    'statistics/trips-by-venue-by-year/',
+    views.statistics_report,
+    {
+        'report_name': 'trip_by_venue_by_year.html'
+    },
+    name='trip_by_venue_by_year'
+),
+
+path(
+    'statistics/fish-by-time/',
+    views.statistics_report,
+    {
+        'report_name': 'fish_by_time.html'
+    },
+    name='fish_by_time'
+),
 ]

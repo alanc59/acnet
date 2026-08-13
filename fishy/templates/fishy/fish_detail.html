@@ -2,40 +2,219 @@
 
 {% block content %}
 
-<div class="container bg-info p-3">
-   <h1>Fish: {{ fish.name }}</h1>
-   <div class="row">
-      <div class="col"> </div>
-      <div class="col">
-         <table class="table">
-            <tr>
-               <th>Name:</th>
-               <td> {{ fish.name }} </td>
-            </tr>
-            <tr>
-               <th>Latin Name:</th>
-               <td> {{ fish.latin_name }} </td>
-            </tr>
-            <tr>
-               <th>UK Record:</th>
-               <td> {{ uk_record }} </td>
-            </tr>
-         </table>
-      </div>
-      <div class="col"> </div>
-   </div>
-   <div class="row p-3">
-      <div class="text-center">
-         <img src="/static/images/fish/{{ fish.name }}.jpeg" alt="picture of {{ fish.name }}">
-      </div>   
-   </div>
-   {% if user.is_authenticated %}
-      <div class="row">
-         <div class="text-center">
-            <a class="btn btn-sm btn-warning" href="{% url 'fish_edit' fish.pk %}" role="button">Edit Fish</a>
-            <a class="btn btn-sm btn-danger" href="{% url 'fish_delete' fish.pk %}" role="button">Delete Fish</a>
-         </div>
-      </div>
-   {% endif %}
+<div class="page-card catch-detail-card">
+
+    <h1 class="page-title">
+        <span class="line"></span>
+        {{ fish.name }}
+        <span class="line"></span>
+    </h1>
+
+    {% if fish.latin_name %}
+        <p class="page-subtitle">
+            <em>{{ fish.latin_name }}</em>
+        </p>
+    {% endif %}
+
+
+    <!-- Fish information -->
+
+    <div class="catch-detail-content">
+
+        <div class="catch-information">
+
+            <div class="catch-info-item">
+
+                <div class="catch-info-label">
+                    Name
+                </div>
+
+                <div class="catch-info-value">
+                    {{ fish.name }}
+                </div>
+
+            </div>
+
+
+            <div class="catch-info-item">
+
+                <div class="catch-info-label">
+                    Latin name
+                </div>
+
+                <div class="catch-info-value">
+                    <em>{{ fish.latin_name }}</em>
+                </div>
+
+            </div>
+
+
+            <div class="catch-info-item">
+
+                <div class="catch-info-label">
+                    UK record
+                </div>
+
+                <div class="catch-info-value">
+                    {{ uk_record }}
+                </div>
+
+            </div>
+
+
+            <div class="catch-info-item">
+
+                <div class="catch-info-label">
+                    Your record
+                </div>
+
+                <div class="catch-info-value">
+
+                    {% if best_catch %}
+
+                        {{ best_catch_weight }}
+
+                    {% else %}
+
+                        No catches recorded
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Best catch -->
+
+    {% if best_catch %}
+
+        <div class="catch-detail-content">
+
+            <h2 class="page-title" style="font-size: 1.5rem; margin-top: 30px;">
+                <span class="line"></span>
+                Your Best Catch
+                <span class="line"></span>
+            </h2>
+
+            <div class="catch-information">
+
+                <div class="catch-info-item">
+
+                    <div class="catch-info-label">
+                        Weight
+                    </div>
+
+                    <div class="catch-info-value">
+                        {{ best_catch_weight }}
+                    </div>
+
+                </div>
+
+
+                <div class="catch-info-item">
+
+                    <div class="catch-info-label">
+                        Date
+                    </div>
+
+                    <div class="catch-info-value">
+                        {{ best_catch.trip.date|date:"d M Y" }}
+                    </div>
+
+                </div>
+
+
+                <div class="catch-info-item">
+
+                    <div class="catch-info-label">
+                        Venue
+                    </div>
+
+                    <div class="catch-info-value">
+                        {{ best_catch.trip.venue }}
+                    </div>
+
+                </div>
+
+
+                <div class="catch-info-item">
+
+                    <div class="catch-info-label">
+                        Catch
+                    </div>
+
+                    <div class="catch-info-value">
+
+                        <a href="{{ best_catch.get_absolute_url }}">
+                            View catch
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- Fish photograph -->
+
+    <div class="catch-photo">
+
+        <img
+            src="/static/images/fish/{{ fish.name }}.jpeg"
+            alt="Picture of {{ fish.name }}"
+        >
+
+    </div>
+
+
+    <!-- Navigation -->
+
+    <div class="catch-navigation">
+
+        <a
+            href="{% url 'fishes' %}"
+            class="btn btn-primary"
+        >
+            Back to Fish
+        </a>
+
+    </div>
+
+
+    <!-- Admin controls -->
+
+    {% if user.is_authenticated %}
+
+        <div class="catch-admin">
+
+            <a
+                class="btn btn-sm btn-warning"
+                href="{% url 'fish_edit' fish.pk %}"
+            >
+                Edit Fish
+            </a>
+
+            <a
+                class="btn btn-sm btn-danger"
+                href="{% url 'fish_delete' fish.pk %}"
+            >
+                Delete Fish
+            </a>
+
+        </div>
+
+    {% endif %}
+
 </div>
+
 {% endblock %}

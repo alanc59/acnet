@@ -1,30 +1,87 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    
-    <div class="container bg-info p-4">  
-        <h1>Trip List</h1>
+
+    <div class="list-card">
+
+        <h1 class="page-title">
+            <span class="line"></span>
+            Trips
+            <span class="line"></span>
+        </h1>
+
+        <p class="page-subtitle">
+            {{ subtitle }}
+        </p>
+
         {% if trip_list %}
-            <table class="table">
-                <t-head>
+
+        <div class="list-wrapper">
+
+            <table class="list-table">
+
+                <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Venue</th>
-                        <th>Fish Caught</th>
+
+<th>
+    <form method="get" class="m-0">
+        <div class="venue-filter">
+            <select name="venue"
+                    onchange="this.form.submit()"
+                    class="venue-select">
+
+                <option value="">Venue</option>
+
+                {% for venue in venues %}
+                    <option value="{{ venue.id }}"
+                        {% if selected_venue == venue.id|stringformat:"s" %}
+                            selected
+                        {% endif %}>
+                        {{ venue.name }}
+                    </option>
+
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+</th>
+                        <th class="text-center">Fish Caught</th>
+                        <th class="text-center">Fish Weight</th>
                     </tr>
-                </t-head>
-                <t-body>
-                    {% for trip in trip_list %}
+                </thead>
+
+                <tbody>
+
+                {% for trip in trip_list %}
                     <tr>
-                        <td><a href="{{ trip.get_absolute_url }}">{{ trip.date|date:'Y-m-d' }}</a></td>
+                        <td>
+                            <a href="{{ trip.get_absolute_url }}">
+                                {{ trip.date|date:"d M Y" }}
+                            </a>
+                        </td>
+
                         <td>{{ trip.venue }}</td>
-                        <td class="c">{{ trip.catch_set.count }}</td>
+
+                        <td class="text-center">
+                            {{ trip.fish_count }}
+                        </td>
+                         <td class="text-center">{{ trip.total_weight_display }}</td>
                     </tr>
-                    {% endfor %}
-               </t-body>
+                {% endfor %}
+
+                </tbody>
+
             </table>
+
+        </div>
+
         {% else %}
-            <p>There are no trips in the library.</p>
-        {% endif %}       
+
+            <p>No trips have been recorded.</p>
+
+        {% endif %}
+
     </div>
+
 {% endblock %}

@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from util.utilities import *
+
 
 class Fish(models.Model):
     name = models.CharField(max_length=20)
@@ -69,6 +71,15 @@ class Trip(models.Model):
         """Returns the url to access a detail record for this trip."""
         return reverse('trip-detail', args=[str(self.id)])
 
+    @property
+    def total_weight_display(self):
+        if self.total_weight is None:
+            return "0-00"
+
+        lbs = self.total_weight // 16
+        oz = self.total_weight % 16
+        return f"{lbs} lbs -{oz:02d} oz"
+
 class Catch(models.Model):
     fish = models.ForeignKey('Fish', on_delete=models.SET_NULL, null=True)
     weight = models.IntegerField(help_text='Weight in ounces')
@@ -82,7 +93,8 @@ class Catch(models.Model):
     photo =  models.CharField(max_length=1, choices=YES_OR_NO, default='N')    
 
     class Meta:
-        ordering = ['trip', '-catch_time', '-weight', 'fish']
+        #ordering = ['trip', '-catch_time', '-weight', 'fish']
+        ordering = ['-trip__date', '-catch_time']
     
     def __str__(self):
         """String for representing the Model object."""
@@ -91,3 +103,8 @@ class Catch(models.Model):
     def get_absolute_url(self):
         """Returns the url to access a detail record for this catch."""
         return reverse('catch-detail', args=[str(self.id)])
+
+    @property
+    def weight_display(self):
+        return toPoundsAndOunces(self.weight)
+

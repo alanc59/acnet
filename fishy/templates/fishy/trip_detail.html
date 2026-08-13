@@ -1,96 +1,286 @@
 {% extends "base_generic_refresh.html" %}
+{% load static %}
 
 {% block content %}
-        <div class="container bg-info p-4">
-            <h1>Trip: {{ trip.venue }}</h1>
-            <h1>Date: {{ trip.date|date:'Y-m-d' }}
-            {% if live_trip %}
-                - Live Trip</h1>
-                <h4><strong>Page last refreshed:</strong> <span id="datetime"> </h4>
-                <script>
-                    var dt = new Date();
-                    document.getElementById("datetime").innerHTML = (("0"+dt.getHours()).slice(-2)) +":"+ (("0"+dt.getMinutes()).slice(-2));
-                </script>
-            {% else %}
-                - Completed Trip</h1>
-            {% endif %}
 
-            <div style="margin-left:20px;margin-top:20px">
-                <h4>Total Fish Caught = {{ trip.catch_set.count }}</h4> 
-                <h4>Total Fish Weight = {{ weight }}</h4> 
+<div class="page-card trip-detail-card">
 
-                {% if new_fish %}
-                    <BR>
-                    <table class="table">
-                        <tr>
-                            <td class="bg-warning">NEW CATCH</td>
-                            <td class="bg-warning">NEW CATCH</td>
-                            <td class="bg-warning">NEW CATCH</td>
-                            <td class="bg-warning">NEW CATCH</td>
-                       </tr>
-                   </table> 
-                   <BR>
+    <h1 class="page-title">
+        <span class="line"></span>
+        {{ trip.venue }}
+        <span class="line"></span>
+    </h1>
+
+    <p class="page-subtitle">
+        {{ trip.date|date:"l j F Y" }}
+    </p>
+
+    <div class="trip-status-bar">
+
+        {% if live_trip %}
+            <div class="status-live">
+                🟢 LIVE TRIP
+            </div>
+
+            <div class="refresh-time">
+                Last updated:
+                <strong><span id="datetime"></span></strong>
+            </div>
+
+            <script>
+                const dt = new Date();
+
+                document.getElementById("datetime").innerHTML =
+                    ("0" + dt.getHours()).slice(-2)
+                    + ":"
+                    + ("0" + dt.getMinutes()).slice(-2);
+            </script>
+
+        {% else %}
+
+            <div class="status-complete">
+                ✔ COMPLETED TRIP
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="trip-summary">
+
+        <div class="summary-card">
+
+            <div class="summary-value">
+                {{ catch_count }}
+            </div>
+
+            <div class="summary-label">
+                Fish Caught
+            </div>
+
+        </div>
+
+        <div class="summary-card">
+
+            <div class="summary-value">
+                {{ weight }}
+            </div>
+
+            <div class="summary-label">
+                Total Weight
+            </div>
+
+        </div>
+
+        <div class="summary-card">
+
+            <div class="summary-value">
+                {{ avg_weight }}
+            </div>
+
+            <div class="summary-label">
+                Average Weight
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {% if new_fish %}
+
+        <div class="new-fish-banner">
+
+            🎣
+            New fish caught at
+            {{ latest_catch.catch_time|date:"H:i" }}
+
+        </div>
+
+    {% endif %}
+
+
+    <div class="list-wrapper">
+
+        <table class="list-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Fish</th>
+
+                    <th class="text-center">
+                        Weight
+                    </th>
+
+                    <th>
+                        Bait
+                    </th>
+
+                    <th class="text-center">
+                        Method
+                    </th>
+
+                    <th class="text-center">
+                        Time
+                    </th>
+
+                    <th class="text-center">
+                        Photo
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for catch in trip.catch_set.all %}
+
+                {% if new_fish and latest_catch and catch.id == latest_catch.id %}
+
+                    <tr class="new-catch-row">
+
+                        <td>
+                            <a href="{{ catch.get_absolute_url }}">
+                                {{ catch.fish }}
+                            </a>
+                        </td>
+
+                        <td class="text-center">
+                            {{ catch.weight_display }}
+                        </td>
+
+                        <td>
+                            {{ catch.bait }}
+                        </td>
+
+                        <td class="text-center">
+
+                            {% if catch.method == 'F' %}
+
+                                Float
+
+                            {% elif catch.method == 'L' %}
+
+                                Ledger
+
+                            {% else %}
+
+                                Method Feeder
+
+                            {% endif %}
+
+                        </td>
+
+                        <td class="text-center">
+                            {{ catch.catch_time|date:"H:i" }}
+                        </td>
+
+                        <td class="text-center">
+
+                            {% if catch.photo == 'Y' %}
+
+                                <a href="{{ catch.get_absolute_url }}">
+                                    View
+                                </a>
+
+                            {% else %}
+
+                                None
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td>
+                            <a href="{{ catch.get_absolute_url }}">
+                                {{ catch.fish }}
+                            </a>
+                        </td>
+
+                        <td class="text-center">
+                            {{ catch.weight_display }}
+                        </td>
+
+                        <td>
+                            {{ catch.bait }}
+                        </td>
+
+                        <td class="text-center">
+
+                            {% if catch.method == 'F' %}
+
+                                Float
+
+                            {% elif catch.method == 'L' %}
+
+                                Ledger
+
+                            {% else %}
+
+                                Method Feeder
+
+                            {% endif %}
+
+                        </td>
+
+                        <td class="text-center">
+                            {{ catch.catch_time|date:"H:i" }}
+                        </td>
+
+                        <td class="text-center">
+
+                            {% if catch.photo == 'Y' %}
+
+                                <a href="{{ catch.get_absolute_url }}">
+                                    View
+                                </a>
+
+                            {% else %}
+
+                                None
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
                 {% endif %}
 
-                <table class="table">
-                    <tr>
-                        <th>Fish Type</th>
-                        <th class="r">Weight (oz)</th>
-                        <th>Bait</th>
-                        <th>Method</th>
-                        <th>Catch Time</th>
-                        <th>Photo</th>
-                    </tr>
-                    {% for catch_instance in trip.catch_set.all %}
-                    <tr>
-                       {% if new_fish and forloop.first %} 
-                           <td class="bg-warning"> {{ catch_instance.fish }} </td>
-                           <td class="bg-warning r"> {{ catch_instance.weight }} </td>
-                           <td class="bg-warning"> {{ catch_instance.bait }} </td>
-                           <td class="bg-warning c"> 
-                               {% if catch_instance.method == 'F' %}
-                                   Float
-                               {% elif catch_instance.method == 'L' %}
-                                   Ledger
-                               {% else %}
-                                   Method Feeder
-                               {% endif %}
-                           </td>
-                           <td class="bg-warning c"> {{ catch_instance.catch_time|date:'H:i' }} </td>
-                           {% if catch_instance.photo == 'N' %}
-                               <td class="bg-warning c">None</td>
-                           {% elif catch_instance.photo == 'Y' %}
-                               <td class="bg-warning c"><a href="{{ catch_instance.get_absolute_url }}">View</a></td>
-                           {% endif %}
-                       {% else %}
-                           <td><a href="/fishy/catch/{{catch_instance.id}}"> {{ catch_instance.fish }} </a></td>
-                           <td class="r"> {{ catch_instance.weight }} </td>
-                           <td> {{ catch_instance.bait }} </td>
-                           <td class="c"> 
-                               {% if catch_instance.method == 'F' %}
-                                   Float
-                               {% elif catch_instance.method == 'L' %}
-                                   Ledger
-                               {% else %}
-                                   Method Feeder
-                               {% endif %}
-                           </td>
-                           <td class="c"> {{ catch_instance.catch_time|date:'H:i' }} </td>
-                           {% if catch_instance.photo == 'N' %}
-                               <td class="c">None</td>
-                           {% elif catch_instance.photo == 'Y' %}
-                               <td class="c"><a href="{{ catch_instance.get_absolute_url }}">View</a></td>
-                           {% endif %}
-                       {% endif %}
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
-            {% if user.is_authenticated %}
-                <div class="col-xs-4 text-center">
-                    <a class="btn btn-sm btn-warning" href="{% url 'trip_edit' trip.pk %}" role="button">Edit Trip</a>
-                    <a class="btn btn-sm btn-danger" href="{% url 'trip_delete' trip.pk %}" role="button">Delete Trip</a>
-                </div>
-            {% endif %}
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+    {% if user.is_authenticated %}
+
+        <div class="text-center mt-4">
+
+            <a class="btn btn-warning me-2"
+               href="{% url 'trip_edit' trip.pk %}">
+                Edit Trip
+            </a>
+
+            <a class="btn btn-danger"
+               href="{% url 'trip_delete' trip.pk %}">
+                Delete Trip
+            </a>
+
         </div>
+
+    {% endif %}
+
+</div>
+
 {% endblock %}
