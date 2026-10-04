@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container bg-info p-4">
     <h1>Edit Catch: {{ catch.trip }}</h1>
-    <form action="" method="post">{% csrf_token %}
+    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
         <div class="row">
             <div class="col"> </div>
             <div class="col-6">
@@ -56,6 +56,7 @@
                                 <option value="Y">Yes</option>
                                 <option value="N" selected>No</option>
                             {% endif %}
+                            </select>
                         </td> 
                         <td><span class="helptext">Weighed (if N = estimated)</span></td>
                     </tr>
@@ -95,6 +96,17 @@
                         </td>
                         <td><span class="helptext">Method used for catch</span></td>
                     </tr>
+                    <tr>
+                        <td><label for="id_photo">Photo:</label></td>
+                        <td><input type="file" name="photo" id="id_photo" accept="image/*"></td>
+                        <td><span class="helptext">
+                            {% if catch.photo == 'Y' %}
+                                Has a photo &ndash; choosing a new one replaces it
+                            {% else %}
+                                No photo yet (optional)
+                            {% endif %}
+                        </span></td>
+                    </tr>
                 </table>
             </div>
             <div class="col"> </div>
@@ -118,4 +130,16 @@
 
     </form>
 </div>
+
+<script>
+// Prevent a double tap on Confirm while a photo uploads
+document.querySelector('form').addEventListener('submit', function () {
+    const btn = this.querySelector('button[type="submit"]');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Saving…';
+    }
+});
+</script>
+
 {% endblock content %}

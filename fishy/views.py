@@ -13,7 +13,14 @@ from django.db.models.functions import Coalesce
 from datetime import datetime, timedelta, timezone
 
 import os
+import logging
+ 
+from django.contrib import messages
+from PIL import Image, ImageOps
+ 
+logger = logging.getLogger(__name__)
 
+PHOTO_DIR = os.environ['PHOTO_DIR']
 
 # ============================================================
 #
@@ -436,6 +443,13 @@ class CatchDetailView(generic.DetailView):
 
         return context
 
+def save_catch_photo(uploaded_file, catch_id):
+    """Fix rotation, shrink, and save the photo as <catch_id>.jpg."""
+    img = Image.open(uploaded_file)
+    img = ImageOps.exif_transpose(img)   # stops phone photos appearing sideways
+    img = img.convert('RGB')
+    img.thumbnail((1600, 1600))          # max 1600px on the long side
+    img.save(os.path.join(PHOTO_DIR, f'{catch_id}.jpg'), 'JPEG', quality=85)
 
 class CatchCreateView(LoginRequiredMixin, CreateView):
     model = Catch
@@ -467,6 +481,24 @@ class CatchCreateView(LoginRequiredMixin, CreateView):
 
         return context
 
+    def form_valid(self, form):
+        # Save the catch first so a problem with the photo never loses the entry
+        response = super().form_valid(form)
+ 
+        photo = self.request.FILES.get('photo')
+        if photo:
+            try:
+                save_catch_photo(photo, self.object.pk)
+                self.object.photo = 'Y'
+                self.object.save(update_fields=['photo'])
+            except Exception:
+                logger.exception('Photo upload failed for catch %s', self.object.pk)
+                messages.warning(
+                    self.request,
+                    'Catch saved, but the photo could not be processed.'
+                )
+ 
+        return response
 
 class CatchUpdateView(LoginRequiredMixin, UpdateView):
     model = Catch
@@ -479,28 +511,47 @@ class CatchUpdateView(LoginRequiredMixin, UpdateView):
         'bait',
         'method'
     ]
-
-    trips = (
-        Trip.objects.all().order_by('-id')
-    )
-
-    fishes = (
-        Fish.objects.all().order_by('name')
-    )
-
-    baits = (
-        Bait.objects.all().order_by('name')
-    )
-
+ 
     def get_context_data(self, **kwargs):
-
+ 
         context = super().get_context_data(**kwargs)
-
-        context['trips'] = self.trips
-        context['fishes'] = self.fishes
-        context['baits'] = self.baits
-
+ 
+        # Built fresh on every request so new trips, fish and baits
+        # always appear in the dropdowns
+        context['trips'] = (
+            Trip.objects.all().order_by('-id')
+        )
+ 
+        context['fishes'] = (
+            Fish.objects.all().order_by('name')
+        )
+ 
+        context['baits'] = (
+            Bait.objects.all().order_by('name')
+        )
+ 
         return context
+ 
+    def form_valid(self, form):
+        # Save the catch changes first so a problem with the photo never loses them
+        response = super().form_valid(form)
+ 
+        # Only act if a new photo was chosen; otherwise leave any existing
+        # photo and the indicator exactly as they are
+        photo = self.request.FILES.get('photo')
+        if photo:
+            try:
+                save_catch_photo(photo, self.object.pk)   # overwrites <id>.jpg
+                self.object.photo = 'Y'
+                self.object.save(update_fields=['photo'])
+            except Exception:
+                logger.exception('Photo upload failed for catch %s', self.object.pk)
+                messages.warning(
+                    self.request,
+                    'Catch updated, but the photo could not be processed.'
+                )
+ 
+        return response
 
 
 class CatchDeleteView(LoginRequiredMixin, DeleteView):
