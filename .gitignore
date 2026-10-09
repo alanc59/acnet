@@ -1,3 +1,4 @@
 .env
 __pycache__
 venv
+fishy/static/fishy_stats

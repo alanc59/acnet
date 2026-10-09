@@ -11,7 +11,6 @@
                     <tr>
                         <td>Database ID</td>
                         <td>{{catch.id}}</td>
-                        <td>Primary Key</td>
                     </tr>
                     <tr>
                         <td><label for="id_trip">Trip:</label></td>
@@ -26,6 +25,11 @@
                             </select>
                         </td>
                         <td></td>
+                    </tr>
+                    <tr>
+                        <td><label for="id_catch_time">Catch time:</label></td>
+                        <td><input type="datetime-local" name="catch_time" id="id_catch_time" step="1" required
+                                   value="{{ catch.catch_time|date:'Y-m-d\TH:i:s' }}"></td>
                     </tr>
                     <tr>
                         <td><label for="id_fish">Fish:</label></td>
@@ -44,7 +48,6 @@
                     <tr>
                         <td><label for="id_weight">Weight:</label></td>
                         <td><input type="number" name="weight" value="{{catch.weight}}" required id="id_weight"></td>
-                        <td><span class="helptext">Weight in ounces</span></td>
                     </tr>
                     <tr>
                         <td><label for="id_weighed">Weighed:</label></td>
@@ -57,8 +60,7 @@
                                 <option value="N" selected>No</option>
                             {% endif %}
                             </select>
-                        </td> 
-                        <td><span class="helptext">Weighed (if N = estimated)</span></td>
+                        </td>
                     </tr>
                     <tr>
                         <td><label for="id_bait">Bait:</label></td>
@@ -94,18 +96,20 @@
                             {% endif %}
                             </select>
                         </td>
-                        <td><span class="helptext">Method used for catch</span></td>
                     </tr>
                     <tr>
                         <td><label for="id_photo">Photo:</label></td>
-                        <td><input type="file" name="photo" id="id_photo" accept="image/*"></td>
-                        <td><span class="helptext">
-                            {% if catch.photo == 'Y' %}
-                                Has a photo &ndash; choosing a new one replaces it
-                            {% else %}
-                                No photo yet (optional)
-                            {% endif %}
-                        </span></td>
+                        <td>
+                            <!-- The real file input is hidden; the label below acts as its button,
+                                 so we can show our own text instead of the browser's "No file selected" -->
+                            <input type="file" name="photo" id="id_photo" accept="image/*" class="d-none">
+                            <label for="id_photo" class="btn btn-sm btn-primary mb-0">
+                                {% if catch.photo == 'Y' %}Replace photo{% else %}Choose photo{% endif %}
+                            </label>
+                            <span id="photo_status" class="ms-2">
+                                {% if catch.photo == 'Y' %}Photo attached{% else %}No photo{% endif %}
+                            </span>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -132,14 +136,93 @@
 </div>
 
 <script>
-// Prevent a double tap on Confirm while a photo uploads
-document.querySelector('form').addEventListener('submit', function () {
-    const btn = this.querySelector('button[type="submit"]');
-    if (btn) {
-        btn.disabled = true;
-        btn.textContent = 'Saving…';
+// Shrinks the photo on the phone before uploading (several MB -> a few hundred KB)
+// so it gets through on a poor signal. Also stops a double tap on the button.
+(function () {
+    const MAX_SIZE = 1600;      // longest side in pixels, same as the server
+    const QUALITY = 0.85;       // JPEG quality
+
+    const form = document.querySelector('form');
+    const input = document.getElementById('id_photo');
+    const btn = form.querySelector('button[type="submit"]');
+    const btnText = btn ? btn.textContent : '';
+
+    function setButton(text, disabled) {
+        if (!btn) return;
+        btn.textContent = text;
+        btn.disabled = disabled;
     }
-});
+
+    function loadImage(file) {
+        return new Promise(function (resolve, reject) {
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = function () { URL.revokeObjectURL(url); resolve(img); };
+            img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Cannot read image')); };
+            img.src = url;
+        });
+    }
+
+    async function shrinkPhoto(file) {
+        const img = await loadImage(file);   // the browser applies the photo's rotation
+        const scale = Math.min(1, MAX_SIZE / Math.max(img.naturalWidth, img.naturalHeight));
+        const width = Math.round(img.naturalWidth * scale);
+        const height = Math.round(img.naturalHeight * scale);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+
+        const blob = await new Promise(function (resolve) {
+            canvas.toBlob(resolve, 'image/jpeg', QUALITY);
+        });
+        if (!blob || blob.size >= file.size) return null;   // no saving, keep original
+        return new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+    }
+
+    form.addEventListener('submit', async function (event) {
+        const file = input && input.files && input.files[0];
+        if (!file) {
+            setButton('Saving…', true);     // no photo, submit as normal
+            return;
+        }
+
+        event.preventDefault();
+        setButton('Preparing photo…', true);
+
+        try {
+            const smaller = await shrinkPhoto(file);
+            if (smaller) {
+                const dt = new DataTransfer();
+                dt.items.add(smaller);
+                input.files = dt.files;
+            }
+        } catch (err) {
+            // Couldn't shrink it on the phone: send the original, the server still resizes it
+        }
+
+        setButton('Uploading…', true);
+        form.submit();
+    });
+
+    // Show which photo has been chosen in place of "Photo attached" / "No photo"
+    const photoStatus = document.getElementById('photo_status');
+    if (input && photoStatus) {
+        input.addEventListener('change', function () {
+            const chosen = input.files && input.files[0];
+            if (chosen) {
+                photoStatus.textContent = 'New photo selected: ' + chosen.name;
+            }
+        });
+    }
+
+    // Re-enable the button if you come back to this page with the Back button
+    window.addEventListener('pageshow', function () {
+        setButton(btnText, false);
+    });
+})();
 </script>
 
 {% endblock content %}
+

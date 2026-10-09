@@ -36,6 +36,12 @@
                     + ("0" + dt.getMinutes()).slice(-2);
             </script>
 
+        {% elif future_trip %}
+
+            <div class="status-complete" style="background: #0d6efd;">
+                📅 FUTURE TRIP
+            </div>
+
         {% else %}
 
             <div class="status-complete">
@@ -284,3 +290,4 @@
 </div>
 
 {% endblock %}
+

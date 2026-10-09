@@ -1,0 +1,168 @@
+/*============================================================*
+* PHONE LAYOUT
+*
+* This file is ONLY loaded on screens 768px wide or less
+* (see the <link ... media="(max-width: 768px)"> line in the
+* base templates). Laptops and desktops never load it, so the
+* laptop display is unaffected.
+*
+* Problem it fixes ("phone scroll problem"):
+*   On the laptop, .site-shell is exactly one screen high and
+*   .page-content has overflow: hidden, so each page has to fit
+*   between the navbar and the footer. A phone screen is much
+*   shorter, so anything that doesn't fit is cut off and can't
+*   be scrolled to (e.g. the Confirm button on Edit Catch).
+*
+* Fix: on phones, let the page grow to its natural length and
+* scroll normally, with the footer at the end of the content.
+*============================================================*/
+
+html,
+body {
+    height: auto;
+    min-height: 100%;
+}
+
+.site-shell {
+    height: auto;          /* was 100vh: let the page be as long as it needs */
+    min-height: 100vh;     /* still fill the screen on short pages */
+    padding: 8px;
+    gap: 8px;
+}
+
+.page-content {
+    flex: 1 0 auto;
+    overflow: visible;     /* was hidden: this is what was cutting pages off */
+}
+
+
+/*------------------------------------------------------------*
+* LONG LISTS
+*
+* Lists (e.g. the catch list) keep their own scrolling box so
+* the blue header row stays visible while scrolling, but the
+* box is limited in height so you can always scroll past it to
+* the rest of the page and the footer.
+*------------------------------------------------------------*/
+
+.list-wrapper {
+    max-height: 70vh;
+}
+
+
+/*------------------------------------------------------------*
+* FORM PAGES (New / Edit Catch, Trip, Venue, etc.)
+*
+* These pages are built as <div class="container bg-info p-4">
+* with the form table in a centred column (col-6 or col) between
+* two blank spacer columns. On a phone that column is too narrow,
+* so the inputs are squashed or stick out past the blue panel.
+*
+* On phones only:
+*   - the form uses the full width of the panel
+*   - each row is laid out as  [label] [field]  side by side
+*   - fields get a consistent, finger-friendly style
+*   - short fields (weight, Yes/No, method) are sized to suit
+*     their content instead of stretching across the screen
+*------------------------------------------------------------*/
+
+.container.bg-info {
+    padding: 12px !important;      /* Bootstrap's p-4 is quite wide on a phone */
+    text-align: left;
+}
+
+.container.bg-info h1 {
+    font-size: 1.5rem;
+}
+
+/* The column holding the form table uses the full width.
+   (Some pages use col-6 for it, others plain col, so match
+   whichever column contains the table.) */
+.container.bg-info .row > [class*="col"]:has(> .table) {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+/* The blank spacer columns either side of the form aren't needed
+   on a phone. Only columns with nothing inside them are hidden,
+   so the Save/Confirm button column is unaffected. */
+.container.bg-info .row > [class*="col"]:not(:has(*)) {
+    display: none;
+}
+
+.container.bg-info .table,
+.container.bg-info .table tbody {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+/* Each form row: label column + field column */
+.container.bg-info .table tr {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    align-items: center;
+    column-gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, .12);
+}
+
+.container.bg-info .table tr:last-child {
+    border-bottom: none;
+}
+
+.container.bg-info .table td {
+    display: block;
+    min-width: 0;                  /* lets long dropdowns shrink to fit */
+    padding: 0;
+    border: none;
+    text-align: left;
+    background: transparent;
+    box-shadow: none;
+}
+
+.container.bg-info .table td:empty {
+    display: none;                 /* the blank third column */
+}
+
+.container.bg-info .table td:first-child {
+    font-weight: 600;
+}
+
+/* Consistent field style (16px text also stops iPhones zooming in) */
+.container.bg-info .table select,
+.container.bg-info .table input:not([type="file"]) {
+    width: 100%;
+    max-width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 6px 10px;
+    font-size: 16px;
+    color: #212529;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+}
+
+.container.bg-info .table select:focus,
+.container.bg-info .table input:not([type="file"]):focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, .25);
+}
+
+/* Short fields: no need to stretch across the screen */
+#id_weight,
+#id_weighed {
+    max-width: 7rem;
+}
+
+#id_method {
+    max-width: 11rem;
+}
+
+/* Photo row: button and status text wrap neatly if space is tight */
+#photo_status {
+    display: inline-block;
+    margin-top: 4px;
+}

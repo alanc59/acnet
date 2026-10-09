@@ -1,13 +1,14 @@
 from django.db import models
 from django.urls import reverse
 from util.utilities import *
+from django.utils import timezone   # after the * import so nothing in utilities can replace it
 
 
 class Fish(models.Model):
     name = models.CharField(max_length=20)
     latin_name = models.CharField(max_length=35, null=True)
     uk_record = models.IntegerField(help_text='Weight in ounces')
-    
+
     class Meta:
         ordering = ['name']
 
@@ -17,18 +18,18 @@ class Fish(models.Model):
 
     def __unicode__(self):
         return self.name
-    
+
     def get_absolute_url(self):
         """Returns the url to access a detail record for this fish."""
         return reverse('fish-detail', args=[str(self.id)])
 
 class Venue(models.Model):
     name = models.CharField(max_length=25)
-	
+
     YES_OR_NO = (('Y', 'Yes'), ('N', 'No'))
 
     wac = models.CharField(max_length=1, choices=YES_OR_NO, help_text='Withnell Water or not')
- 
+
     postcode = models.CharField(max_length=10, null=True)
 
     class Meta:
@@ -44,7 +45,7 @@ class Venue(models.Model):
 
 class Bait(models.Model):
     name = models.CharField(max_length=20)
-    
+
     class Meta:
         ordering = ['name']
 
@@ -89,13 +90,13 @@ class Catch(models.Model):
     bait = models.ForeignKey('Bait', on_delete=models.SET_NULL, null=True)
     METHOD = (('F', 'Float'), ('L', 'Ledger'), ('M', 'Method Feeder'))
     method = models.CharField(max_length=1, choices=METHOD, default='F', help_text='Method used for catch')
-    catch_time = models.DateTimeField(auto_now_add=True)
-    photo =  models.CharField(max_length=1, choices=YES_OR_NO, default='N')    
+    catch_time = models.DateTimeField(default=timezone.now)
+    photo =  models.CharField(max_length=1, choices=YES_OR_NO, default='N')
 
     class Meta:
         #ordering = ['trip', '-catch_time', '-weight', 'fish']
         ordering = ['-trip__date', '-catch_time']
-    
+
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.trip}, {self.fish}, Weight (oz)={self.weight}, Weighed={self.weighed}, {self.bait}, {self.catch_time}, {self.photo}'
@@ -107,4 +108,3 @@ class Catch(models.Model):
     @property
     def weight_display(self):
         return toPoundsAndOunces(self.weight)
-

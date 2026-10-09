@@ -8,6 +8,8 @@
   {% load static %}
   <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.1/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <!-- Phone-only layout fixes: only loaded on screens 768px wide or less -->
+  <link rel="stylesheet" href="{% static 'css/phone.css' %}" media="(max-width: 768px)">
   <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
   <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 </head>

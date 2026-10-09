@@ -11,6 +11,7 @@ from django.db.models import Sum, Count
 from django.db.models.functions import Coalesce
 
 from datetime import datetime, timedelta, timezone
+from django.utils.timezone import localdate
 
 import os
 import logging
@@ -143,8 +144,16 @@ class TripDetailView(generic.DetailView):
 
         time_now = datetime.now(timezone.utc)
 
+        # Today's date in UK time (settings.TIME_ZONE), not UTC, so the
+        # status doesn't lag by an hour around midnight in summer
+        today = localdate()
+
         live_trip = (
-            trip.date == time_now.date()
+            trip.date == today
+        )
+
+        future_trip = (
+            trip.date > today
         )
 
         latest_catch = catches.first()
@@ -182,6 +191,7 @@ class TripDetailView(generic.DetailView):
         )
 
         context["live_trip"] = live_trip
+        context["future_trip"] = future_trip
         context["new_fish"] = new_fish
         context["latest_catch"] = latest_catch
 
@@ -505,6 +515,7 @@ class CatchUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'fishy/catch_edit.html'
     fields = [
         'trip',
+        'catch_time',
         'fish',
         'weight',
         'weighed',
@@ -704,3 +715,4 @@ def statistics_report(request, report_name):
             "report_html": report_html,
         }
     )
+

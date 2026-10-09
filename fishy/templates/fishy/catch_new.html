@@ -4,7 +4,7 @@
 <div class="container bg-info p-4">
     <h1>New Catch</h1>
     <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-        <div class="row">      
+        <div class="row">
             <div class="col"> </div>
             <div class="col-6">
                 <table class="table">
@@ -13,13 +13,13 @@
                         <td><select name="trip" required id="id_trip">
                             {% for trip  in trips %}
                                 <option value="{{ trip.id }}">{{ trip.date|date:'Y-m-d' }} {{trip.venue }}</option>
-                            {% endfor %}    
+                            {% endfor %}
                             </select>
                         </td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td><label for="id_fish">Fish:</label></td> 
+                        <td><label for="id_fish">Fish:</label></td>
                         <td><select name="fish" required id="id_fish">
                             {% for fish in fishes %}
                                 {% if fish.name == 'Roach' %}
@@ -33,18 +33,16 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td><label for="id_weight">Weight:</label></td> 
+                        <td><label for="id_weight">Weight:</label></td>
                         <td><input type="number" name="weight" required id="id_weight"></td>
-                        <td><span class="helptext">Weight in ounces</span></td>
                     </tr>
                     <tr>
                         <td><label for="id_weighed">Weighed:</label></td>
                         <td><select name="weighed" id="id_weighed">
                                 <option value="Y" selected>Yes</option>
                                 <option value="N">No</option>
-                            </select> 
+                            </select>
                         </td>
-                        <td><span class="helptext">Weighed (if No = estimated)</span></td>
                     </tr>
                     <tr>
                         <td><label for="id_bait">Bait:</label></td>
@@ -56,7 +54,7 @@
                                     <option value="{{ bait.id }}">{{ bait.name }}</option>
                                 {% endif %}
                             {% endfor %}
-                            </select> 
+                            </select>
                         </td>
                         <td></td>
                     </tr>
@@ -66,14 +64,12 @@
                             <option value="F" selected>Float</option>
                             <option value="L">Ledger</option>
                             <option value="M">Method Feeder</option>
-                            </select> 
+                            </select>
                         </td>
-                        <td><span class="helptext">Method used for catch</span></td>
                     </tr>
                     <tr>
                         <td><label for="id_photo">Photo:</label></td>
                         <td><input type="file" name="photo" id="id_photo" accept="image/*"></td>
-                        <td><span class="helptext">Optional</span></td>
                     </tr>
                 </table>
             </div>
@@ -93,14 +89,81 @@
 </div>
 
 <script>
-// Prevent a double tap on Save creating a duplicate catch while a photo uploads
-document.querySelector('form').addEventListener('submit', function () {
-    const btn = this.querySelector('button[type="submit"]');
-    if (btn) {
-        btn.disabled = true;
-        btn.textContent = 'Saving…';
+// Shrinks the photo on the phone before uploading (several MB -> a few hundred KB)
+// so it gets through on a poor signal. Also stops a double tap on the button.
+(function () {
+    const MAX_SIZE = 1600;      // longest side in pixels, same as the server
+    const QUALITY = 0.85;       // JPEG quality
+
+    const form = document.querySelector('form');
+    const input = document.getElementById('id_photo');
+    const btn = form.querySelector('button[type="submit"]');
+    const btnText = btn ? btn.textContent : '';
+
+    function setButton(text, disabled) {
+        if (!btn) return;
+        btn.textContent = text;
+        btn.disabled = disabled;
     }
-});
+
+    function loadImage(file) {
+        return new Promise(function (resolve, reject) {
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = function () { URL.revokeObjectURL(url); resolve(img); };
+            img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Cannot read image')); };
+            img.src = url;
+        });
+    }
+
+    async function shrinkPhoto(file) {
+        const img = await loadImage(file);   // the browser applies the photo's rotation
+        const scale = Math.min(1, MAX_SIZE / Math.max(img.naturalWidth, img.naturalHeight));
+        const width = Math.round(img.naturalWidth * scale);
+        const height = Math.round(img.naturalHeight * scale);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+
+        const blob = await new Promise(function (resolve) {
+            canvas.toBlob(resolve, 'image/jpeg', QUALITY);
+        });
+        if (!blob || blob.size >= file.size) return null;   // no saving, keep original
+        return new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+    }
+
+    form.addEventListener('submit', async function (event) {
+        const file = input && input.files && input.files[0];
+        if (!file) {
+            setButton('Saving…', true);     // no photo, submit as normal
+            return;
+        }
+
+        event.preventDefault();
+        setButton('Preparing photo…', true);
+
+        try {
+            const smaller = await shrinkPhoto(file);
+            if (smaller) {
+                const dt = new DataTransfer();
+                dt.items.add(smaller);
+                input.files = dt.files;
+            }
+        } catch (err) {
+            // Couldn't shrink it on the phone: send the original, the server still resizes it
+        }
+
+        setButton('Uploading…', true);
+        form.submit();
+    });
+
+    // Re-enable the button if you come back to this page with the Back button
+    window.addEventListener('pageshow', function () {
+        setButton(btnText, false);
+    });
+})();
 </script>
 
 {% endblock content %}
