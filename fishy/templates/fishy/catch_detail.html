@@ -12,7 +12,7 @@
     </h1>
 
     <p class="page-subtitle">
-        {{ catch.trip.venue }} - {{ catch.trip.date|date:"l j F Y" }}
+        {{ catch.trip.venue }} - {{ catch.trip.date|date:"l j F Y" }}{% if catch.angler %} &middot; {{ catch.angler }}{% endif %}
     </p>
 
     <div class="catch-detail-content">
@@ -86,7 +86,7 @@
     </div>
 
 
-    {% if user.is_authenticated %}
+    {% if can_edit %}
 
         <div class="catch-admin">
 

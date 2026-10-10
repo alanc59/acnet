@@ -14,9 +14,19 @@
         {{ subtitle }}
     </p>
 
-    <div class="list-wrapper">
+    <form id="filterForm" method="get" class="d-flex flex-column" style="flex: 1; min-height: 0;">
 
-        <form id="filterForm" method="get">
+        <div class="angler-filter">
+            <label for="id_angler">Angler</label>
+            <select name="angler" id="id_angler" onchange="['venue','bait'].forEach(function (n) { var s=document.querySelector('#filterForm [name=' + n + ']'); if (s) { s.value=''; } }); this.form.submit();">
+                <option value="">All anglers</option>
+                {% for a in anglers %}
+                    <option value="{{ a.id }}" {% if selected_angler == a.id|stringformat:"s" %}selected{% endif %}>{{ a.get_full_name|default:a.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+    <div class="list-wrapper">
 
             <table class="list-table">
 
@@ -30,6 +40,8 @@
                             </a>
                         </th>
 
+                        {% if not selected_angler %}<th>Angler</th>{% endif %}
+
                         <th>
                             <select name="venue"
                                     class="venue-select"
@@ -42,7 +54,7 @@
                                         {% if selected_venue == venue.id|stringformat:"s" %}
                                             selected
                                         {% endif %}>
-                                        {{ venue.name }}
+                                        {{ venue.name }}{% if not selected_angler %} ({{ venue.angler }}){% endif %}
                                     </option>
                                 {% endfor %}
 
@@ -84,7 +96,7 @@
                                         {% if selected_bait == bait.id|stringformat:"s" %}
                                             selected
                                         {% endif %}>
-                                        {{ bait.name }}
+                                        {{ bait.name }}{% if not selected_angler %} ({{ bait.angler }}){% endif %}
                                     </option>
                                 {% endfor %}
 
@@ -164,6 +176,8 @@
                                     </a>
                                 </td>
 
+                                {% if not selected_angler %}<td>{{ catch.angler }}</td>{% endif %}
+
                                 <td>
                                     {{ catch.trip.venue }}
                                 </td>
@@ -213,7 +227,7 @@
                     {% else %}
 
                         <tr>
-                            <td colspan="7" class="text-center py-4">
+                            <td colspan="8" class="text-center py-4">
                                 No catches match the selected filters.
                             </td>
                         </tr>
@@ -224,9 +238,9 @@
 
             </table>
 
-        </form>
-
     </div>
+
+    </form>
 
 </div>
 

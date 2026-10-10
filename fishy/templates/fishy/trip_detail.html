@@ -12,7 +12,7 @@
     </h1>
 
     <p class="page-subtitle">
-        {{ trip.date|date:"l j F Y" }}
+        {{ trip.date|date:"l j F Y" }}{% if trip.angler %} &middot; {{ trip.angler }}{% endif %}
     </p>
 
     <div class="trip-status-bar">
@@ -269,24 +269,28 @@
         </table>
 
     </div>
-    {% if user.is_authenticated %}
+    {% if can_add_catch or can_edit %}
 
         <div class="text-center mt-4">
 
-            <a class="btn btn-success me-2"
-               href="{% url 'catch_new' %}?trip={{ trip.pk }}">
-                New Catch
-            </a>
+            {% if can_add_catch %}
+                <a class="btn btn-success me-2"
+                   href="{% url 'catch_new' %}?trip={{ trip.pk }}">
+                    New Catch
+                </a>
+            {% endif %}
 
-            <a class="btn btn-warning me-2"
-               href="{% url 'trip_edit' trip.pk %}">
-                Edit Trip
-            </a>
+            {% if can_edit %}
+                <a class="btn btn-warning me-2"
+                   href="{% url 'trip_edit' trip.pk %}">
+                    Edit Trip
+                </a>
 
-            <a class="btn btn-danger"
-               href="{% url 'trip_delete' trip.pk %}">
-                Delete Trip
-            </a>
+                <a class="btn btn-danger"
+                   href="{% url 'trip_delete' trip.pk %}">
+                    Delete Trip
+                </a>
+            {% endif %}
 
         </div>
 

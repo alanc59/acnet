@@ -11,7 +11,7 @@
     </h1>
 
     <p class="page-subtitle">
-        {{ venue.postcode }}
+        {{ venue.postcode }}{% if venue.angler %} &middot; {{ venue.angler }}{% endif %}
     </p>
 
 
@@ -59,7 +59,7 @@
     </div>
 
 
-    {% if user.is_authenticated %}
+    {% if can_edit %}
 
         <div class="venue-admin">
 

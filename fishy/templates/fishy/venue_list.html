@@ -11,8 +11,20 @@
     </h1>
 
     <p class="page-subtitle">
-        Fishing venues in the library
+        Fishing venues
     </p>
+
+    <form method="get" class="m-0">
+        <div class="angler-filter">
+            <label for="id_angler">Angler</label>
+            <select name="angler" id="id_angler" onchange="this.form.submit();">
+                <option value="">All anglers</option>
+                {% for a in anglers %}
+                    <option value="{{ a.id }}" {% if selected_angler == a.id|stringformat:"s" %}selected{% endif %}>{{ a.get_full_name|default:a.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
 
     {% if venue_list %}
 
@@ -23,6 +35,7 @@
             <thead>
                 <tr>
                     <th>Venue</th>
+                    {% if not selected_angler %}<th>Angler</th>{% endif %}
                     <th>Postcode</th>
                     <th class="text-center">WAC Water</th>
                     <th class="text-center">Visits</th>
@@ -42,6 +55,8 @@
                             {{ venue.name }}
                         </a>
                     </td>
+
+                    {% if not selected_angler %}<td>{{ venue.angler }}</td>{% endif %}
 
                     <td>
                         {{ venue.postcode }}
@@ -75,7 +90,7 @@
 
     {% else %}
 
-        <p>No venues have been recorded.</p>
+        <p class="text-center">No venues recorded.</p>
 
     {% endif %}
 

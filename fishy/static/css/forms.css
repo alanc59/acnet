@@ -140,3 +140,31 @@
     padding: 6px 22px;
     font-size: 1rem;
 }
+
+
+/*============================================================*
+* ANGLER FILTER (Trips / Catches / Venues / Baits lists)
+*============================================================*/
+
+.angler-filter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 0 12px;
+}
+
+.angler-filter label {
+    font-weight: 600;
+    color: #333;
+}
+
+.angler-filter select {
+    height: 36px;
+    padding: 4px 10px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background-color: #fff;
+    min-width: 12rem;
+}

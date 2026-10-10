@@ -14,6 +14,18 @@
         Baits recorded: {{ bait_list|length }}
     </p>
 
+    <form method="get" class="m-0">
+        <div class="angler-filter">
+            <label for="id_angler">Angler</label>
+            <select name="angler" id="id_angler" onchange="this.form.submit();">
+                <option value="">All anglers</option>
+                {% for a in anglers %}
+                    <option value="{{ a.id }}" {% if selected_angler == a.id|stringformat:"s" %}selected{% endif %}>{{ a.get_full_name|default:a.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
     <div class="list-wrapper">
 
         <table class="list-table">
@@ -21,6 +33,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    {% if not selected_angler %}<th>Angler</th>{% endif %}
                     <th class="text-center">Fish Caught</th>
                 </tr>
             </thead>
@@ -37,6 +50,8 @@
                             </a>
                         </td>
 
+                        {% if not selected_angler %}<td>{{ bait.angler }}</td>{% endif %}
+
                         <td class="text-center">
                             {{ bait.catch_count }}
                         </td>
@@ -46,7 +61,7 @@
                 {% empty %}
 
                     <tr>
-                        <td colspan="2" class="text-center py-4">
+                        <td colspan="3" class="text-center py-4">
                             No baits recorded.
                         </td>
                     </tr>

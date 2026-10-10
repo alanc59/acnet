@@ -1,7 +1,15 @@
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from util.utilities import *
 from django.utils import timezone   # after the * import so nothing in utilities can replace it
+
+
+def angler_name(user):
+    """How an angler's name is shown: full name if set, otherwise username."""
+    if user is None:
+        return ''
+    return user.get_full_name() or user.get_username()
 
 
 class Fish(models.Model):
@@ -31,6 +39,7 @@ class Venue(models.Model):
     wac = models.CharField(max_length=1, choices=YES_OR_NO, help_text='Withnell Water or not')
 
     postcode = models.CharField(max_length=10, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name='venues')   # owner (angler)
 
     class Meta:
         ordering = ['name']
@@ -43,8 +52,15 @@ class Venue(models.Model):
         """Returns the url to access a detail record for this venue."""
         return reverse('venue-detail', args=[str(self.id)])
 
+    @property
+    def angler(self):
+        """Owner's display name."""
+        return angler_name(self.user)
+
+
 class Bait(models.Model):
     name = models.CharField(max_length=20)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name='baits')   # owner (angler)
 
     class Meta:
         ordering = ['name']
@@ -57,9 +73,16 @@ class Bait(models.Model):
         """Returns the url to access a detail record for this trip."""
         return reverse('bait-detail', args=[str(self.id)])
 
+    @property
+    def angler(self):
+        """Owner's display name."""
+        return angler_name(self.user)
+
+
 class Trip(models.Model):
     date = models.DateField()
     venue = models.ForeignKey('Venue', on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name='trips')   # owner (angler)
 
     class Meta:
         ordering = ['-date', 'venue']
@@ -81,6 +104,12 @@ class Trip(models.Model):
         oz = self.total_weight % 16
         return f"{lbs} lbs -{oz:02d} oz"
 
+    @property
+    def angler(self):
+        """Owner's display name."""
+        return angler_name(self.user)
+
+
 class Catch(models.Model):
     fish = models.ForeignKey('Fish', on_delete=models.SET_NULL, null=True)
     weight = models.IntegerField(help_text='Weight in ounces')
@@ -92,6 +121,7 @@ class Catch(models.Model):
     method = models.CharField(max_length=1, choices=METHOD, default='F', help_text='Method used for catch')
     catch_time = models.DateTimeField(default=timezone.now)
     photo =  models.CharField(max_length=1, choices=YES_OR_NO, default='N')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name='catches')   # owner (angler)
 
     class Meta:
         #ordering = ['trip', '-catch_time', '-weight', 'fish']
@@ -108,3 +138,8 @@ class Catch(models.Model):
     @property
     def weight_display(self):
         return toPoundsAndOunces(self.weight)
+
+    @property
+    def angler(self):
+        """Owner's display name."""
+        return angler_name(self.user)

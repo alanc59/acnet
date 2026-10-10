@@ -35,14 +35,53 @@ class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_staff
 
+
+class OwnerRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+    """Only the record's owner (or an admin) may edit or delete it.
+
+    Anyone else gets a 403 Forbidden page, even if they type the address.
+    """
+
+    def test_func(self):
+        user = self.request.user
+        return user.is_staff or self.get_object().user_id == user.pk
+
+
+def can_edit(user, obj):
+    """True if this user may edit / delete this record (owner or admin)."""
+    return user.is_authenticated and (user.is_staff or obj.user_id == user.pk)
+
+
+def selected_angler(request):
+    """The Angler filter on the lists: a user id as a string, or '' for all.
+
+    With no filter in the address yet, logged-in users start on their own
+    records and visitors start on all anglers.
+    """
+    value = request.GET.get('angler')
+    if value is None:
+        value = str(request.user.pk) if request.user.is_authenticated else ''
+    return value if value.isdigit() else ''
+
+
+def filter_by_angler(queryset, angler):
+    return queryset.filter(user_id=angler) if angler else queryset
+
+
+def add_angler_filter(request, context):
+    """Adds what the Angler dropdown needs to a list page's context."""
+    context['anglers'] = _anglers()
+    context['selected_angler'] = selected_angler(request)
+    return context
+
 # ============================================================
 #
 # Index
 #
 # ============================================================
 
-# Until multi-user adds an owner to Trip, every trip belongs to the
-# single angler. Once Trip has a 'user' field this picks it up automatically.
+# Trips have an owner (multi-user). Kept as a check so the home page still
+# works if the field were ever missing.
 TRIP_HAS_OWNER = any(f.name == 'user' for f in Trip._meta.get_fields())
 
 
@@ -97,10 +136,12 @@ def index(request):
         })
 
     # ---- Fish of the week / month / year: heaviest WEIGHED fish ----
-    def heaviest_since(start):
+    def heaviest_since(start, user=None):
+        catches = Catch.objects.filter(weighed='Y', trip__date__gte=start, trip__date__lte=today)
+        if user is not None:
+            catches = catches.filter(user=user)
         return (
-            Catch.objects
-            .filter(weighed='Y', trip__date__gte=start, trip__date__lte=today)
+            catches
             .select_related('fish', 'trip', 'trip__venue')
             .order_by('-weight', 'trip__date', 'catch_time')
             .first()
@@ -113,25 +154,38 @@ def index(request):
             return anglers[0] and _angler_name(anglers[0])
         return ''
 
-    fish_of = []
-    for label, start, period, empty in (
+    periods = (
         ('Week', week_start, 'Week starting ' + week_start.strftime('%-d %B'), 'this week'),
         ('Month', month_start, month_start.strftime('%B %Y'), 'this month'),
         ('Year', year_start, str(today.year), 'this year'),
-    ):
-        catch = heaviest_since(start)
-        fish_of.append({
-            'label': label,
-            'period': period,
-            'empty': empty,
-            'catch': catch,
-            'angler': angler_for(catch) if catch else '',
-        })
+    )
+
+    def fish_cards(user=None):
+        cards = []
+        for label, start, period, empty in periods:
+            catch = heaviest_since(start, user)
+            cards.append({
+                'label': label,
+                'period': period,
+                'empty': empty,
+                'catch': catch,
+                'angler': angler_for(catch) if catch else '',
+            })
+        return cards
+
+    # Everyone's top fish, plus the logged-in angler's own (not for admins)
+    fish_of = fish_cards()
+
+    user = request.user
+    my_fish_of = None
+    if user.is_authenticated and not user.is_staff:
+        my_fish_of = fish_cards(user)
 
     context = {
         'this_year': today.year,
         'anglers_table': anglers_table,
         'fish_of': fish_of,
+        'my_fish_of': my_fish_of,
     }
 
     # Render the HTML template index.html with the data in the context variable
@@ -157,7 +211,7 @@ class TripListView(generic.ListView):
 
         queryset = (
             Trip.objects
-            .select_related("venue")
+            .select_related("venue", "user")
             .annotate(
                 fish_count=Count("catch"),
                 total_weight=Coalesce(
@@ -167,6 +221,8 @@ class TripListView(generic.ListView):
             )
             .order_by("-date")
         )
+
+        queryset = filter_by_angler(queryset, selected_angler(self.request))
 
         if venue_id:
             queryset = queryset.filter(
@@ -179,35 +235,23 @@ class TripListView(generic.ListView):
 
         context = super().get_context_data(**kwargs)
 
+        add_angler_filter(self.request, context)
+        angler = context["selected_angler"]
         venue_id = self.request.GET.get("venue")
 
-        # These two lines are needed for the dropdown
-        context["venues"] = Venue.objects.order_by("name")
+        # Venue dropdown: the selected angler's venues (or everyone's)
+        context["venues"] = filter_by_angler(Venue.objects, angler).order_by("name")
         context["selected_venue"] = venue_id
 
-        if venue_id:
+        trip_count = context["object_list"].count()
+        subtitle = f"Fishing trips recorded: {trip_count}"
 
-            venue = Venue.objects.get(
-                pk=venue_id
-            )
+        venue = Venue.objects.filter(pk=venue_id).first() if venue_id else None
+        if venue:
+            subtitle += f" ({venue.name})"
 
-            context["subtitle"] = (
-                f"Fishing trips recorded: "
-                f"{context['object_list'].count()} "
-                f"({venue.name})"
-            )
-
-        else:
-
-            context["subtitle"] = (
-                f"Fishing trips recorded: "
-                f"{Trip.objects.count()} "
-                f"(All venues)"
-            )
-
-        context["trip_count"] = (
-            context["object_list"].count()
-        )
+        context["subtitle"] = subtitle
+        context["trip_count"] = trip_count
 
         return context
 
@@ -278,6 +322,11 @@ class TripDetailView(generic.DetailView):
 
         context["live_trip"] = live_trip
         context["future_trip"] = future_trip
+
+        user = self.request.user
+        context["can_edit"] = can_edit(user, trip)
+        # Only the trip's own angler adds catches to it
+        context["can_add_catch"] = user.is_authenticated and trip.user_id == user.pk
         context["new_fish"] = new_fish
         context["latest_catch"] = latest_catch
 
@@ -289,34 +338,46 @@ class TripCreateView(LoginRequiredMixin, CreateView):
     template_name = 'fishy/trip_new.html'
     fields = ['venue', 'date']
 
-    venues = Venue.objects.all().order_by('-id')
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # Only your own venues can be chosen
+        form.fields['venue'].queryset = Venue.objects.filter(user=self.request.user)
+        return form
 
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
 
-        context['venues'] = self.venues
+        context['venues'] = Venue.objects.filter(user=self.request.user).order_by('-id')
 
         return context
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-class TripUpdateView(LoginRequiredMixin, UpdateView):
+
+class TripUpdateView(OwnerRequiredMixin, UpdateView):
     model = Trip
     template_name = 'fishy/trip_edit.html'
     fields = ['venue', 'date']
 
-    venues = Venue.objects.all().order_by('-id')
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # Only the trip owner's venues can be chosen
+        form.fields['venue'].queryset = Venue.objects.filter(user=self.object.user)
+        return form
 
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
 
-        context['venues'] = self.venues
+        context['venues'] = Venue.objects.filter(user=self.object.user).order_by('-id')
 
         return context
 
 
-class TripDeleteView(LoginRequiredMixin, DeleteView):
+class TripDeleteView(OwnerRequiredMixin, DeleteView):
     model = Trip
     template_name = 'fishy/trip_delete.html'
     success_url = reverse_lazy('trips')
@@ -360,8 +421,13 @@ class VenueListView(generic.ListView):
 
     def get_queryset(self):
 
+        venues = filter_by_angler(
+            Venue.objects.select_related("user"),
+            selected_angler(self.request)
+        )
+
         return (
-            Venue.objects
+            venues
             .annotate(
                 total_visits=Count(
                     "trip",
@@ -382,6 +448,8 @@ class VenueListView(generic.ListView):
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
+
+        add_angler_filter(self.request, context)
 
         for venue in context["venue_list"]:
 
@@ -426,6 +494,7 @@ class VenueDetailView(generic.DetailView):
         context["total_weight"] = (
             toPoundsAndOunces(total_weight)
         )
+        context["can_edit"] = can_edit(self.request.user, venue)
 
         return context
 
@@ -435,14 +504,18 @@ class VenueCreateView(LoginRequiredMixin, CreateView):
     template_name = 'fishy/venue_new.html'
     fields = ['name', 'wac', 'postcode']
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-class VenueUpdateView(LoginRequiredMixin, UpdateView):
+
+class VenueUpdateView(OwnerRequiredMixin, UpdateView):
     model = Venue
     template_name = 'fishy/venue_edit.html'
     fields = ['wac', 'postcode']
 
 
-class VenueDeleteView(LoginRequiredMixin, DeleteView):
+class VenueDeleteView(OwnerRequiredMixin, DeleteView):
     model = Venue
     template_name = 'fishy/venue_delete.html'
     success_url = reverse_lazy('venues')
@@ -473,12 +546,15 @@ class CatchListView(generic.ListView):
                 "trip__venue",
                 "fish",
                 "bait",
+                "user",
             )
             .order_by(
                 "-trip__date",
                 "-id"
             )
         )
+
+        queryset = filter_by_angler(queryset, selected_angler(self.request))
 
         if venue_id:
             queryset = queryset.filter(
@@ -511,8 +587,12 @@ class CatchListView(generic.ListView):
 
         context = super().get_context_data(**kwargs)
 
+        add_angler_filter(self.request, context)
+        angler = context["selected_angler"]
+
+        # Venue and bait dropdowns: the selected angler's own (or everyone's)
         context["venues"] = (
-            Venue.objects.order_by("name")
+            filter_by_angler(Venue.objects, angler).order_by("name")
         )
 
         context["fishes"] = (
@@ -520,7 +600,7 @@ class CatchListView(generic.ListView):
         )
 
         context["baits"] = (
-            Bait.objects.order_by("name")
+            filter_by_angler(Bait.objects, angler).order_by("name")
         )
 
         context["selected_venue"] = (
@@ -563,6 +643,7 @@ class CatchDetailView(generic.DetailView):
         context["weight_display"] = (
             toPoundsAndOunces(catch.weight)
         )
+        context["can_edit"] = can_edit(self.request.user, catch)
 
         return context
 
@@ -590,8 +671,9 @@ class CatchCreateView(LoginRequiredMixin, CreateView):
 
         context = super().get_context_data(**kwargs)
 
+        # Only your own trips and baits
         context['trips'] = (
-            Trip.objects.order_by('-date')
+            Trip.objects.filter(user=self.request.user).order_by('-date')
         )
 
         context['fishes'] = (
@@ -599,7 +681,7 @@ class CatchCreateView(LoginRequiredMixin, CreateView):
         )
 
         context['baits'] = (
-            Bait.objects.order_by('name')
+            Bait.objects.filter(user=self.request.user).order_by('name')
         )
 
         # Set when opened from a trip page's "New Catch" button (?trip=<id>),
@@ -607,6 +689,12 @@ class CatchCreateView(LoginRequiredMixin, CreateView):
         context['selected_trip'] = self.request.GET.get('trip', '')
 
         return context
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['trip'].queryset = Trip.objects.filter(user=self.request.user)
+        form.fields['bait'].queryset = Bait.objects.filter(user=self.request.user)
+        return form
 
     def get_success_url(self):
         # Opened from a trip page: go back to that trip after saving,
@@ -616,6 +704,8 @@ class CatchCreateView(LoginRequiredMixin, CreateView):
         return super().get_success_url()
 
     def form_valid(self, form):
+        form.instance.user = self.request.user
+
         # Save the catch first so a problem with the photo never loses the entry
         response = super().form_valid(form)
  
@@ -634,7 +724,7 @@ class CatchCreateView(LoginRequiredMixin, CreateView):
  
         return response
 
-class CatchUpdateView(LoginRequiredMixin, UpdateView):
+class CatchUpdateView(OwnerRequiredMixin, UpdateView):
     model = Catch
     template_name = 'fishy/catch_edit.html'
     fields = [
@@ -653,8 +743,9 @@ class CatchUpdateView(LoginRequiredMixin, UpdateView):
  
         # Built fresh on every request so new trips, fish and baits
         # always appear in the dropdowns
+        # The catch owner's own trips and baits
         context['trips'] = (
-            Trip.objects.all().order_by('-id')
+            Trip.objects.filter(user=self.object.user).order_by('-id')
         )
  
         context['fishes'] = (
@@ -662,10 +753,16 @@ class CatchUpdateView(LoginRequiredMixin, UpdateView):
         )
  
         context['baits'] = (
-            Bait.objects.all().order_by('name')
+            Bait.objects.filter(user=self.object.user).order_by('name')
         )
  
         return context
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['trip'].queryset = Trip.objects.filter(user=self.object.user)
+        form.fields['bait'].queryset = Bait.objects.filter(user=self.object.user)
+        return form
  
     def form_valid(self, form):
         # Save the catch changes first so a problem with the photo never loses them
@@ -689,7 +786,7 @@ class CatchUpdateView(LoginRequiredMixin, UpdateView):
         return response
 
 
-class CatchDeleteView(LoginRequiredMixin, DeleteView):
+class CatchDeleteView(OwnerRequiredMixin, DeleteView):
     model = Catch
     template_name = 'fishy/catch_delete.html'
     success_url = reverse_lazy('catches')
@@ -748,10 +845,18 @@ class FishDetailView(generic.DetailView):
             fish.uk_record
         )
 
-        # Find the user's best catch of this species
+        # Logged-in anglers see their own best catch of this species;
+        # visitors (and admins) see the best catch by anyone
+        user = self.request.user
+        mine = user.is_authenticated and not user.is_staff
+        context["best_label"] = "Your" if mine else "Best"
+
+        catches = Catch.objects.filter(fish=fish)
+        if mine:
+            catches = catches.filter(user=user)
+
         best_catch = (
-            Catch.objects
-            .filter(fish=fish)
+            catches
             .select_related(
                 "trip",
                 "trip__venue",
@@ -793,7 +898,7 @@ class FishUpdateView(StaffRequiredMixin, UpdateView):
 #
 # Bait
 #
-# Anyone can view baits; logged-in users can add and delete them.
+# Anyone can view baits; anglers add their own and delete their own.
 #
 # ============================================================
 
@@ -803,16 +908,26 @@ class BaitListView(generic.ListView):
     def get_queryset(self):
 
         return (
-            Bait.objects
+            filter_by_angler(Bait.objects.select_related("user"), selected_angler(self.request))
             .annotate(
                 catch_count=Count("catch")
             )
             .order_by("name")
         )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return add_angler_filter(self.request, context)
+
 
 class BaitDetailView(generic.DetailView):
     model = Bait
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["catch_count"] = self.object.catch_set.count()
+        context["can_edit"] = can_edit(self.request.user, self.object)
+        return context
 
 
 class BaitCreateView(LoginRequiredMixin, CreateView):
@@ -820,8 +935,12 @@ class BaitCreateView(LoginRequiredMixin, CreateView):
     template_name = 'fishy/bait_new.html'
     fields = ['name']
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-class BaitDeleteView(LoginRequiredMixin, DeleteView):
+
+class BaitDeleteView(OwnerRequiredMixin, DeleteView):
     model = Bait
     template_name = 'fishy/bait_delete.html'
     success_url = reverse_lazy('baits')
@@ -867,4 +986,3 @@ def statistics_report(request, report_name):
             "report_html": report_html,
         }
     )
-

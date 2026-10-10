@@ -1,26 +1,57 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<div class="container bg-info p-3">
-   <div class="row">
-      <div class="col"> </div>
-      <div class="col">
-         <h1>Bait: {{ bait.name }}</h1>
-         <TABLE class="table">
-            <TR>
-               <TH>Name:</TH>
-               <TD> {{ bait.name }} </TD>
-            </TR>
-         </TABLE>
-      </div>
-      <div class="col"> </div>
-   </div>
-   {% if user.is_authenticated %}
-      <div class="row">
-         <div class="text-center">
-            <a class="btn btn-sm btn-danger" href="{% url 'bait_delete' bait.pk %}" role="button">Delete Bait</a>
-         </div>
-      </div>
-   {% endif %}
+
+<div class="page-card catch-detail-card">
+
+    <h1 class="page-title">
+        <span class="line"></span>
+        {{ bait.name }}
+        <span class="line"></span>
+    </h1>
+
+    {% if bait.angler %}
+        <p class="page-subtitle">
+            {{ bait.angler }}
+        </p>
+    {% endif %}
+
+    <div class="catch-detail-content">
+
+        <div class="catch-information">
+
+            <div class="catch-info-item">
+                <div class="catch-info-label">Bait</div>
+                <div class="catch-info-value">{{ bait.name }}</div>
+            </div>
+
+            <div class="catch-info-item">
+                <div class="catch-info-label">Fish caught</div>
+                <div class="catch-info-value">{{ catch_count }}</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="catch-navigation">
+        <a href="{% url 'baits' %}" class="btn btn-primary">
+            Back to Baits
+        </a>
+    </div>
+
+    {% if can_edit %}
+
+        <div class="catch-admin">
+            <a class="btn btn-sm btn-danger"
+               href="{% url 'bait_delete' bait.pk %}"
+               role="button">
+                Delete Bait
+            </a>
+        </div>
+
+    {% endif %}
+
 </div>
+
 {% endblock %}

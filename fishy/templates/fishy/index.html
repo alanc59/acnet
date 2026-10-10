@@ -147,6 +147,60 @@
 
     </div>
 
+
+    {% if my_fish_of %}
+
+        <!-- The logged-in angler's own top fish (heaviest weighed fish) -->
+
+        <h2 class="page-title" style="font-size: 1.5rem;">
+            <span class="line"></span>
+            My Top Fish
+            <span class="line"></span>
+        </h2>
+
+        <div class="fish-of-grid">
+
+            {% for item in my_fish_of %}
+
+                <div class="fish-of-card">
+
+                    <div class="fish-of-label">My Fish of the {{ item.label }}</div>
+                    <div class="fish-of-period">{{ item.period }}</div>
+
+                    {% if item.catch %}
+
+                        {% if item.catch.photo == 'Y' %}
+                            <a href="{{ item.catch.get_absolute_url }}">
+                                <img src="/static/images/fish/{{ item.catch.id }}.jpg"
+                                     alt="{{ item.catch.fish }}">
+                            </a>
+                        {% endif %}
+
+                        <div class="fish-of-name">
+                            <a href="{{ item.catch.get_absolute_url }}">{{ item.catch.fish }}</a>
+                        </div>
+
+                        <div class="fish-of-weight">{{ item.catch.weight_display }}</div>
+
+                        <div class="fish-of-meta">
+                            {{ item.catch.trip.venue }}
+                            &middot; {{ item.catch.trip.date|date:"j M Y" }}
+                        </div>
+
+                    {% else %}
+
+                        <div class="fish-of-empty">No weighed fish {{ item.empty }} yet</div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
 </div>
 
 {% endblock %}

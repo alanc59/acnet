@@ -14,7 +14,19 @@
             {{ subtitle }}
         </p>
 
-        {% if trip_list %}
+        <form method="get" class="m-0 d-flex flex-column" style="flex: 1; min-height: 0;">
+
+        <div class="angler-filter">
+            <label for="id_angler">Angler</label>
+            <select name="angler" id="id_angler" onchange="var v=this.form.elements['venue']; if (v) { v.value=''; } this.form.submit();">
+                <option value="">All anglers</option>
+                {% for a in anglers %}
+                    <option value="{{ a.id }}" {% if selected_angler == a.id|stringformat:"s" %}selected{% endif %}>{{ a.get_full_name|default:a.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        {% if trip_list or selected_venue %}
 
         <div class="list-wrapper">
 
@@ -23,29 +35,26 @@
                 <thead>
                     <tr>
                         <th>Date</th>
+                        {% if not selected_angler %}<th>Angler</th>{% endif %}
+                        <th>
+                            <div class="venue-filter">
+                                <select name="venue"
+                                        onchange="this.form.submit()"
+                                        class="venue-select">
 
-<th>
-    <form method="get" class="m-0">
-        <div class="venue-filter">
-            <select name="venue"
-                    onchange="this.form.submit()"
-                    class="venue-select">
+                                    <option value="">Venue</option>
 
-                <option value="">Venue</option>
-
-                {% for venue in venues %}
-                    <option value="{{ venue.id }}"
-                        {% if selected_venue == venue.id|stringformat:"s" %}
-                            selected
-                        {% endif %}>
-                        {{ venue.name }}
-                    </option>
-
-                {% endfor %}
-            </select>
-        </div>
-    </form>
-</th>
+                                    {% for venue in venues %}
+                                        <option value="{{ venue.id }}"
+                                            {% if selected_venue == venue.id|stringformat:"s" %}
+                                                selected
+                                            {% endif %}>
+                                            {{ venue.name }}{% if not selected_angler %} ({{ venue.angler }}){% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </th>
                         <th class="text-center">Fish Caught</th>
                         <th class="text-center">Fish Weight</th>
                     </tr>
@@ -61,12 +70,18 @@
                             </a>
                         </td>
 
+                        {% if not selected_angler %}<td>{{ trip.angler }}</td>{% endif %}
+
                         <td>{{ trip.venue }}</td>
 
                         <td class="text-center">
                             {{ trip.fish_count }}
                         </td>
-                         <td class="text-center">{{ trip.total_weight_display }}</td>
+                        <td class="text-center">{{ trip.total_weight_display }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4">No trips match the selected filters.</td>
                     </tr>
                 {% endfor %}
 
@@ -78,9 +93,11 @@
 
         {% else %}
 
-            <p>No trips have been recorded.</p>
+            <p class="text-center">No trips have been recorded.</p>
 
         {% endif %}
+
+        </form>
 
     </div>
 
