@@ -2,36 +2,47 @@
 
 {% block content %}
 
-  {% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
-  {% endif %}
-  
-  {% if next %}
-    {% if user.is_authenticated %}
-      <p>Your account doesn't have access to this page. To proceed,
-      please login with an account that has access.</p>
-    {% else %}
-      <p>Please login to see this page.</p>
+<div class="page-card" style="width: 100%; max-width: 420px; margin: 0 auto; align-self: flex-start;">
+
+    <h1 class="page-title">
+        <span class="line"></span>
+        Log in
+        <span class="line"></span>
+    </h1>
+
+    {% if next and user.is_authenticated %}
+        <p class="page-subtitle">
+            Your account doesn't have access to that page.
+        </p>
     {% endif %}
-  {% endif %}
-  
-  <form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    <table>
-      <tr>
-        <td>{{ form.username.label_tag }}</td>
-        <td>{{ form.username }}</td>
-      </tr>
-      <tr>
-        <td>{{ form.password.label_tag }}</td>
-        <td>{{ form.password }}</td>
-      </tr>
-    </table>
-    <input type="submit" value="login" />
-    <input type="hidden" name="next" value="{{ next }}" />
-  </form>
-  
-  {# Assumes you setup the password_reset view in your URLconf #}
-  <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
-  
+
+    {% if form.errors %}
+        <div class="alert alert-danger py-2">
+            Your username and password didn't match. Please try again.
+        </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="id_username" class="form-label fw-semibold">Username</label>
+            <input type="text" name="username" id="id_username" class="form-control"
+                   value="{{ form.username.value|default_if_none:'' }}"
+                   autocomplete="username" autocapitalize="none" autofocus required>
+        </div>
+
+        <div class="mb-4">
+            <label for="id_password" class="form-label fw-semibold">Password</label>
+            <input type="password" name="password" id="id_password" class="form-control"
+                   autocomplete="current-password" required>
+        </div>
+
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <button type="submit" class="btn btn-primary w-100">Log in</button>
+    </form>
+
+</div>
+
 {% endblock %}

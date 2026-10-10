@@ -191,9 +191,9 @@
     </div>
 
 
-    <!-- Admin controls -->
+    <!-- Admin controls (admins only: fish are shared by everyone) -->
 
-    {% if user.is_authenticated %}
+    {% if user.is_staff %}
 
         <div class="catch-admin">
 

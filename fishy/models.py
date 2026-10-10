@@ -86,7 +86,7 @@ class Catch(models.Model):
     weight = models.IntegerField(help_text='Weight in ounces')
     YES_OR_NO = (('Y', 'Yes'), ('N', 'No'))
     weighed = models.CharField(max_length=1, choices=YES_OR_NO, default='Y', help_text='Weighed (if N = estimated)')
-    trip = models.ForeignKey('Trip', on_delete=models.SET_NULL, null=True)
+    trip = models.ForeignKey('Trip', on_delete=models.CASCADE, null=True)   # deleting a trip deletes its catches
     bait = models.ForeignKey('Bait', on_delete=models.SET_NULL, null=True)
     METHOD = (('F', 'Float'), ('L', 'Ledger'), ('M', 'Method Feeder'))
     method = models.CharField(max_length=1, choices=METHOD, default='F', help_text='Method used for catch')

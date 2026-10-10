@@ -11,7 +11,15 @@
                     <tr><td>ID</td><td>{{trip.id}}</td></tr>
                     <tr><td>Venue</td><td>{{trip.venue}}</td></tr>
                     <tr><td>Date</td><td>{{trip.date|date:'Y-m-d'}}</td></tr>
+                    <tr><td>Catches</td><td>{{ catch_count }}</td></tr>
                 </table>
+                {% if catch_count %}
+                    <div class="alert alert-warning">
+                        Deleting this trip will also delete its
+                        <strong>{{ catch_count }} catch{{ catch_count|pluralize:"es" }}</strong>
+                        and their photos. This can't be undone.
+                    </div>
+                {% endif %}
             </div>
             <div class="col"> </div>
         </div>
@@ -19,6 +27,9 @@
             <div class="row">
                 <div class="col text-center">
                     <button class="btn btn-sm btn-danger" type="submit" value="Confirm">Confirm</button>
+                    <a class="btn btn-sm btn-secondary ms-2"
+                       href="{{ object.get_absolute_url }}"
+                       onclick="if (history.length > 1) { history.back(); return false; }">Cancel</a>
                 </div>
             </div>
         {% endif %}

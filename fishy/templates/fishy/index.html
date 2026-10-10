@@ -4,7 +4,47 @@
 
 {% block content %}
 
-<div class="home-card">
+<style>
+    /* Home page: this year's table and fish of the week / month / year */
+    .home-table {
+        overflow-x: auto;
+        border: 1px solid #c8c8c8;
+        border-radius: 10px;
+        margin-bottom: 24px;
+    }
+    .fish-of-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+    @media (max-width: 768px) {
+        .fish-of-grid { grid-template-columns: 1fr; }
+    }
+    .fish-of-card {
+        background: #f8f9fa;
+        border: 1px solid #d0d0d0;
+        border-radius: 10px;
+        padding: 16px;
+        text-align: center;
+    }
+    .fish-of-label  { color: #0d6efd; font-weight: 700; font-size: 1.15rem; }
+    .fish-of-period { color: #666; font-size: .9rem; margin-bottom: 10px; }
+    .fish-of-card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    .fish-of-name a { font-size: 1.2rem; font-weight: 600; text-decoration: none; }
+    .fish-of-name a:hover { text-decoration: underline; }
+    .fish-of-weight { font-size: 1.8rem; font-weight: 700; color: #0d6efd; line-height: 1.2; }
+    .fish-of-meta   { color: #555; font-size: .95rem; margin-top: 4px; }
+    .fish-of-empty  { color: #777; padding: 30px 0; }
+</style>
+
+<div class="home-card" style="max-height: 100%; overflow-y: auto;">
  
     <h1 class="page-title">
         <span class="line"></span>
@@ -16,229 +56,94 @@
         Welcome to the ACNet Fishing App &ndash; A record of fishing trips, venues and catches.
     </p>
 
-    <div class="home-stats">
+    <!-- This year's record per angler -->
 
-        <div class="home-stat">
-            <img src="{% static 'images/top_lock.jpg' %}"
-                 alt="Fishing venue">
+    <h2 class="page-title" style="font-size: 1.5rem; margin-top: 10px;">
+        <span class="line"></span>
+        {{ this_year }} So Far
+        <span class="line"></span>
+    </h2>
 
-            <div class="home-stat-text">
-                <span class="home-stat-number">
-                    {{ num_venues }}
-                </span>
-                <span class="home-stat-label">
-                    Venues
-                </span>
-            </div>
-        </div>
-
-
-        <div class="home-stat">
-            <img src="{% static 'images/angler.jpg' %}"
-                 alt="Fishing trip">
-
-            <div class="home-stat-text">
-                <span class="home-stat-number">
-                    {{ num_trips }}
-                </span>
-                <span class="home-stat-label">
-                    Trips
-                </span>
-            </div>
-        </div>
-
-
-        <div class="home-stat">
-            <img src="{% static 'images/fish/1307.jpg' %}"
-                 alt="Fish catch">
-
-            <div class="home-stat-text">
-                <span class="home-stat-number">
-                    {{ num_catches }}
-                </span>
-                <span class="home-stat-label">
-                    Catches
-                </span>
-            </div>
-        </div>
-
+    <div class="home-table">
+        <table class="list-table">
+            <thead>
+                <tr>
+                    <th>Angler</th>
+                    <th class="text-center">Trips</th>
+                    <th class="text-center">Venues</th>
+                    <th class="text-center">Fish</th>
+                    <th class="text-center">Total Weight</th>
+                    <th class="text-center">Avg Fish / Trip</th>
+                    <th class="text-center">Avg Weight / Trip</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in anglers_table %}
+                    <tr>
+                        <td>{{ row.name }}</td>
+                        <td class="text-center">{{ row.trips }}</td>
+                        <td class="text-center">{{ row.venues }}</td>
+                        <td class="text-center">{{ row.fish }}</td>
+                        <td class="text-center">{{ row.total_weight }}</td>
+                        <td class="text-center">{{ row.avg_fish }}</td>
+                        <td class="text-center">{{ row.avg_weight }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-3">No anglers yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 
-    <div class="home-carousel">
+    <!-- Fish of the week / month / year (heaviest weighed fish) -->
 
-        <div id="homeCarousel"
-             class="carousel slide"
-             data-bs-ride="carousel">
+    <h2 class="page-title" style="font-size: 1.5rem;">
+        <span class="line"></span>
+        Top Fish
+        <span class="line"></span>
+    </h2>
 
-            <div class="carousel-indicators">
+    <div class="fish-of-grid">
 
-                <button type="button"
-                        data-bs-target="#homeCarousel"
-                        data-bs-slide-to="0"
-                        class="active"
-                        aria-current="true"
-                        aria-label="Slide 1">
-                </button>
+        {% for item in fish_of %}
 
-                <button type="button"
-                        data-bs-target="#homeCarousel"
-                        data-bs-slide-to="1"
-                        aria-label="Slide 2">
-                </button>
+            <div class="fish-of-card">
 
-                <button type="button"
-                        data-bs-target="#homeCarousel"
-                        data-bs-slide-to="2"
-                        aria-label="Slide 3">
-                </button>
+                <div class="fish-of-label">Fish of the {{ item.label }}</div>
+                <div class="fish-of-period">{{ item.period }}</div>
 
-                <button type="button"
-                        data-bs-target="#homeCarousel"
-                        data-bs-slide-to="3"
-                        aria-label="Slide 4">
-                </button>
+                {% if item.catch %}
 
-                <button type="button"
-                        data-bs-target="#homeCarousel"
-                        data-bs-slide-to="4"
-                        aria-label="Slide 5">
-                </button>
+                    {% if item.catch.photo == 'Y' %}
+                        <a href="{{ item.catch.get_absolute_url }}">
+                            <img src="/static/images/fish/{{ item.catch.id }}.jpg"
+                                 alt="{{ item.catch.fish }}">
+                        </a>
+                    {% endif %}
+
+                    <div class="fish-of-name">
+                        <a href="{{ item.catch.get_absolute_url }}">{{ item.catch.fish }}</a>
+                    </div>
+
+                    <div class="fish-of-weight">{{ item.catch.weight_display }}</div>
+
+                    <div class="fish-of-meta">
+                        {% if item.angler %}{{ item.angler }} &middot; {% endif %}{{ item.catch.trip.venue }}
+                        &middot; {{ item.catch.trip.date|date:"j M Y" }}
+                    </div>
+
+                {% else %}
+
+                    <div class="fish-of-empty">No weighed fish {{ item.empty }} yet</div>
+
+                {% endif %}
 
             </div>
 
-
-            <div class="carousel-inner">
-
-                <div class="carousel-item active">
-
-                    <img src="{% static 'images/fish/1342.jpg' %}"
-                         class="d-block w-100"
-                         alt="Common Carp">
-
-                    <div class="carousel-caption">
-
-                        <h5>Common Carp</h5>
-
-                        <p>
-                            Top Lock : 26/07/2021 : 6 lb 8 oz
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="carousel-item">
-
-                    <img src="{% static 'images/fish/1090.jpg' %}"
-                         class="d-block w-100"
-                         alt="Tench">
-
-                    <div class="carousel-caption">
-
-                        <h5>Tench</h5>
-
-                        <p>
-                            Limbrick Fishery : 19/08/2020 : 1 lb 15 oz
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="carousel-item">
-
-                    <img src="{% static 'images/fish/1403.jpg' %}"
-                         class="d-block w-100"
-                         alt="Rainbow Trout">
-
-                    <div class="carousel-caption">
-
-                        <h5>Rainbow Trout</h5>
-
-                        <p>
-                            Cricket Field : 23/03/2021 : 2 lb 5 oz
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="carousel-item">
-
-                    <img src="{% static 'images/fish/1087.jpg' %}"
-                         class="d-block w-100"
-                         alt="Bream">
-
-                    <div class="carousel-caption">
-
-                        <h5>Bream</h5>
-
-                        <p>
-                            Lancaster House : 22/07/2020 : 1 lb 4 oz
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="carousel-item">
-
-                    <img src="{% static 'images/fish/1664.jpg' %}"
-                         class="d-block w-100"
-                         alt="Mirror Carp">
-
-                    <div class="carousel-caption">
-
-                        <h5>Mirror Carp</h5>
-
-                        <p>
-                            Top Lock : 03/10/2022 : 4 lb 07 oz
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <button class="carousel-control-prev"
-                    type="button"
-                    data-bs-target="#homeCarousel"
-                    data-bs-slide="prev">
-
-                <span class="carousel-control-prev-icon"
-                      aria-hidden="true">
-                </span>
-
-                <span class="visually-hidden">
-                    Previous
-                </span>
-
-            </button>
-
-
-            <button class="carousel-control-next"
-                    type="button"
-                    data-bs-target="#homeCarousel"
-                    data-bs-slide="next">
-
-                <span class="carousel-control-next-icon"
-                      aria-hidden="true">
-                </span>
-
-                <span class="visually-hidden">
-                    Next
-                </span>
-
-            </button>
-
-        </div>
+        {% endfor %}
 
     </div>
 

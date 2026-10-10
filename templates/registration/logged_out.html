@@ -1,6 +1,24 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <p>Logged out!</p>  
-  <a href="{% url 'login'%}">Click here to login again.</a>
+
+<div class="page-card" style="width: 100%; max-width: 420px; margin: 0 auto; align-self: flex-start;">
+
+    <h1 class="page-title">
+        <span class="line"></span>
+        Logged out
+        <span class="line"></span>
+    </h1>
+
+    <p class="page-subtitle">
+        You have been logged out.
+    </p>
+
+    <div class="text-center mt-3">
+        <a class="btn btn-primary me-2" href="{% url 'index' %}">Home</a>
+        <a class="btn btn-outline-primary" href="{% url 'login' %}">Log in again</a>
+    </div>
+
+</div>
+
 {% endblock %}

@@ -1,21 +1,64 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-        <div class="container bg-info p-4">
-            <h1>Bait List</h1>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
+
+<div class="page-card fish-list-card">
+
+    <h1 class="page-title">
+        <span class="line"></span>
+        Baits
+        <span class="line"></span>
+    </h1>
+
+    <p class="page-subtitle">
+        Baits recorded: {{ bait_list|length }}
+    </p>
+
+    <div class="list-wrapper">
+
+        <table class="list-table">
+
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="text-center">Fish Caught</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
                 {% for bait in bait_list %}
+
                     <tr>
-                        <td><a href="{{ bait.get_absolute_url }}">{{ bait.name }}</a></td>
+
+                        <td>
+                            <a href="{{ bait.get_absolute_url }}">
+                                {{ bait.name }}
+                            </a>
+                        </td>
+
+                        <td class="text-center">
+                            {{ bait.catch_count }}
+                        </td>
+
                     </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="2" class="text-center py-4">
+                            No baits recorded.
+                        </td>
+                    </tr>
+
                 {% endfor %}
-                </tbody>
-            </table>
-        </div>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
 {% endblock %}

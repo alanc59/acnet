@@ -29,6 +29,9 @@
             <div class="row">
                 <div class="col text-center">
                     <button class="btn btn-sm btn-danger" type="submit" value="Save">Save</button>
+                    <a class="btn btn-sm btn-secondary ms-2"
+                       href="{% url 'trips' %}"
+                       onclick="if (history.length > 1) { history.back(); return false; }">Cancel</a>
                 </div>
             </div>
         {% endif %}

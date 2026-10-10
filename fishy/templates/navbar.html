@@ -75,12 +75,14 @@
                             </a>
                         </li>
 
-                        <li>
-                            <a class="dropdown-item hf_txt_color"
-                               href="{% url 'fish_new' %}">
-                                Fish
-                            </a>
-                        </li>
+                        {% if user.is_staff %}
+                            <li>
+                                <a class="dropdown-item hf_txt_color"
+                                   href="{% url 'fish_new' %}">
+                                    Fish
+                                </a>
+                            </li>
+                        {% endif %}
 
                         <li>
                             <a class="dropdown-item hf_txt_color"
@@ -123,6 +125,13 @@
                 <a class="nav-link hf_txt_color"
                    href="{% url 'fishes' %}">
                     Fish
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link hf_txt_color"
+                   href="{% url 'baits' %}">
+                    Baits
                 </a>
             </li>
 
@@ -202,6 +211,18 @@
                 </ul>
 
             </li>
+
+
+            <!-- ADMIN - STAFF ONLY (user management) -->
+
+            {% if user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link hf_txt_color"
+                       href="{% url 'admin:index' %}">
+                        Admin
+                    </a>
+                </li>
+            {% endif %}
 
 
             <!-- LOGIN / LOGOUT -->

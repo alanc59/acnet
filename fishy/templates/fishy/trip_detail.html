@@ -273,6 +273,11 @@
 
         <div class="text-center mt-4">
 
+            <a class="btn btn-success me-2"
+               href="{% url 'catch_new' %}?trip={{ trip.pk }}">
+                New Catch
+            </a>
+
             <a class="btn btn-warning me-2"
                href="{% url 'trip_edit' trip.pk %}">
                 Edit Trip

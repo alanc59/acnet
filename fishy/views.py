@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 
 from fishy.models import Bait, Catch, Fish, Trip, Venue
@@ -17,11 +17,23 @@ import os
 import logging
  
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from PIL import Image, ImageOps
  
 logger = logging.getLogger(__name__)
 
 PHOTO_DIR = os.environ['PHOTO_DIR']
+
+
+class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+    """Admins only (users with 'Staff status' ticked in Django admin).
+
+    Visitors who aren't logged in are sent to the login page;
+    logged-in users who aren't admins get a 403 Forbidden page.
+    """
+
+    def test_func(self):
+        return self.request.user.is_staff
 
 # ============================================================
 #
@@ -29,23 +41,97 @@ PHOTO_DIR = os.environ['PHOTO_DIR']
 #
 # ============================================================
 
+# Until multi-user adds an owner to Trip, every trip belongs to the
+# single angler. Once Trip has a 'user' field this picks it up automatically.
+TRIP_HAS_OWNER = any(f.name == 'user' for f in Trip._meta.get_fields())
+
+
+def _anglers():
+    """Active anglers: users who are not admins (staff / superusers)."""
+    return (
+        get_user_model().objects
+        .filter(is_active=True, is_staff=False, is_superuser=False)
+        .order_by('username')
+    )
+
+
+def _angler_name(user):
+    return user.get_full_name() or user.get_username()
+
+
+def _trips_for(user):
+    if TRIP_HAS_OWNER:
+        return Trip.objects.filter(user=user)
+    return Trip.objects.all()
+
+
 def index(request):
     """View function for home page of site."""
 
-    # Generate counts of some of the main objects
-    num_venues = Venue.objects.all().count()
-    num_trips = Trip.objects.all().count()
-    num_catches = Catch.objects.all().count()
+    # Calendar periods, in UK time
+    today = localdate()
+    year_start = today.replace(month=1, day=1)
+    month_start = today.replace(day=1)
+    week_start = today - timedelta(days=today.weekday())     # Monday
 
-    # Number of visits to this view, as counted in the session variable.
-    num_visits = request.session.get('num_visits', 0)
-    request.session['num_visits'] = num_visits + 1
+    anglers = list(_anglers())
+
+    # ---- This year's record per angler (trips up to today) ----
+    anglers_table = []
+    for angler in anglers:
+        trips = _trips_for(angler).filter(date__gte=year_start, date__lte=today)
+        trip_count = trips.count()
+        venue_count = trips.exclude(venue=None).values('venue').distinct().count()
+        catches = Catch.objects.filter(trip__in=trips)
+        fish_count = catches.count()
+        total_weight = catches.aggregate(total=Sum('weight'))['total'] or 0
+
+        anglers_table.append({
+            'name': _angler_name(angler),
+            'trips': trip_count,
+            'venues': venue_count,
+            'fish': fish_count,
+            'total_weight': toPoundsAndOunces(total_weight),
+            'avg_fish': round(fish_count / trip_count) if trip_count else 0,
+            'avg_weight': toPoundsAndOunces(round(total_weight / trip_count) if trip_count else 0),
+        })
+
+    # ---- Fish of the week / month / year: heaviest WEIGHED fish ----
+    def heaviest_since(start):
+        return (
+            Catch.objects
+            .filter(weighed='Y', trip__date__gte=start, trip__date__lte=today)
+            .select_related('fish', 'trip', 'trip__venue')
+            .order_by('-weight', 'trip__date', 'catch_time')
+            .first()
+        )
+
+    def angler_for(catch):
+        if TRIP_HAS_OWNER and getattr(catch.trip, 'user', None):
+            return _angler_name(catch.trip.user)
+        if len(anglers) == 1:
+            return anglers[0] and _angler_name(anglers[0])
+        return ''
+
+    fish_of = []
+    for label, start, period, empty in (
+        ('Week', week_start, 'Week starting ' + week_start.strftime('%-d %B'), 'this week'),
+        ('Month', month_start, month_start.strftime('%B %Y'), 'this month'),
+        ('Year', year_start, str(today.year), 'this year'),
+    ):
+        catch = heaviest_since(start)
+        fish_of.append({
+            'label': label,
+            'period': period,
+            'empty': empty,
+            'catch': catch,
+            'angler': angler_for(catch) if catch else '',
+        })
 
     context = {
-        'num_venues': num_venues,
-        'num_trips': num_trips,
-        'num_catches': num_catches,
-        'num_visits': num_visits,
+        'this_year': today.year,
+        'anglers_table': anglers_table,
+        'fish_of': fish_of,
     }
 
     # Render the HTML template index.html with the data in the context variable
@@ -234,6 +320,33 @@ class TripDeleteView(LoginRequiredMixin, DeleteView):
     model = Trip
     template_name = 'fishy/trip_delete.html'
     success_url = reverse_lazy('trips')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['catch_count'] = self.object.catch_set.count()
+        return context
+
+    def form_valid(self, form):
+        # The trip's catches are deleted with it (on_delete=CASCADE on
+        # Catch.trip). Note which ones had photos first, then remove the
+        # photo files once the database delete has succeeded.
+        photo_ids = list(
+            self.object.catch_set
+            .filter(photo='Y')
+            .values_list('id', flat=True)
+        )
+
+        response = super().form_valid(form)
+
+        for catch_id in photo_ids:
+            try:
+                os.remove(os.path.join(PHOTO_DIR, f'{catch_id}.jpg'))
+            except FileNotFoundError:
+                pass
+            except OSError:
+                logger.exception('Could not delete photo for catch %s', catch_id)
+
+        return response
 
 
 # ============================================================
@@ -489,7 +602,18 @@ class CatchCreateView(LoginRequiredMixin, CreateView):
             Bait.objects.order_by('name')
         )
 
+        # Set when opened from a trip page's "New Catch" button (?trip=<id>),
+        # so that trip is already selected in the dropdown
+        context['selected_trip'] = self.request.GET.get('trip', '')
+
         return context
+
+    def get_success_url(self):
+        # Opened from a trip page: go back to that trip after saving,
+        # otherwise show the new catch as before
+        if self.request.POST.get('from_trip') and self.object.trip:
+            return self.object.trip.get_absolute_url()
+        return super().get_success_url()
 
     def form_valid(self, form):
         # Save the catch first so a problem with the photo never loses the entry
@@ -570,6 +694,24 @@ class CatchDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'fishy/catch_delete.html'
     success_url = reverse_lazy('catches')
 
+    def form_valid(self, form):
+        # Note the photo before the catch is deleted, then remove the
+        # photo file once the database delete has succeeded
+        catch_id = self.object.pk
+        had_photo = (self.object.photo == 'Y')
+
+        response = super().form_valid(form)
+
+        if had_photo:
+            try:
+                os.remove(os.path.join(PHOTO_DIR, f'{catch_id}.jpg'))
+            except FileNotFoundError:
+                pass
+            except OSError:
+                logger.exception('Could not delete photo for catch %s', catch_id)
+
+        return response
+
 
 # ============================================================
 #
@@ -630,19 +772,19 @@ class FishDetailView(generic.DetailView):
         return context
 
 
-class FishCreateView(CreateView):
+class FishCreateView(StaffRequiredMixin, CreateView):
     model = Fish
     template_name = "fishy/fish_new.html"
     fields = ["name", "latin_name", "uk_record"]
 
 
-class FishDeleteView(DeleteView):
+class FishDeleteView(StaffRequiredMixin, DeleteView):
     model = Fish
     template_name = "fishy/fish_delete.html"
     success_url = reverse_lazy("fishes")
 
 
-class FishUpdateView(UpdateView):
+class FishUpdateView(StaffRequiredMixin, UpdateView):
     model = Fish
     template_name = "fishy/fish_edit.html"
     fields = ["name", "latin_name", "uk_record"]
@@ -651,15 +793,25 @@ class FishUpdateView(UpdateView):
 #
 # Bait
 #
-# Bait is completely protected.
+# Anyone can view baits; logged-in users can add and delete them.
 #
 # ============================================================
 
-class BaitListView(LoginRequiredMixin, generic.ListView):
+class BaitListView(generic.ListView):
     model = Bait
 
+    def get_queryset(self):
 
-class BaitDetailView(LoginRequiredMixin, generic.DetailView):
+        return (
+            Bait.objects
+            .annotate(
+                catch_count=Count("catch")
+            )
+            .order_by("name")
+        )
+
+
+class BaitDetailView(generic.DetailView):
     model = Bait
 
 

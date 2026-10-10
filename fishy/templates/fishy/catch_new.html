@@ -4,6 +4,10 @@
 <div class="container bg-info p-4">
     <h1>New Catch</h1>
     <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+        {% if selected_trip %}
+            <!-- Opened from a trip page: go back to that trip after saving -->
+            <input type="hidden" name="from_trip" value="1">
+        {% endif %}
         <div class="row">
             <div class="col"> </div>
             <div class="col-6">
@@ -12,7 +16,11 @@
                         <td><label for="id_trip">Trip:</label></td>
                         <td><select name="trip" required id="id_trip">
                             {% for trip  in trips %}
-                                <option value="{{ trip.id }}">{{ trip.date|date:'Y-m-d' }} {{trip.venue }}</option>
+                                {% if trip.id|stringformat:"s" == selected_trip %}
+                                    <option value="{{ trip.id }}" selected>{{ trip.date|date:'Y-m-d' }} {{trip.venue }}</option>
+                                {% else %}
+                                    <option value="{{ trip.id }}">{{ trip.date|date:'Y-m-d' }} {{trip.venue }}</option>
+                                {% endif %}
                             {% endfor %}
                             </select>
                         </td>
@@ -81,6 +89,9 @@
                 <div class="col">
                     <div class="text-center">
                         <button class="btn btn-sm btn-warning" type="submit" value="Save">Save</button>
+                    <a class="btn btn-sm btn-secondary ms-2"
+                       href="{% url 'catches' %}"
+                       onclick="if (history.length > 1) { history.back(); return false; }">Cancel</a>
                     </div>
                 </div>
             </div>
@@ -167,3 +178,4 @@
 </script>
 
 {% endblock content %}
+

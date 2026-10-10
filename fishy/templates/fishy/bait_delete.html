@@ -20,6 +20,9 @@
                   <td></td>
                   <td class="r">
                      <button type="submit" class="btn btn-danger" value="Confirm">Confirm</button>
+                     <a class="btn btn-secondary ms-2"
+                        href="{{ object.get_absolute_url }}"
+                        onclick="if (history.length > 1) { history.back(); return false; }">Cancel</a>
                   </td>
                </tr>
     {% endif %}     

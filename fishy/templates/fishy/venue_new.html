@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container bg-info p-4">
     <h1>New Venue</h1>
-    <form action "" method="post">{% csrf_token %}
+    <form action="" method="post">{% csrf_token %}
         <div class="row">
             <div class="col"> </div>
             <div class="col-6">
@@ -34,6 +34,9 @@
             <div class="row">
                 <div class="col text-center">
                     <button class="btn btn-sm btn-danger" type="submit" value="Save">Save</button>
+                    <a class="btn btn-sm btn-secondary ms-2"
+                       href="{% url 'venues' %}"
+                       onclick="if (history.length > 1) { history.back(); return false; }">Cancel</a>
                 </div>
             </div>
         {% endif %}

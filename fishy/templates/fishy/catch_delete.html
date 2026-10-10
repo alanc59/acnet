@@ -23,6 +23,9 @@
             <div class="row">
                 <div class="col text-center">
                    <button class="btn btn-sm btn-danger" type="submit" value="Confirm">Confirm</button>
+                    <a class="btn btn-sm btn-secondary ms-2"
+                       href="{{ object.get_absolute_url }}"
+                       onclick="if (history.length > 1) { history.back(); return false; }">Cancel</a>
                 </div>
             </div>
         {% endif %}
