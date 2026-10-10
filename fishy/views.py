@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 
 from fishy.models import Bait, Catch, Fish, Trip, Venue
+from fishy import reports
 from util.utilities import *
 
 from django.db.models import Sum, Count
@@ -953,36 +954,12 @@ class BaitDeleteView(OwnerRequiredMixin, DeleteView):
 # ============================================================
 
 def statistics_report(request, report_name):
-
-    report_file = os.path.join(
-        os.getenv("FISHY_STATS_DIR"),
-        report_name
-    )
-
-    if os.path.exists(report_file):
-
-        with open(report_file, "r") as f:
-            report_html = f.read()
-
-    else:
-
-        report_html = (
-            '<div class="report-card">'
-            '<h1 class="report-title">'
-            '<span class="line"></span>'
-            'Report unavailable'
-            '<span class="line"></span>'
-            '</h1>'
-            '<p class="text-center">'
-            'The statistics report has not yet been generated.'
-            '</p>'
-            '</div>'
-        )
+    """Statistics reports, worked out live (see fishy/reports.py)."""
 
     return render(
         request,
         "fishy/statistics_report.html",
         {
-            "report_html": report_html,
+            "report_html": reports.render_report(request, report_name),
         }
     )

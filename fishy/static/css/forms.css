@@ -168,3 +168,33 @@
     background-color: #fff;
     min-width: 12rem;
 }
+
+
+/*------------------------------------------------------------*
+* Statistics reports: make room for the Angler filter
+*
+* styles.css sizes each report table to fit the panel
+* (100vh - 360px, or - 450px when there is a colour key below
+* the table). The Angler filter row adds about 50px, so allow
+* for it on reports that have the filter.
+*------------------------------------------------------------*/
+
+.report-card:has(.angler-filter) .table-wrapper {
+    max-height: calc(100vh - 410px);
+}
+
+.report-card:has(.angler-filter):has(.report-note) .table-wrapper {
+    max-height: calc(100vh - 500px);
+}
+
+/* Reports with only a few year columns (e.g. a new angler): natural width,
+   centred, instead of one column stretched across the panel */
+.table-wrapper.compact-report {
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.table-wrapper.compact-report .shared-report {
+    min-width: 0;
+}
