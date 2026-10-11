@@ -946,12 +946,13 @@ class BaitCreateView(LoginRequiredMixin, CreateView):
     fields = ['name']
 
     def form_valid(self, form):
-        # Each angler can only have one bait of a given name. The check
-        # ignores capitals and spaces at either end, so "Mussel" or
-        # " mussel " count as the same as "mussel".
-        name = form.cleaned_data['name'].strip()
-        if Bait.objects.filter(user=self.request.user, name__iexact=name).exists():
-            form.add_error('name', f'You already have a bait called "{name}".')
+        # Baits are always stored in lower case, with spaces at either end
+        # removed, so "Mussel" or " MUSSEL " are saved as "mussel".
+        # Each angler can only have one bait of a given name.
+        name = form.cleaned_data['name'].strip().lower()
+        existing = Bait.objects.filter(user=self.request.user, name__iexact=name).first()
+        if existing:
+            form.add_error('name', f'You already have a bait called "{existing.name.lower()}".')
             return self.form_invalid(form)
 
         form.instance.name = name
