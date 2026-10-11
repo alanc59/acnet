@@ -10,7 +10,7 @@
                 <table class="table">
                     <tr>
                         <td><label for="id_name">Name:</label></td>
-                        <td><input type="text" name="name" maxlength="25" required id="id_name"></td>
+                        <td><input type="text" name="name" maxlength="25" required id="id_name" value="{{ form.name.value|default_if_none:'' }}"></td>
                         <td></td>
                     </tr>
                 </table>
@@ -26,6 +26,16 @@
                        onclick="if (history.length > 1) { history.back(); return false; }">Cancel</a>
                 </div>
             </div>
+        {% endif %}
+
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger mt-3">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
         {% endif %}
     </form>
 </div>
