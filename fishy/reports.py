@@ -143,18 +143,24 @@ def _filter_form(request, extra=""):
     )
 
 
-def _page(request, title, table_class, headers, body, note="", compact=False, extra_filter=""):
+def _page(request, title, table_class, headers, body, note="", compact=False, extra_filter="", aside=""):
+    """aside: optional panel shown above the table."""
     wrapper = "table-wrapper compact-report" if compact else "table-wrapper"
-    return (
-        '<div class="report-card">\n'
-        f'    <h1 class="report-title"><span class="line"></span>{title}<span class="line"></span></h1>\n'
-        + _filter_form(request, extra_filter) +
+    table = (
         f'    <div class="{wrapper}">\n'
         f'        <table class="shared-report {table_class}">\n'
         '            <thead>\n' + headers + '            </thead>\n'
         '            <tbody>\n' + body + '            </tbody>\n'
         '        </table>\n'
         '    </div>\n'
+    )
+    if aside:
+        table = '<div class="report-with-aside">\n' + aside + table + '</div>\n'
+    return (
+        '<div class="report-card">\n'
+        f'    <h1 class="report-title"><span class="line"></span>{title}<span class="line"></span></h1>\n'
+        + _filter_form(request, extra_filter)
+        + table
         + note +
         '</div>\n'
     )
@@ -494,13 +500,38 @@ def fish_of_the(request, d):
     def section(title):
         return f'<TR class="section-row"><TH colspan="{cols}">{title}</TH></TR>\n'
 
+    def year_panel(c):
+        """Fish of the year as a panel, in the same style as the Home page."""
+        url = c.get_absolute_url()
+        fish = escape(c.fish.name) if c.fish else ""
+        photo = (f'<a href="{url}"><img src="/static/images/fish/{c.id}.jpg" alt="{fish}"></a>'
+                 if c.photo == "Y" else "")
+        meta = []
+        if d.all_anglers:
+            meta.append(escape(angler_name(c.user)))
+        if c.trip.venue:
+            meta.append(escape(c.trip.venue.name))
+        meta.append(f'<a href="{c.trip.get_absolute_url()}">{c.trip.date.strftime("%-d %b %Y")}</a>')
+        return (
+            '<div class="fish-of-card">\n'
+            f'    {photo}\n'
+            '    <div class="fish-of-details">\n'
+            '        <div class="fish-of-label">Fish of the Year</div>\n'
+            f'        <div class="fish-of-period">{year}</div>\n'
+            f'        <div class="fish-of-name"><a href="{url}">{fish}</a></div>\n'
+            f'        <div class="fish-of-weight">{escape(c.weight_display)}</div>\n'
+            f'        <div class="fish-of-meta">{" &middot; ".join(meta)}</div>\n'
+            '    </div>\n'
+            '</div>\n'
+        )
+
     if not weighed:
         body = f'<TR><TD colspan="{cols}" class="text-center py-3">No weighed fish recorded in {year}.</TD></TR>\n'
+        aside = ""
     else:
-        body = section(f"Fish of the Year &ndash; {year}")
-        body += row(str(year), heaviest(weighed))
+        aside = year_panel(heaviest(weighed))
 
-        body += section("Fish of the Month")
+        body = section("Fish of the Month")
         for m in sorted(by_month):
             body += row(date(year, m, 1).strftime("%B"), heaviest(by_month[m]))
 
@@ -509,7 +540,7 @@ def fish_of_the(request, d):
             body += row("Week starting " + monday.strftime("%-d %b"), heaviest(by_week[monday]))
 
     return _page(request, "Fish of the &hellip;", "fish-of-report", headers, body,
-                 compact=True, extra_filter=year_select)
+                 compact=True, extra_filter=year_select, aside=aside)
 
 
 # Report name in urls.py -> function
