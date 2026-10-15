@@ -10,7 +10,7 @@ The calculations follow the old fishy_support queries, and the HTML uses
 the same structure and CSS classes, so the reports look the same as before.
 """
 from collections import Counter, defaultdict
-from datetime import timedelta
+from datetime import date, timedelta
 
 from django.contrib.auth import get_user_model
 from django.utils.html import escape
@@ -127,7 +127,7 @@ class Data:
 # Page structure
 # ------------------------------------------------------------------
 
-def _filter_form(request):
+def _filter_form(request, extra=""):
     current = selected_angler(request)
     options = ['<option value="">All anglers</option>']
     for a in anglers():
@@ -139,16 +139,16 @@ def _filter_form(request):
         '<label for="id_angler">Angler</label>'
         '<select name="angler" id="id_angler" onchange="this.form.submit();">'
         + "".join(options) +
-        '</select></div></form>\n'
+        '</select>' + extra + '</div></form>\n'
     )
 
 
-def _page(request, title, table_class, headers, body, note="", compact=False):
+def _page(request, title, table_class, headers, body, note="", compact=False, extra_filter=""):
     wrapper = "table-wrapper compact-report" if compact else "table-wrapper"
     return (
         '<div class="report-card">\n'
         f'    <h1 class="report-title"><span class="line"></span>{title}<span class="line"></span></h1>\n'
-        + _filter_form(request) +
+        + _filter_form(request, extra_filter) +
         f'    <div class="{wrapper}">\n'
         f'        <table class="shared-report {table_class}">\n'
         '            <thead>\n' + headers + '            </thead>\n'
@@ -438,6 +438,80 @@ def fish_by_time(request, d):
     return _page(request, "Fish By Time: Month/Hour", "time-report", headers, body)
 
 
+def fish_of_the(request, d):
+    """Fish of the year, of each month and of each week for a chosen year:
+    the heaviest WEIGHED fish in each period (same rules as the Home page)."""
+    today = localdate()
+
+    # Year selector: the selected angler's years, defaulting to this year
+    wanted = request.GET.get("year", "")
+    if wanted.isdigit() and int(wanted) in d.years:
+        year = int(wanted)
+    elif today.year in d.years:
+        year = today.year
+    else:
+        year = d.years[0]
+
+    options = "".join(
+        f'<option value="{y}"{" selected" if y == year else ""}>{y}</option>'
+        for y in d.years
+    )
+    year_select = (
+        '<label for="id_year" class="ms-3">Year</label>'
+        f'<select name="year" id="id_year" onchange="this.form.submit();">{options}</select>'
+    )
+
+    weighed = [c for c in d.catches if c.weighed == "Y" and c.trip.date.year == year]
+
+    def heaviest(catches):
+        return min(catches, key=lambda c: (-c.weight, c.trip.date, c.catch_time)) if catches else None
+
+    by_month = defaultdict(list)
+    by_week = defaultdict(list)
+    for c in weighed:
+        by_month[c.trip.date.month].append(c)
+        by_week[c.trip.date - timedelta(days=c.trip.date.weekday())].append(c)   # Monday
+
+    cols = 6 + (1 if d.all_anglers else 0)
+
+    headers = ("<TR>" + th("Period", "text-start") + th("Fish", "text-start")
+               + th("lbs-oz", "text-end")
+               + (th("Angler", "text-start") if d.all_anglers else "")
+               + th("Venue", "text-start") + th("Date", "text-center")
+               + th("Photo", "text-center") + "</TR>\n")
+
+    def row(label, c):
+        fish = escape(c.fish.name) if c.fish else ""
+        photo = f'<a href="{c.get_absolute_url()}">View</a>' if c.photo == "Y" else ""
+        return ("<TR>" + td(label, "text-start")
+                + td(f'<a href="{c.get_absolute_url()}">{fish}</a>', "text-start")
+                + td(lbs_oz(c.weight), "text-end")
+                + (td(escape(angler_name(c.user)), "text-start") if d.all_anglers else "")
+                + td(escape(c.trip.venue.name) if c.trip.venue else "", "text-start")
+                + td(f'<a href="{c.trip.get_absolute_url()}">{dmy(c.trip.date)}</a>', "text-center")
+                + td(photo, "text-center") + "</TR>\n")
+
+    def section(title):
+        return f'<TR class="section-row"><TH colspan="{cols}">{title}</TH></TR>\n'
+
+    if not weighed:
+        body = f'<TR><TD colspan="{cols}" class="text-center py-3">No weighed fish recorded in {year}.</TD></TR>\n'
+    else:
+        body = section(f"Fish of the Year &ndash; {year}")
+        body += row(str(year), heaviest(weighed))
+
+        body += section("Fish of the Month")
+        for m in sorted(by_month):
+            body += row(date(year, m, 1).strftime("%B"), heaviest(by_month[m]))
+
+        body += section("Fish of the Week")
+        for monday in sorted(by_week):
+            body += row("Week starting " + monday.strftime("%-d %b"), heaviest(by_week[monday]))
+
+    return _page(request, "Fish of the &hellip;", "fish-of-report", headers, body,
+                 compact=True, extra_filter=year_select)
+
+
 # Report name in urls.py -> function
 REPORTS = {
     "fish_by_species_by_year.html": fish_by_species_by_year,
@@ -448,6 +522,7 @@ REPORTS = {
     "top_twenty_trips_this_year.html": top_twenty_trips_this_year,
     "trip_by_venue_by_year.html": trip_by_venue_by_year,
     "fish_by_time.html": fish_by_time,
+    "fish_of_the.html": fish_of_the,
 }
 
 
@@ -460,6 +535,7 @@ TITLES = {
     "top_twenty_trips_this_year.html": "Top Twenty Trips This Year",
     "trip_by_venue_by_year.html": "Trips By Venue By Year",
     "fish_by_time.html": "Fish By Time: Month/Hour",
+    "fish_of_the.html": "Fish of the &hellip;",
 }
 
 

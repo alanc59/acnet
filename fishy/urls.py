@@ -98,4 +98,13 @@ path(
     },
     name='fish_by_time'
 ),
+
+path(
+    'statistics/fish-of-the/',
+    views.statistics_report,
+    {
+        'report_name': 'fish_of_the.html'
+    },
+    name='fish_of_the'
+),
 ]
