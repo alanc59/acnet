@@ -1,8 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 
 from fishy.models import Bait, Catch, Fish, Trip, Venue
 from fishy import reports
@@ -665,6 +668,56 @@ def save_catch_photo(uploaded_file, catch_id):
     img.thumbnail((1600, 1600))          # max 1600px on the long side
     img.save(os.path.join(PHOTO_DIR, f'{catch_id}.jpg'), 'JPEG', quality=85)
 
+
+# ------------------------------------------------------------
+# Two-step save for poor signal
+#
+# When a photo is attached, the New / Edit Catch pages first send
+# only the catch details (a tiny request that gets through on a weak
+# signal), then send the photo on its own to catch_photo below.
+# If the photo doesn't make it, the catch is still saved and the
+# photo can be added later from Edit Catch.
+# ------------------------------------------------------------
+
+def is_two_step(request):
+    """True when the page is sending the details on their own (step 1)."""
+    return request.headers.get('X-Two-Step') == '1'
+
+
+def two_step_errors(form):
+    """Form errors as a plain list of messages for the page to show."""
+    errors = []
+    for field, field_errors in form.errors.items():
+        label = form.fields[field].label if field in form.fields else ''
+        for e in field_errors:
+            errors.append(f'{label}: {e}' if label else e)
+    return JsonResponse({'ok': False, 'errors': errors}, status=400)
+
+
+@login_required
+@require_POST
+def catch_photo(request, pk):
+    """Step 2: add (or replace) the photo of a catch already saved."""
+    catch = get_object_or_404(Catch, pk=pk)
+    if not can_edit(request.user, catch):
+        return JsonResponse({'ok': False, 'error': 'Not your catch'}, status=403)
+
+    photo = request.FILES.get('photo')
+    if not photo:
+        return JsonResponse({'ok': False, 'error': 'No photo received'}, status=400)
+
+    try:
+        save_catch_photo(photo, catch.pk)   # overwrites <id>.jpg
+    except Exception:
+        logger.exception('Photo upload failed for catch %s', catch.pk)
+        return JsonResponse({'ok': False, 'error': 'The photo could not be processed'}, status=500)
+
+    if catch.photo != 'Y':
+        catch.photo = 'Y'
+        catch.save(update_fields=['photo'])
+    return JsonResponse({'ok': True})
+
+
 class CatchCreateView(LoginRequiredMixin, CreateView):
     model = Catch
     template_name = 'fishy/catch_new.html'
@@ -713,11 +766,25 @@ class CatchCreateView(LoginRequiredMixin, CreateView):
             return self.object.trip.get_absolute_url()
         return super().get_success_url()
 
+    def form_invalid(self, form):
+        if is_two_step(self.request):
+            return two_step_errors(form)
+        return super().form_invalid(form)
+
     def form_valid(self, form):
         form.instance.user = self.request.user
 
         # Save the catch first so a problem with the photo never loses the entry
         response = super().form_valid(form)
+
+        if is_two_step(self.request):
+            # Details only: tell the page where to send the photo next
+            return JsonResponse({
+                'ok': True,
+                'photo_url': reverse('catch_photo', args=[self.object.pk]),
+                'edit_url': reverse('catch_edit', args=[self.object.pk]),
+                'next': self.get_success_url(),
+            })
  
         photo = self.request.FILES.get('photo')
         if photo:
@@ -774,9 +841,23 @@ class CatchUpdateView(OwnerRequiredMixin, UpdateView):
         form.fields['bait'].queryset = Bait.objects.filter(user=self.object.user)
         return form
  
+    def form_invalid(self, form):
+        if is_two_step(self.request):
+            return two_step_errors(form)
+        return super().form_invalid(form)
+
     def form_valid(self, form):
         # Save the catch changes first so a problem with the photo never loses them
         response = super().form_valid(form)
+
+        if is_two_step(self.request):
+            # Details only: tell the page where to send the photo next
+            return JsonResponse({
+                'ok': True,
+                'photo_url': reverse('catch_photo', args=[self.object.pk]),
+                'edit_url': reverse('catch_edit', args=[self.object.pk]),
+                'next': self.get_success_url(),
+            })
  
         # Only act if a new photo was chosen; otherwise leave any existing
         # photo and the indicator exactly as they are

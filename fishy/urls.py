@@ -11,6 +11,7 @@ urlpatterns = [
     path('catch/new/', views.CatchCreateView.as_view(), name='catch_new'),
     path('catch/<int:pk>/edit/', views.CatchUpdateView.as_view(), name='catch_edit'),
     path('catch/<int:pk>/delete/', views.CatchDeleteView.as_view(), name='catch_delete'),
+    path('catch/<int:pk>/photo/', views.catch_photo, name='catch_photo'),
     path('catches/', views.CatchListView.as_view(), name='catches'),
     path('fish/<int:pk>', views.FishDetailView.as_view(), name='fish-detail'),
     path('fish/new/', views.FishCreateView.as_view(), name='fish_new'),

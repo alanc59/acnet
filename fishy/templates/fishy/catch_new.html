@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container bg-info p-4">
     <h1>New Catch</h1>
-    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <form id="catch_form" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
         {% if selected_trip %}
             <!-- Opened from a trip page: go back to that trip after saving -->
             <input type="hidden" name="from_trip" value="1">
@@ -77,7 +77,13 @@
                     </tr>
                     <tr>
                         <td><label for="id_photo">Photo:</label></td>
-                        <td><input type="file" name="photo" id="id_photo" accept="image/*"></td>
+                        <td>
+                            <!-- The real file input is hidden; the label below acts as its button -->
+                            <input type="file" name="photo" id="id_photo" accept="image/*" class="d-none">
+                            <label for="id_photo" class="btn btn-sm btn-primary mb-0">Choose photo</label>
+                            <button type="button" id="photo_clear" class="btn btn-sm btn-outline-danger ms-1" style="display: none;">Remove</button>
+                            <span id="photo_status" class="ms-2" data-default="No photo">No photo</span>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -96,25 +102,67 @@
                 </div>
             </div>
         {% endif %}
+        <!-- Progress / problems when saving a catch with a photo -->
+        <div id="save_status" role="status" style="display: none;"></div>
     </form>
 </div>
 
 <script>
-// Shrinks the photo on the phone before uploading (several MB -> a few hundred KB)
-// so it gets through on a poor signal. Also stops a double tap on the button.
+// Saving a catch with a photo, built for a poor signal:
+//   1. The photo is shrunk on the phone (1200px, ~150-250 KB).
+//   2. The catch details are sent on their own first - a tiny request
+//      that gets through on a weak signal, just like a catch with no photo.
+//   3. Once the catch is safely saved, the photo is sent separately,
+//      with up to 3 tries. If it still can't get through, the catch is
+//      kept and you can try again, or add the photo later from Edit Catch.
+// Without a photo the form is sent exactly as before.
 (function () {
-    const MAX_SIZE = 1600;      // longest side in pixels, same as the server
-    const QUALITY = 0.85;       // JPEG quality
+    const MAX_SIZE = 1200;          // longest side in pixels
+    const QUALITY = 0.75;           // JPEG quality
+    const DETAILS_TIMEOUT = 30000;  // ms to wait for the catch details to be saved
+    const PHOTO_TIMEOUT = 90000;    // ms to wait for each photo attempt
+    const PHOTO_TRIES = 3;
+    const RETRY_WAITS = [3000, 6000];   // pause before the 2nd and 3rd tries
 
-    const form = document.querySelector('form');
+    const form = document.getElementById('catch_form');   // not the navbar's Logout form
     const input = document.getElementById('id_photo');
     const btn = form.querySelector('button[type="submit"]');
     const btnText = btn ? btn.textContent : '';
+    const statusBox = document.getElementById('save_status');
+    const csrf = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+    let saved = null;       // the server's reply once the catch details are saved
+    let photoFile = null;   // the (shrunk) photo waiting to be sent
 
     function setButton(text, disabled) {
         if (!btn) return;
         btn.textContent = text;
         btn.disabled = disabled;
+    }
+
+    function showStatus(html, kind) {
+        statusBox.className = 'alert alert-' + kind + ' mt-3 mb-0 text-center';
+        statusBox.innerHTML = html;
+        statusBox.style.display = '';
+    }
+
+    function wait(ms) {
+        return new Promise(function (resolve) { setTimeout(resolve, ms); });
+    }
+
+    function postWithTimeout(url, body, ms, headers) {
+        const ctl = new AbortController();
+        const timer = setTimeout(function () { ctl.abort(); }, ms);
+        return fetch(url, {
+            method: 'POST', body: body, headers: headers || {},
+            credentials: 'same-origin', signal: ctl.signal
+        }).finally(function () { clearTimeout(timer); });
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     function loadImage(file) {
@@ -145,6 +193,46 @@
         return new File([blob], 'photo.jpg', { type: 'image/jpeg' });
     }
 
+    // Step 3: send the photo for the saved catch, with retries
+    async function sendPhoto() {
+        let problem = "the signal wasn't good enough";
+        setButton('Sending photo…', true);
+
+        for (let attempt = 1; attempt <= PHOTO_TRIES; attempt++) {
+            showStatus('<strong>Catch saved.</strong> Sending photo'
+                       + (attempt > 1 ? ' (try ' + attempt + ' of ' + PHOTO_TRIES + ')' : '') + '…', 'info');
+            try {
+                const fd = new FormData();
+                fd.append('photo', photoFile, photoFile.name || 'photo.jpg');
+                fd.append('csrfmiddlewaretoken', csrf);
+                const r = await postWithTimeout(saved.photo_url, fd, PHOTO_TIMEOUT);
+                const reply = await r.json();
+                if (r.ok && reply.ok) {
+                    window.location.href = saved.next;      // all done
+                    return;
+                }
+                if (r.status < 500) {                       // a real refusal: retrying won't help
+                    problem = reply.error || 'the site refused it';
+                    break;
+                }
+                problem = reply.error || problem;
+            } catch (err) {
+                // no reply (poor signal / timed out): try again
+            }
+            if (attempt < PHOTO_TRIES) await wait(RETRY_WAITS[attempt - 1]);
+        }
+
+        setButton('Saved', true);
+        showStatus(
+            '<strong>Catch saved</strong>, but the photo couldn\'t be sent (' + escapeHtml(problem) + ').<br>'
+            + 'Try again when the signal is better, or add it later from Edit Catch.'
+            + '<div class="mt-2">'
+            + '<button type="button" id="photo_retry" class="btn btn-sm btn-primary">Try photo again</button>'
+            + '<a class="btn btn-sm btn-secondary ms-2" href="' + escapeHtml(saved.next) + '">Carry on without photo</a>'
+            + '</div>', 'warning');
+        document.getElementById('photo_retry').addEventListener('click', sendPhoto);
+    }
+
     form.addEventListener('submit', async function (event) {
         const file = input && input.files && input.files[0];
         if (!file) {
@@ -153,26 +241,75 @@
         }
 
         event.preventDefault();
-        setButton('Preparing photo…', true);
+        if (saved) return;                  // catch already saved: don't save it twice
 
+        // Step 1: shrink the photo (on the phone, no signal needed)
+        setButton('Preparing photo…', true);
+        photoFile = file;
         try {
             const smaller = await shrinkPhoto(file);
-            if (smaller) {
-                const dt = new DataTransfer();
-                dt.items.add(smaller);
-                input.files = dt.files;
-            }
+            if (smaller) photoFile = smaller;
         } catch (err) {
             // Couldn't shrink it on the phone: send the original, the server still resizes it
         }
 
-        setButton('Uploading…', true);
-        form.submit();
+        // Step 2: send the catch details on their own
+        setButton('Saving catch…', true);
+        showStatus('Saving catch…', 'info');
+        const details = new FormData(form);
+        details.delete('photo');
+
+        let reply;
+        try {
+            const r = await postWithTimeout(form.action || window.location.href, details,
+                                            DETAILS_TIMEOUT, { 'X-Two-Step': '1' });
+            reply = await r.json();
+        } catch (err) {
+            setButton(btnText, false);
+            showStatus('<strong>No reply from the site</strong>, so the catch may not have been saved. '
+                       + 'Check the signal and tap ' + escapeHtml(btnText) + ' again.', 'danger');
+            return;
+        }
+
+        if (!reply.ok) {
+            setButton(btnText, false);
+            const errors = (reply.errors || ['Please check the details.']).map(escapeHtml).join('<br>');
+            showStatus('<strong>The catch has not been saved:</strong><br>' + errors, 'danger');
+            return;
+        }
+
+        // Step 3: the catch is safe; now the photo
+        saved = reply;
+        await sendPhoto();
     });
 
-    // Re-enable the button if you come back to this page with the Back button
+    // Photo status, and the Remove button to clear a chosen photo
+    const photoStatus = document.getElementById('photo_status');
+    const photoClear = document.getElementById('photo_clear');
+
+    function showPhotoChoice() {
+        const chosen = input && input.files && input.files[0];
+        if (photoStatus) {
+            photoStatus.textContent = chosen ? 'New photo selected: ' + chosen.name
+                                             : photoStatus.dataset.default;
+        }
+        if (photoClear) photoClear.style.display = chosen ? "" : "none";
+    }
+
+    if (input) input.addEventListener('change', showPhotoChoice);
+
+    if (photoClear) {
+        photoClear.addEventListener('click', function () {
+            input.value = '';            // forget the chosen photo
+            showPhotoChoice();
+        });
+    }
+
+    // Re-enable the button, and show the photo actually still chosen,
+    // if you come back to this page with the Back button
     window.addEventListener('pageshow', function () {
-        setButton(btnText, false);
+        if (!saved) setButton(btnText, false);
+        showPhotoChoice();
     });
 })();
 </script>
